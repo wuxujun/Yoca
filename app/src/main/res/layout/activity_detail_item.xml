@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+
+    <LinearLayout android:id="@+id/llTargetValue" android:layout_marginTop="1dp" android:padding="10dp"
+        android:layout_width="match_parent" android:background="@color/action_bar_bg_color"
+        android:layout_height="wrap_content" android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent" android:orientation="vertical"
+            android:layout_height="match_parent" android:layout_weight="3">
+            <TextView android:layout_weight="1" android:id="@+id/tvTargetName"
+                android:layout_width="match_parent" android:gravity="bottom|center_horizontal" style="@style/main_text_label"
+                android:layout_height="match_parent" android:text="@string/target_value1"/>
+            <TextView android:layout_weight="1" android:id="@+id/tvTargetStatus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" style="@style/main_text_label"
+                android:gravity="center_horizontal|top" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent" android:orientation="vertical" android:layout_marginRight="10dp"
+            android:layout_height="match_parent" android:layout_weight="2">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView android:layout_weight="1" android:id="@+id/tvTargetValue" android:layout_marginRight="20dp"
+                    android:layout_width="match_parent" android:gravity="top|right" style="@style/main_text_label"
+                    android:layout_height="match_parent"/>
+                <TextView android:id="@+id/tvTargetUnit"
+                    android:layout_width="match_parent"  android:gravity="center_vertical|right" style="@style/main_target_unit"
+                    android:layout_height="match_parent"/>
+                <LinearLayout android:gravity="center_vertical" android:layout_marginRight="20dp" android:layout_marginTop="20dp"
+                    android:layout_width="match_parent" android:orientation="horizontal"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp" android:layout_weight="1" android:background="@color/line_yellow"/>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp" android:layout_weight="1" android:background="@color/line_green"/>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp" android:layout_weight="1" android:background="@color/line_red"/>
+                </LinearLayout>
+                <com.xujun.widget.MySeekBar android:id="@+id/mySeekBar" android:descendantFocusability= "blocksDescendants" android:focusable="false"
+                    android:layout_width="match_parent" android:progress="48" android:progressDrawable="@drawable/main_seekbar_style"
+                    android:layout_height="10dp" android:layout_marginTop="25dp" android:thumb="@drawable/ic_indicator"/>
+
+            </FrameLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout android:layout_marginTop="1dp" android:id="@+id/llTargetDesc"
+        android:layout_width="match_parent" android:background="@color/action_bar_bg_color"
+        android:layout_height="wrap_content" android:orientation="horizontal">
+        <TextView android:id="@+id/tvTargetDesc" android:layout_weight="1"
+            android:layout_width="match_parent" android:layout_margin="20dp"
+            android:layout_height="wrap_content" style="@style/main_text_label" android:text="1"/>
+        <LinearLayout android:id="@+id/llTargetChart" android:visibility="gone"
+            android:layout_width="60dp" android:gravity="top|center_horizontal"
+            android:layout_height="match_parent">
+            <ImageButton android:id="@+id/ibTargetHis"
+                android:layout_width="wrap_content" android:layout_margin="10dp"
+                android:layout_height="wrap_content" android:background="@drawable/number"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

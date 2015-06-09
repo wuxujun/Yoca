@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item
+        android:id="@+id/itemMenuSave"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/btn_Save"/>
+    <item
+        android:id="@+id/itemMenuCancel"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/btn_Cancel"/>
+</menu>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+
+    <LinearLayout android:id="@+id/llAccountM"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="80dp" android:layout_marginBottom="1dp" android:gravity="center_vertical">
+        <ImageView
+            android:id="@+id/ivAccountM" android:layout_marginLeft="@dimen/menu_item_left"
+            android:layout_width="60dp"
+            android:layout_height="60dp" android:src="@drawable/user"/>
+        <TextView
+            android:id="@+id/tvAccountMTitle" android:text="@string/menu_account_manager"
+            android:layout_weight="1" android:layout_marginLeft="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" style="@style/ment_item_label" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/llOther"
+        android:layout_width="match_parent" android:layout_marginBottom="1dp" android:gravity="center_vertical"
+        android:layout_height="80dp"  android:background="@color/item_background">
+        <ImageView
+            android:id="@+id/ivOtherIcon" android:layout_marginLeft="@dimen/menu_item_left"
+            android:layout_width="60dp"
+            android:layout_height="60dp" android:src="@drawable/vistor"/>
+        <TextView
+            android:id="@+id/tvOtherTitle" android:text="@string/menu_other"
+            android:layout_weight="1" android:layout_marginLeft="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" style="@style/ment_item_label"/>
+        </LinearLayout>
+
+    <LinearLayout android:id="@+id/llGroup"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="80dp" android:visibility="gone">
+        <ImageView
+            android:id="@+id/ivGroupIcon" android:layout_marginLeft="@dimen/menu_item_left"
+            android:layout_width="60dp"
+            android:layout_height="60dp" android:src="@drawable/ic_launcher"/>
+        <TextView
+            android:id="@+id/tvGroupTitle" android:text="@string/menu_group"
+            android:layout_weight="1" android:layout_marginLeft="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" style="@style/ment_item_label" />
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/llSetting" android:layout_marginBottom="1dp" android:gravity="center_vertical"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="80dp">
+        <ImageView
+            android:id="@+id/ivSettingIcon" android:layout_marginLeft="@dimen/menu_item_left"
+            android:layout_width="60dp"
+            android:layout_height="60dp" android:src="@drawable/seting"/>
+        <TextView
+            android:id="@+id/tvSettingTitle" android:text="@string/menu_setting"
+            android:layout_weight="1" android:layout_marginLeft="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" style="@style/ment_item_label" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:background="@color/item_background"></LinearLayout>
+
+</LinearLayout>

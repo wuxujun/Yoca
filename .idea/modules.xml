@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Crouton/Crouton.iml" filepath="$PROJECT_DIR$/Crouton/Crouton.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ViewPagerIndicator/ViewPagerIndicator.iml" filepath="$PROJECT_DIR$/ViewPagerIndicator/ViewPagerIndicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Yoca.iml" filepath="$PROJECT_DIR$/Yoca.iml" />
+      <module fileurl="file://$PROJECT_DIR$/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/actionbarsherlock/actionbarsherlock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/edittextvalidator/edittextvalidator.iml" filepath="$PROJECT_DIR$/edittextvalidator/edittextvalidator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rebound-android/rebound-android.iml" filepath="$PROJECT_DIR$/rebound-android/rebound-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rebound-core/rebound-core.iml" filepath="$PROJECT_DIR$/rebound-core/rebound-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sMSSDK/sMSSDK.iml" filepath="$PROJECT_DIR$/sMSSDK/sMSSDK.iml" />
+    </modules>
+  </component>
+</project>
+

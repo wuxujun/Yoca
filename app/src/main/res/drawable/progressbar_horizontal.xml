@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@android:id/background"
+        android:drawable="@drawable/abs__ab_bottom_transparent_dark_holo">
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <nine-patch android:src="@drawable/abs__ab_share_pack_holo_light" />
+        </clip>
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <nine-patch android:src="@drawable/abs__ab_bottom_solid_inverse_holo"/>
+        </clip>
+    </item>
+
+</layer-list>

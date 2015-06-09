@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout android:id="@+id/llLoginAccount"
+        android:layout_width="match_parent" android:layout_marginTop="40dp" android:background="@color/btn_color"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        <LinearLayout android:layout_margin="1dp"
+            android:layout_width="match_parent" android:background="#303030"
+            android:layout_height="match_parent">
+        <TextView android:layout_marginLeft="20dp" android:id="@+id/tvLoginAccount"
+            android:gravity="center_vertical" style="@style/input_item_title"
+            android:layout_width="wrap_content" android:text="@string/login_Account"
+            android:layout_height="match_parent" />
+        <com.andreabaccega.widget.FormEditText android:id="@+id/etLoginAccount"
+            android:layout_width="match_parent" android:layout_weight="1" android:singleLine="true"
+            android:layout_height="match_parent" android:hint="@string/login_Account_Hit" style="@style/input_item_edit" android:imeOptions="actionNext"
+            />
+        </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout android:id="@+id/llLoginPassword"
+        android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        <LinearLayout android:layout_margin="1dp"
+            android:layout_width="match_parent" android:background="#303030"
+            android:layout_height="match_parent">
+        <TextView android:layout_marginLeft="20dp" android:id="@+id/tvLoginPassword"
+            android:gravity="center_vertical"  style="@style/input_item_title"
+            android:layout_width="wrap_content" android:text="@string/login_Password"
+            android:layout_height="match_parent" />
+        <com.andreabaccega.widget.FormEditText android:id="@+id/etLoginPassword" android:singleLine="true"
+            android:layout_width="match_parent" android:layout_weight="1" android:hint="@string/login_Password_Hit" style="@style/input_item_edit"
+            android:layout_height="match_parent"  android:password="true" android:imeOptions="actionDone"/>
+            </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_marginTop="10dp"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        <TextView android:layout_marginLeft="20dp" android:id="@+id/tvForgotPassword"
+            android:gravity="center_vertical" android:layout_weight="1"
+            android:layout_width="match_parent" android:text="@string/login_ForgotPassword"
+            android:layout_height="match_parent" style="@style/input_item_title"/>
+        <TextView android:layout_marginLeft="20dp" android:id="@+id/tvRegister"
+            android:gravity="right|center_vertical" android:layout_weight="1"
+            android:layout_width="match_parent" android:layout_marginRight="10dp" android:text="@string/register"
+            android:layout_height="match_parent" style="@style/input_item_title"/>
+    </LinearLayout>
+
+    <com.xujun.progressbutton.CircularProgressButton
+        android:id="@+id/btnLogin"
+        android:textSize="20sp"
+        android:layout_width="match_parent" android:layout_margin="20dp"
+        android:layout_height="@dimen/input_item_height"
+        app:cpb_textIdle="@string/login"
+        app:cpb_textComplete="@string/login_Complete"
+        app:cpb_textError="@string/login_Error"
+        app:cpb_selectorIdle="@drawable/idle_state_selector"
+        app:cpb_selectorComplete="@drawable/complete_state_selector"
+        app:cpb_selectorError="@drawable/error_state_selector"
+        />
+</LinearLayout>
+    </ScrollView>
+</LinearLayout>

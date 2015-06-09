@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent" android:background="@color/target_header_bg_color" android:orientation="vertical"
+        android:layout_height="wrap_content" android:gravity="center_vertical|center_horizontal">
+        <LinearLayout  android:layout_margin="20dp"
+            android:layout_width="match_parent" android:orientation="horizontal"
+            android:layout_height="wrap_content" android:gravity="center_horizontal|center_vertical">
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_weight="1" android:orientation="vertical"
+                android:layout_height="wrap_content" android:gravity="center_horizontal">
+            <TextView
+                android:layout_width="match_parent" android:gravity="center_horizontal"
+                android:layout_height="wrap_content" android:text="@string/target_top_weight"/>
+            <TextView android:id="@+id/tvTopWeight"
+                android:layout_width="match_parent" android:gravity="center_horizontal"
+                android:layout_height="wrap_content" android:text="65" android:textSize="65sp"/>
+            <TextView
+                android:layout_width="match_parent" android:gravity="right" android:layout_marginRight="20dp"
+                android:layout_height="wrap_content"  android:text="@string/main_kpi_unit"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_marginRight="24dp" android:gravity="right|center_vertical"
+                android:layout_height="wrap_content" android:layout_weight="1">
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:background="@drawable/remand"/>
+                </LinearLayout>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent" android:padding="10dp" android:background="@color/target_header_weight_color"
+            android:layout_height="wrap_content" android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content" android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content" android:text="@string/target_current_weight"/>
+
+            <TextView android:id="@+id/tvWeight"
+                android:layout_width="match_parent" android:gravity="left" android:layout_marginLeft="20dp" android:layout_weight="1"
+                android:layout_height="wrap_content" android:text="65kg"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_margin="20dp"
+        android:layout_height="@dimen/input_item_height" android:gravity="center_vertical|center_horizontal">
+        <LinearLayout
+            android:layout_width="match_parent" android:id="@+id/llTargetType1" android:background="@color/btn_color_selected"
+            android:layout_height="match_parent" android:layout_weight="1" android:layout_marginRight="5dp">
+        <Button android:id="@+id/btnTargetType" style="@style/input_item_button_selected"
+            android:layout_width="match_parent" android:layout_weight="1" android:layout_margin="1dp"
+            android:layout_height="match_parent" android:text="@string/target_type_1"/>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent" android:id="@+id/llTargetType2" android:background="@color/btn_color"
+            android:layout_height="match_parent" android:layout_weight="1" android:layout_marginRight="5dp">
+            <Button android:id="@+id/btnTargetType2" style="@style/input_item_button_normal"
+                android:layout_width="match_parent" android:layout_weight="1" android:layout_margin="1dp"
+                android:layout_height="match_parent" android:text="@string/target_type_2"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent" android:id="@+id/llTargetType3" android:background="@color/btn_color"
+            android:layout_height="match_parent" android:layout_weight="1">
+
+        <Button style="@style/input_item_button_normal" android:id="@+id/btnTargetType3" android:layout_margin="1dp"
+            android:layout_width="match_parent" android:layout_weight="1"
+            android:layout_height="match_parent" android:text="@string/target_type_3" />
+            </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/llAccountNick"
+        android:layout_width="match_parent" android:orientation="vertical"
+        android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView  android:layout_marginRight="10dp"
+                android:gravity="center_vertical|right" style="@style/input_item_title"
+                android:layout_width="80dp" android:text="@string/target_weight"
+                android:layout_height="match_parent" />
+            <TextView  android:layout_marginLeft="20dp" android:id="@+id/tvTargetValue"
+                android:gravity="center_vertical|right" android:textSize="36sp"
+                android:layout_width="match_parent" android:layout_weight="1" android:textColor="#808080"
+                android:layout_height="match_parent" android:text="65" />
+            <TextView
+                android:gravity="center_vertical|center_horizontal" android:textSize="20sp"
+                android:layout_width="wrap_content" android:textColor="#808080"
+                android:layout_height="match_parent" android:text="Kg" android:layout_marginRight="60sp" />
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_marginTop="10dp"
+            android:layout_height="wrap_content" android:layout_marginBottom="10dp">
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekBar"/>
+
+            </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout android:id="@+id/llTargetTime"
+        android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp"  android:layout_marginRight="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"  android:layout_margin="1dp"
+            android:layout_height="match_parent" android:background="#303030" >
+
+        <TextView  android:layout_marginRight="10dp" style="@style/input_item_title"
+            android:gravity="center_vertical|right" android:id="@+id/tvTargetTime"
+            android:layout_width="80dp" android:text="@string/target_done_time"
+            android:layout_height="match_parent" />
+        <com.andreabaccega.widget.FormEditText android:inputType="date" style="@style/input_item_edit" android:maxLength="8"
+            android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/etTargetTime" android:singleLine="true"
+            android:layout_height="match_parent" android:imeOptions="actionDone" />
+    </LinearLayout>
+        </LinearLayout>
+    <com.xujun.progressbutton.CircularProgressButton
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_margin="20dp"
+        android:textSize="20sp"
+        android:id="@+id/btnSave"
+        app:cpb_textIdle="@string/btn_Save"
+        app:cpb_textComplete="@string/save_Complete"
+        app:cpb_textError="@string/save_Error"
+        app:cpb_selectorIdle="@drawable/idle_state_selector"
+        app:cpb_selectorComplete="@drawable/complete_state_selector"
+        app:cpb_selectorError="@drawable/error_state_selector"
+        />
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="#303030">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"><LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent" android:orientation="horizontal" android:gravity="center_horizontal|center_vertical"
+        android:layout_height="wrap_content">
+        <com.xujun.app.yoca.widget.PickerView
+            android:id="@+id/pvHours"
+            android:layout_width="80dp"
+            android:layout_height="200dp" />
+        <TextView
+            android:layout_width="wrap_content" android:textSize="36sp" android:textColor="@color/btn_color_selected"
+            android:layout_height="wrap_content" android:text=":"/>
+        <com.xujun.app.yoca.widget.PickerView
+            android:id="@+id/pvMinutes"
+            android:layout_width="80dp"
+            android:layout_height="200dp" />
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_marginTop="20dp" android:background="#3A3A3A"
+        android:layout_height="wrap_content" android:orientation="vertical">
+
+        <TextView android:layout_marginLeft="20dp" android:textSize="18sp" android:layout_marginTop="10dp" android:background="#3A3A3A"
+        android:layout_width="match_parent" style="@style/input_item_button_normal"
+        android:layout_height="wrap_content" android:text="@string/setting_Repeat"/>
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+        android:layout_height="wrap_content" android:layout_marginBottom="5dp">
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekMon"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Week_Mon" />
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekTue"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Week_Tue" />
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekWed"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Week_Wed" />
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekThu"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Week_Thu" />
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekFri"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Week_Fri" />
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekSat"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Week_Sat" />
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekSun"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Week_Sun" />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeek"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Repeat_Day"/>
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekDays"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Repeat_Work"/>
+        <Button
+            android:layout_width="match_parent" style="@style/weight_item_button_normal" android:id="@+id/btnWeekend"
+            android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/setting_Repeat_Weekend"/>
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_marginTop="5dp"
+        android:layout_width="match_parent" android:background="#3A3A3A"
+        android:layout_height="wrap_content" android:orientation="vertical">
+    <TextView android:layout_marginLeft="20dp" style="@style/weight_item_button_normal" android:layout_marginTop="10dp"
+        android:layout_width="match_parent" android:textSize="18sp"
+        android:layout_height="wrap_content" android:text="@string/setting_warn_tag"/>
+    <LinearLayout
+        android:layout_width="match_parent" android:gravity="center_vertical|center_horizontal" android:background="@color/btn_color_selected"
+        android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginRight="20dp" android:layout_marginLeft="20dp">
+        <com.andreabaccega.widget.FormEditText android:id="@+id/etWeekTag" style="@style/input_item_edit" android:layout_margin="1dp"
+            android:layout_width="match_parent" android:hint="@string/setting_warn_tag_hit"
+            android:layout_height="150dp" android:imeOptions="actionDone" />
+    </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

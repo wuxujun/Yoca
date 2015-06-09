@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#45c979"
+    >
+
+    <ImageView android:layout_alignParentTop="true" android:id="@+id/ivLogo"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:src="@drawable/logo" />
+    <LinearLayout android:id="@+id/llLogin"
+        android:layout_below="@id/ivLogo"
+        android:layout_width="match_parent" android:orientation="vertical"
+        android:layout_height="wrap_content" android:layout_margin="10dp">
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+            android:layout_height="wrap_content" android:background="#2a2a2a">
+        <Button android:id="@+id/btnLogin" style="@style/input_item_button"
+            android:layout_width="match_parent" android:layout_margin="1dp"
+            android:layout_height="56dp" android:background="#45c979" android:text="@string/login" />
+        </LinearLayout>
+        <LinearLayout android:layout_marginTop="24dp"
+        android:layout_width="match_parent" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+        android:layout_height="wrap_content" android:background="#2a2a2a">
+        <Button android:id="@+id/btnRegister" style="@style/input_item_button"
+            android:layout_width="match_parent" android:layout_margin="1dp"
+            android:layout_height="56dp" android:background="#45c979" android:text="@string/register"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/llOtherLogin" android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"  android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content" android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp" android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="match_parent" android:layout_weight="1"
+                android:layout_height="1dp" android:background="#2a2a2a" />
+            <TextView
+                android:layout_width="match_parent" android:gravity="center_horizontal" android:layout_weight="1" android:textSize="18sp"
+                android:layout_height="wrap_content" android:text="@string/login_Other"/>
+            <ImageView
+                android:layout_width="match_parent" android:layout_weight="1"
+                android:layout_height="1dp" android:background="#2a2a2a" />
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_marginTop="10dp" android:orientation="horizontal"
+        android:layout_height="wrap_content" android:gravity="center_vertical|center_horizontal">
+        <ImageButton android:id="@+id/ibWeixin"
+            android:layout_width="wrap_content" android:layout_margin="10dp"
+            android:layout_height="wrap_content" android:background="@drawable/wechat"/>
+        <ImageButton android:id="@+id/ibQQ"
+            android:layout_width="wrap_content" android:layout_margin="10dp"
+            android:layout_height="wrap_content" android:background="@drawable/qq"/>
+        <ImageButton android:id="@+id/ibWeibo"
+            android:layout_width="wrap_content" android:layout_margin="10dp"
+            android:layout_height="wrap_content" android:background="@drawable/weibo"/>
+
+    </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

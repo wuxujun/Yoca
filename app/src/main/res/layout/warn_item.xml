@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+    <LinearLayout android:id="@+id/llWarnAdd" android:visibility="gone"
+        android:layout_width="match_parent" android:layout_marginBottom="10dp"
+        android:layout_height="100dp" android:gravity="center_vertical" android:background="@color/action_bar_bg_color">
+    <ImageView
+        android:id="@+id/ivItemIcon"
+        android:layout_width="60dp" android:layout_marginLeft="@dimen/wran_item_left"
+        android:layout_height="60dp" android:src="@drawable/plus"/>
+    <TextView
+        android:id="@+id/tvItemTitle"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="@string/menu_member"
+        android:visibility="gone"
+        android:layout_marginLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       style="@style/ment_item_label" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/llWarnItem" android:layout_marginBottom="10dp"
+        android:layout_width="match_parent" android:gravity="center_vertical"
+        android:layout_height="wrap_content" android:orientation="vertical" >
+        <LinearLayout android:background="@color/action_bar_bg_color"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="wrap_content" android:orientation="horizontal">
+        <LinearLayout android:layout_margin="20dp" android:layout_weight="1"
+            android:layout_width="match_parent" android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <TextView android:id="@+id/tvWarnTitle"
+                android:layout_width="match_parent" style="@style/warn_item_text_value"
+                android:layout_height="wrap_content" android:text="08:00"/>
+
+            <TextView android:id="@+id/tvWarnDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" style="@style/warn_item_desc_value" android:text="@string/account_avatar" />
+            </LinearLayout>
+        <com.xujun.widget.ToggleButton android:id="@+id/tbOff"
+            android:layout_width="54dp" android:layout_marginRight="20dp"
+            android:layout_height="30dp"
+            toggle:onColor="#303030"
+            toggle:offColor="#ddd"
+            toggle:spotColor="#45c878"
+            toggle:offBorderColor="#000"
+            />
+        </LinearLayout>
+        <TextView android:id="@+id/tvWarnTag"  android:background="@color/wran_tag_bg_color" android:paddingLeft="20dp" android:layout_marginTop="1dp"
+            android:layout_width="match_parent" style="@style/warn_item_desc_value"
+            android:layout_height="52dp" android:text="@string/account_avatar" android:gravity="center_vertical"/>
+
+    </LinearLayout>
+
+</LinearLayout>

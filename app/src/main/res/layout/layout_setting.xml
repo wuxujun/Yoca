@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tvLogout"
+        android:orientation="vertical">
+
+    <LinearLayout android:id="@+id/llWarn" android:layout_marginBottom="2dp"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="56dp" android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/tvOtherTitle" android:text="@string/setting_warn"
+            android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" />
+        <ImageView android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/enter"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/llGroup" android:layout_marginBottom="2dp"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="56dp" android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/tvGroupTitle" android:text="@string/setting_device" style="@style/setting_item_label"
+            android:layout_weight="1" android:layout_marginLeft="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent"/>
+        <ImageView android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/enter"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/llPrvPassword" android:layout_marginBottom="2dp"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="56dp" android:gravity="center_vertical">
+        <ImageView  android:layout_marginLeft="40dp"
+            android:layout_width="60dp" android:visibility="gone"
+            android:layout_height="60dp" android:src="@drawable/ic_launcher"/>
+        <TextView android:text="@string/setting_PrivacyPassword"
+            android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" />
+        <com.xujun.widget.ToggleButton android:id="@+id/tbPrePwd"
+            android:layout_width="54dp" android:layout_marginRight="20dp"
+            android:layout_height="30dp"
+            toggle:onColor="#45c878"
+            toggle:offColor="#ddd"
+            toggle:spotColor="@color/chart_grid_color"
+            toggle:offBorderColor="#000"
+            />
+    </LinearLayout>
+
+        <LinearLayout android:id="@+id/llAutoLogin" android:layout_marginBottom="2dp"
+            android:layout_width="match_parent" android:background="@color/item_background"
+            android:layout_height="56dp" android:gravity="center_vertical">
+            <ImageView  android:layout_marginLeft="40dp"
+                android:layout_width="60dp" android:visibility="gone"
+                android:layout_height="60dp" android:src="@drawable/ic_launcher"/>
+            <TextView android:text="@string/setting_AutoLogin"
+                android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+                android:layout_width="match_parent" android:gravity="center_vertical"
+                android:layout_height="match_parent" />
+            <com.xujun.widget.ToggleButton android:id="@+id/tbAutoLogin"
+                android:layout_width="54dp" android:layout_marginRight="20dp"
+                android:layout_height="30dp"
+                toggle:onColor="#45c878"
+                toggle:offColor="#ddd"
+                toggle:spotColor="@color/chart_grid_color"
+                toggle:offBorderColor="#000"
+                />
+        </LinearLayout>
+
+    <LinearLayout android:id="@+id/llOtherData" android:background="@color/item_background"
+        android:layout_width="match_parent" android:visibility="gone"
+        android:layout_height="wrap_content">
+        <TextView android:text="@string/setting_OtherData"
+            android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" />
+        <ImageView android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/enter"/>
+
+
+    </LinearLayout>
+    <LinearLayout android:id="@+id/llVersion" android:background="@color/item_background"
+            android:layout_width="match_parent" android:layout_marginBottom="2dp"
+            android:layout_height="56dp">
+            <ImageView  android:layout_marginLeft="40dp"
+                android:layout_width="60dp" android:visibility="gone"
+                android:layout_height="60dp" android:src="@drawable/ic_launcher"/>
+            <TextView android:text="@string/about_version"
+                android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+                android:layout_width="match_parent" android:gravity="center_vertical"
+                android:layout_height="match_parent" />
+            <TextView android:text="V0.1" android:textColor="#808080" android:id="@+id/tvVersion"
+                android:layout_weight="1" android:layout_marginRight="20dp"
+                android:layout_width="match_parent" android:gravity="center_vertical|right"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    <LinearLayout android:id="@+id/llAbout" android:background="@color/item_background"
+        android:layout_width="match_parent" android:layout_marginBottom="2dp"
+        android:layout_height="56dp" android:gravity="center_vertical">
+        <TextView android:text="@string/setting_About"
+            android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" />
+        <ImageView android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/enter"/>
+
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:background="@color/item_background" android:layout_marginBottom="2dp"></LinearLayout>
+    </LinearLayout>
+
+    <TextView android:id="@+id/tvLogout" android:text="@string/setting_logoutAccount" android:background="@color/item_background"
+        android:layout_weight="1" android:paddingLeft="20dp" style="@style/setting_item_label"
+        android:layout_width="match_parent" android:gravity="center_vertical"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

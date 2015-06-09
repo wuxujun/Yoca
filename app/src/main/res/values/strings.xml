@@ -1,0 +1,236 @@
+<resources>
+    <string name="app_name">YOCA</string>
+
+    <string name="exit_tips">再按一次退出应用</string>
+    <string name="btn_Ok">确定</string>
+    <string name="btn_Cancel">取消</string>
+    <string name="btn_Edit">编辑</string>
+    <string name="btn_Switch">切换</string>
+    <string name="btn_Logout">注销</string>
+    <string name="btn_Save">保存</string>
+    <string name="btn_Next">下一步</string>
+    <string name="btn_Target">目标</string>
+    <string name="btn_StartWeigh">开始称重</string>
+    <string name="btn_try_again">重试</string>
+    <string name="btn_goon">继续</string>
+    <string name="btn_manager">管理</string>
+    <string name="btn_main_done">完成</string>
+    <string name="btn_history">历史</string>
+    <string name="btn_setting">设置</string>
+    <string name="btn_shared">分享</string>
+
+    <string name="menu_member">成员</string>
+    <string name="menu_account_manager">成员管理</string>
+    <string name="menu_other">访客</string>
+    <string name="menu_group">小组</string>
+    <string name="menu_setting">设置</string>
+
+    <string name="main_title">检测</string>
+    <string name="main_today">今日</string>
+    <string name="main_Yesterday">昨天</string>
+    <string name="main_total_target">总体目标</string>
+    <string name="main_week_target">本周目标</string>
+    <string name="main_time_left">剩余时间</string>
+    <string name="main_kpi_unit">Kg</string>
+    <string name="main_day_unit">天</string>
+    <string name="main_value_unit">分</string>
+    <string name="main_click_weight">点击称重</string>
+    <string name="main_connected">已连接</string>
+    <string name="main_disconnected">未连接</string>
+    <string name="main_connect_err">连接失败</string>
+    <string name="main_scan_device">搜索蓝牙设备</string>
+    <string name="main_connecting">蓝牙连接中...</string>
+    <string name="main_current_weight">当前体重</string>
+    <string name="login_Other">第三方登录</string>
+    <string name="data_loading">数据加载中...</string>
+
+
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="login_Account">帐号</string>
+    <string name="login_Account_Hit">请输入帐号</string>
+    <string name="login_Mobileoremail">邮箱/手机</string>
+    <string name="login_Password">密码</string>
+    <string name="login_ConfirmPassword">确认密码</string>
+    <string name="login_ConfirmPassword_Error">两次输入的密码不一致.</string>
+    <string name="login_VerifyCode">验证码</string>
+    <string name="login_GetVerifyCode">点击获取</string>
+    <string name="login_ForgotPassword">忘记密码</string>
+    <string name="login_VerCode_Hit">请输入验证码</string>
+    <string name="login_Mobileoremail_Hit">请输入邮箱或手机</string>
+    <string name="login_Password_Hit">请输入密码</string>
+    <string name="login_ConfirmPassword_Hit">请输入确认密码</string>
+    <string name="forgot_password">找回密码</string>
+    <string name="forgot_NewPassword">新密码</string>
+    <string name="login_Complete">登录成功</string>
+    <string name="login_Error">登录失败</string>
+    <string name="register_Complete">注册成功</string>
+    <string name="register_Error">注册失败</string>
+    <string name="login_loading">请稍候,登录请求中...</string>
+    <string name="register_loading">请稍候,注册请求中...</string>
+
+    <string name="photo_camera">从相机拍摄</string>
+    <string name="photo_local">选择本地图片</string>
+    <string name="account_avatar">头像编辑</string>
+    <string name="account_Edit">填写帐户信息</string>
+    <string name="account_Male">男</string>
+    <string name="account_Woman">女</string>
+    <string name="account_Nick">昵称</string>
+    <string name="account_Nick_Hit">请输入昵称</string>
+    <string name="account_Birthday">生日</string>
+    <string name="account_Birthday_Hit">请输入生日 如:20110110</string>
+    <string name="account_Birthday_error">生日日期错误</string>
+    <string name="account_Visitor">填写访客信息</string>
+
+
+    <string name="account_Heshan">身高</string>
+    <string name="account_Heshan_Hit">请输入身高</string>
+    <string name="account_Heshan_Unit">cm</string>
+    <string name="account_EditAvatar">修改头像</string>
+    <string name="account_Camera">拍照</string>
+    <string name="account_MobilePhoto">手机相册</string>
+
+    <string name="chart_min_value">最低值</string>
+    <string name="chart_age_value">平均值</string>
+    <string name="chart_max_value">最高值</string>
+
+    <string name="setting_warn">称重提醒</string>
+    <string name="setting_device">设备管理</string>
+    <string name="setting_PrivacyPassword">隐私密码</string>
+    <string name="setting_AutoLogin">自动登录</string>
+    <string name="setting_OtherData">第三方数据</string>
+    <string name="setting_About">关于我们</string>
+    <string name="setting_logoutAccount">退出当前帐号</string>
+    <string name="setting_Repeat">重复</string>
+    <string name="setting_Week_Mon">周一</string>
+    <string name="setting_Week_Tue">周二</string>
+    <string name="setting_Week_Wed">周三</string>
+    <string name="setting_Week_Thu">周四</string>
+    <string name="setting_Week_Fri">周五</string>
+    <string name="setting_Week_Sat">周六</string>
+    <string name="setting_Week_Sun">周日</string>
+    <string name="setting_Repeat_Day">每天</string>
+    <string name="setting_Repeat_Work">工作日</string>
+    <string name="setting_Repeat_Weekend">周末</string>
+    <string name="setting_warn_tag">标签</string>
+    <string name="setting_warn_tag_hit">请输入标签内容</string>
+
+
+    <string name="target_setting">设定目标</string>
+    <string name="target_weight">希望体重</string>
+    <string name="target_top_weight">推荐体重</string>
+    <string name="target_current_weight">当前体重</string>
+    <string name="target_type_1">减重</string>
+    <string name="target_type_2">减脂</string>
+    <string name="target_type_3">保持</string>
+    <string name="target_done_time">达成日期</string>
+    <string name="target_setting_title">快来设置减肥目标吧</string>
+
+    <string name="target_value0">BMI</string>
+    <string name="target_value1">体重</string>
+    <string name="target_value2">体脂率</string>
+    <string name="target_value3">皮下脂肪等级</string>
+    <string name="target_value4">内脏脂肪等级</string>
+    <string name="target_value5">水含量</string>
+    <string name="target_value6">基础代谢率</string>
+    <string name="target_value7">肌肉重量</string>
+    <string name="target_value8">骨量</string>
+    <string name="char_target_title">趋势图</string>
+
+    <string name="chart_week">周</string>
+    <string name="chart_month">月</string>
+    <string name="chart_year">年</string>
+
+    <string name="about_feedback">用户反馈</string>
+    <string name="about_version">版本更新</string>
+
+    <string name="error_Date">日期格式错误</string>
+    <string name="save_Complete">保存成功</string>
+    <string name="save_Error">保存失败</string>
+
+
+    <string name="weibo_oauth_regiseter">Authorization</string>
+    <string name="website">http://www.mob.com</string>
+    <string name="weibo_upload_content">分享图片</string>
+    <string name="wechat_client_inavailable">Wechat client not exists or the version is too low</string>
+    <string name="google_plus_client_inavailable">Google+ client not exists or the version is too low</string>
+    <string name="qq_client_inavailable">Mobile QQ client not exists or the version is too low</string>
+    <string name="pinterest_client_inavailable">Pinterest client not exists or the version is too low</string>
+    <string name="instagram_client_inavailable">Instagram client not exists or the version is too low</string>
+    <string name="yixin_client_inavailable">Yixin client not exists or the version is too low</string>
+    <string name="line_client_inavailable">Line client not exists or the version is too low</string>
+    <string name="kakaotalk_client_inavailable">KakaoTalk client not exists or the version is too low</string>
+    <string name="kakaostory_client_inavailable">KakaoStory client not exists or the version is too low</string>
+    <string name="whatsapp_client_inavailable">WhatsApp client not exists or the version is too low</string>
+    <string name="baidutieba_client_inavailable">目前您的百度贴吧版本过低或未安装，需要安装百度贴吧才能使用</string>
+
+    <string name="sinaweibo">Sina Weibo</string>
+    <string name="tencentweibo">Tencent Weibo</string>
+    <string name="qzone">QZone</string>
+    <string name="wechat">Wechat</string>
+    <string name="wechatmoments">Wechat Moments</string>
+    <string name="wechatfavorite">Wechat Favorite</string>
+    <string name="facebook">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="renren">Renren</string>
+    <string name="kaixin">Kaixin</string>
+    <string name="email">Email</string>
+    <string name="shortmessage">Short Message</string>
+    <string name="sohumicroblog">Sohu Microblog</string>
+    <string name="neteasemicroblog">Netease Microblog</string>
+    <string name="douban">Douban</string>
+    <string name="youdao">Youdao</string>
+    <string name="evernote">Evernote</string>
+    <string name="linkedin">Linked in</string>
+    <string name="googleplus">Google+</string>
+    <string name="foursquare">FourSquare</string>
+    <string name="qq">QQ</string>
+    <string name="sohusuishenkan">Sohu Suishenkan</string>
+    <string name="pinterest">Pinterest</string>
+    <string name="flickr">Flickr</string>
+    <string name="tumblr">Tumblr</string>
+    <string name="dropbox">Dropbox</string>
+    <string name="vkontakte">VK</string>
+    <string name="instagram">Instagram</string>
+    <string name="yixin">Yixin</string>
+    <string name="yixinmoments">Yixin Moments</string>
+    <string name="mingdao">Mingdao</string>
+    <string name="kakaotalk">KakaoTalk</string>
+    <string name="kakaostory">KakaoStory</string>
+    <string name="line">Line</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="whatsapp">WhatsApp</string>
+    <string name="pocket">Pocket</string>
+    <string name="instapaper">Instapaper</string>
+    <string name="instapaper_email">Email</string>
+    <string name="instapaper_pwd">Password</string>
+    <string name="instapaper_login">Sign In</string>
+    <string name="instapaper_logining">Sign In…</string>
+    <string name="instapager_email_or_password_incorrect">Email or Password incorrect</string>
+    <string name="facebookmessenger">Facebook Messenger</string>
+    <string name="baidutieba">百度贴吧</string>
+
+    <string name="share_to_baidutieba">分享到百度贴吧</string>
+    <string name="share_to_qzone">Share To QZone</string>
+    <string name="share_to_qq">Share To QQ</string>
+    <string name="mingdao_share_content">Share webpage</string>
+    <string name="share_to_mingdao">Share To Mingdao</string>
+    <string name="share_to_qzone_default">Shared from %s</string>
+    <string name="use_login_button">use login button instead</string>
+
+
+    <string name="lockpattern_recording_incorrect_too_short" >"至少连接4个点，请重试"</string>
+    <string name="lockpattern_error" >"手势密码不对"</string>
+
+    <!-- Accessibility description sent when user starts drawing a lock pattern. [CHAR LIMIT=NONE] -->
+    <string name="lockscreen_access_pattern_start">Pattern started</string>
+    <!-- Accessibility description sent when the pattern times out and is cleared. [CHAR LIMIT=NONE] -->
+    <string name="lockscreen_access_pattern_cleared">Pattern cleared</string>
+    <!-- Accessibility description sent when user adds a cell to the pattern. [CHAR LIMIT=NONE] -->
+    <string name="lockscreen_access_pattern_cell_added">Cell added</string>
+    <!-- Accessibility description sent when user completes drawing a pattern. [CHAR LIMIT=NONE] -->
+    <string name="lockscreen_access_pattern_detected">Pattern completed</string>
+
+
+
+</resources>

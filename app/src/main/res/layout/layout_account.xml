@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_marginTop="40dp"
+        android:layout_height="wrap_content" android:gravity="center_vertical|center_horizontal">
+        <ImageButton android:id="@+id/ibAvatar"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:background="@drawable/userbig" />
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_margin="20dp"
+        android:layout_height="@dimen/input_item_height" android:gravity="center_vertical|center_horizontal">
+        <LinearLayout
+            android:layout_width="match_parent" android:id="@+id/llSexWoram" android:background="@color/btn_color_selected"
+            android:layout_height="match_parent" android:layout_weight="1" android:layout_marginRight="5dp">
+        <Button android:id="@+id/btnSexWoram" style="@style/input_item_button_selected"
+            android:layout_width="match_parent" android:layout_weight="1" android:layout_margin="1dp"
+            android:layout_height="match_parent" android:text="@string/account_Woman"/>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent" android:id="@+id/llSexMale" android:background="@color/btn_color"
+            android:layout_height="match_parent" android:layout_weight="1" android:layout_marginLeft="5dp">
+
+        <Button style="@style/input_item_button_normal" android:id="@+id/btnSexMale" android:layout_margin="1dp"
+            android:layout_width="match_parent" android:layout_weight="1"
+            android:layout_height="match_parent" android:text="@string/account_Male" />
+            </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/llAccountNick"
+        android:layout_width="match_parent"  android:background="@color/btn_color"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"  android:layout_margin="1dp"
+            android:layout_height="match_parent" android:background="#303030" >
+
+        <TextView  android:layout_marginRight="10dp" android:id="@+id/tvAccountNick"
+            android:gravity="center_vertical|right" style="@style/input_item_title"
+            android:layout_width="80dp" android:text="@string/account_Nick"
+            android:layout_height="match_parent" />
+        <com.andreabaccega.widget.FormEditText android:hint="@string/account_Nick_Hit" android:id="@+id/etAccountNick" style="@style/input_item_edit"
+            android:layout_width="match_parent" android:layout_weight="1" android:imeOptions="actionNext" android:singleLine="true"
+            android:layout_height="match_parent" android:maxLength="20"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/llAccountBirthday"
+        android:layout_width="match_parent" android:layout_marginTop="20dp" android:background="@color/btn_color"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp"  android:layout_marginRight="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"  android:layout_margin="1dp"
+            android:layout_height="match_parent" android:background="#303030" >
+
+        <TextView  android:layout_marginRight="10dp" style="@style/input_item_title"
+            android:gravity="center_vertical|right" android:id="@+id/tvAccountBirthday"
+            android:layout_width="80dp" android:text="@string/account_Birthday"
+            android:layout_height="match_parent" />
+        <com.andreabaccega.widget.FormEditText android:hint="@string/account_Birthday_Hit" android:inputType="date" style="@style/input_item_edit" android:maxLength="8"
+            android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/etAccountBirthday" android:singleLine="true"
+            android:layout_height="match_parent" android:imeOptions="actionDone" />
+    </LinearLayout>
+        </LinearLayout>
+    <LinearLayout android:id="@+id/llAccountHashan"
+        android:layout_width="match_parent" android:layout_marginTop="20dp" android:background="@color/btn_color"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"  android:layout_margin="1dp"
+            android:layout_height="match_parent" android:background="#303030" >
+
+        <TextView android:layout_marginRight="10dp" style="@style/input_item_title"
+            android:gravity="center_vertical|right" android:id="@+id/tvAccountHasHan"
+            android:layout_width="80dp" android:text="@string/account_Heshan"
+            android:layout_height="match_parent" />
+        <com.andreabaccega.widget.FormEditText android:hint="@string/account_Heshan_Hit" android:id="@+id/etAccountHasHan" android:singleLine="true"
+            android:layout_width="match_parent" android:layout_weight="1" android:imeOptions="actionDone" style="@style/input_item_edit"
+            android:layout_height="match_parent" android:inputType="number"  android:maxLength="3"/>
+        <TextView
+            android:layout_width="80dp" android:gravity="center_vertical" style="@style/input_item_title"
+            android:layout_height="match_parent" android:text="@string/account_Heshan_Unit" />
+    </LinearLayout>
+        </LinearLayout>
+    <Button  style="@style/input_item_button" android:id="@+id/btnStart" android:layout_marginTop="40dp" android:text="@string/btn_StartWeigh" />
+</LinearLayout>
+    </ScrollView>
+</LinearLayout>

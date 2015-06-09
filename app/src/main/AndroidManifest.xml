@@ -1,0 +1,175 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca" android:versionCode="20"
+    android:versionName="1.0.19">
+
+    <application android:allowBackup="true" android:label="@string/app_name" android:name=".AppContext"
+        android:icon="@drawable/ic_launcher" android:theme="@style/Theme.Yocatheme">
+        <activity android:name=".StartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".DefaultActivity"/>
+        <activity android:name=".HistoryActivity"/>
+        <activity android:name=".TabActivity"/>
+        <activity android:name=".WebActivity"/>
+        <activity android:name=".HomeActivity"/>
+        <activity android:name=".LoginActivity" android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
+        <activity android:name=".ForgotPwdActivity"/>
+        <activity android:name=".RegisterActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".ChartActivity"/>
+        <activity android:name=".ContentEActivity"/>
+        <activity android:name=".AccountActivity" android:windowSoftInputMode="adjustPan" android:configChanges="keyboardHidden|orientation"/>
+        <activity android:name=".TargetActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait"/>
+        <activity android:name=".DetailActivity"/>
+        <activity android:name=".TargetHisActivity"/>
+        <activity android:name=".WarnActivity"/>
+        <activity android:name=".WarnSetActivity"/>
+        <activity android:name=".LockSetupActivity"/>
+        <activity android:name=".LockActivity"/>
+        <activity android:name=".AboutActivity"/>
+        <activity android:name=".SelectDialog" android:theme="@style/dialog" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+        <service android:name=".NotifyService"/>
+        <service android:name=".BluetoothLeService" android:enabled="true"/>
+        <receiver android:name=".AlarmReceiver">
+            <intent-filter>
+                <action android:name="com.xujun.app.yoca.alarm.action"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.umeng.message.SystemReceiver" android:process=":push">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.CONFIGURATION_CHANGED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.umeng.message.MessageReceiver" android:process=":push">
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.RECEIVE"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.umeng.message.ElectionReceiver" android:process=":push">
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.ELECTION_RESULT_V4"/>
+                <category android:name="umeng"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.umeng.message.RegistrationReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.xujun.app.yoca.intent.action.COMMAND" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.umeng.message.BootBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.umeng.message.UmengService"
+            android:label="PushService"
+            android:exported="true"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="com.xujun.app.yoca.intent.action.START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xujun.app.yoca.intent.action.COCKROACH" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.PING_V4" />
+                <category android:name="umeng" />
+            </intent-filter>
+        </service>
+        <service android:name="com.umeng.message.UmengIntentService"
+            android:process=":push" />
+        <!-- V1.3.0添加的service，负责下载通知的资源 -->
+        <service android:name="com.umeng.message.UmengDownloadResourceService" />
+
+        <activity android:name="com.xujun.app.wxapi.WXEntryActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize" android:exported="true" android:screenOrientation="portrait"/>
+
+        <activity android:name="cn.smssdk.SMSSDKUIShell" android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
+        <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID-->
+                <data android:scheme="tencent100424468" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <meta-data android:name="UMENG_APPKEY" android:value="526498d656240b87c1152bff"/>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="523008738db9a003fd491981a99c6685" >
+        </meta-data>
+        <meta-data android:name="UMENG_CHANNEL" android:value="Umeng"/>
+        <activity android:name="com.umeng.update.UpdateDialogActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <service android:name="com.umeng.update.net.DownloadingService" android:process=":DownloadingService"/>
+
+    </application>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.SET_TIME_ZONE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+
+</manifest>

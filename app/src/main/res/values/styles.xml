@@ -1,0 +1,403 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="MyCheckbox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_selecter</item>
+    </style>
+
+    <style name="Theme.Yocatheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_yocatheme</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.Yocatheme</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Yocatheme</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Yocatheme</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Yocatheme</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.Yocatheme</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_yocatheme</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_yocatheme</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Yocatheme</item>
+
+        <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.Yocatheme.Widget</item>
+    </style>
+
+    <style name="ActionBar.Solid.Yocatheme" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ic_nav_bg</item>
+        <item name="android:backgroundStacked">@color/action_bar_bg_color</item>
+        <item name="android:backgroundSplit">@color/action_bar_bg_color</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Yocatheme</item>
+    </style>
+
+    <style name="ActionBar.Transparent.Yocatheme" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_yocatheme</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.Yocatheme</item>
+    </style>
+
+    <style name="PopupMenu.Yocatheme" parent="@android:style/Widget.Holo.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_yocatheme</item>
+    </style>
+
+    <style name="DropDownListView.Yocatheme" parent="@android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_yocatheme</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Yocatheme" parent="@android:style/Widget.Holo.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_yocatheme</item>
+    </style>
+
+    <style name="DropDownNav.Yocatheme" parent="@android:style/Widget.Holo.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_yocatheme</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_yocatheme</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_yocatheme</item>
+    </style>
+
+    <style name="ProgressBar.Yocatheme" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_yocatheme</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.Yocatheme" parent="@android:style/Widget.Holo.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_yocatheme</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Yocatheme.Widget" parent="@android:style/Theme.Holo">
+        <item name="android:popupMenuStyle">@style/PopupMenu.Yocatheme</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Yocatheme</item>
+    </style>
+
+    <style name="dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="App_Tab">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">8dip</item>
+        <item name="android:paddingBottom">4dip</item>
+        <item name="android:background">@drawable/app_bottombar_itembg_selector</item>
+        <item name="android:textColor">@color/app_bottombar_textcolor_selector</item>
+        <item name="android:button">@null</item>
+    </style>
+
+    <declare-styleable name="NumberProgressBar">
+        <attr name="progress" format="integer"/>
+        <attr name="max" format="integer"/>
+
+        <attr name="progress_unreached_color" format="color"/>
+        <attr name="progress_reached_color" format="color"/>
+
+        <attr name="progress_reached_bar_height" format="dimension"/>
+        <attr name="progress_unreached_bar_height" format="dimension"/>
+
+        <attr name="progress_text_size" format="dimension"/>
+        <attr name="progress_text_color" format="color"/>
+
+        <attr name="progress_text_offset" format="dimension"/>
+
+        <attr name="progress_text_visibility" format="enum">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="Themes">
+        <attr name="numberProgressBarStyle" format="reference"/>
+    </declare-styleable>
+
+    <style name="input_item_title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
+
+    <style name="input_item_edit">
+        <item name="android:textColor">#45c878</item>
+        <item name="android:background">#303030</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="input_item_button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#2a2a2a</item>
+        <item name="android:background">#45c878</item>
+    </style>
+    <style name="input_item_button_selected">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#45c878</item>
+        <item name="android:background">#303030</item>
+    </style>
+    <style name="input_item_button_normal">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:background">#303030</item>
+    </style>
+
+    <style name="chart_item_button_normal">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:background">#303030</item>
+    </style>
+
+    <style name="weight_item_button_normal">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:background">#3A3A3A</item>
+    </style>
+
+    <style name="main_item_text_label">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
+    <style name="main_today_label">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <style name="main_target_unit">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
+    <style name="main_title">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">#ffffff</item>
+
+    </style>
+    <style name="main_text_label">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
+
+    <style name="chart_text_label">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
+
+    <style name="warn_item_text_value">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">#45c878</item>
+    </style>
+    <style name="warn_item_desc_value">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
+
+    <style name="main_text_value">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">#45c878</item>
+    </style>
+    <style name="main_text_unit">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#45c878</item>
+    </style>
+
+    <style name="ment_item_label">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
+
+    <style name="setting_item_label">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#808080</item>
+    </style>
+
+
+    <style name="mProgress_horizontal">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/progressbar_horizontal</item>
+        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:minHeight">20dip</item>
+        <item name="android:maxHeight">20dip</item>
+        <item name="android:mirrorForRtl">true</item>
+    </style>
+
+
+    <style name="NumberProgressBar_Default">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="max">100</item>
+        <item name="progress">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#3498DB</item>
+
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#3498DB</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
+
+    <style name="NumberProgressBar_Passing_Green">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="max">100</item>
+        <item name="progress">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#70A800</item>
+
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#70A800</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
+
+    <style name="NumberProgressBar_Beauty_Red">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="max">100</item>
+        <item name="progress">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#FF3D7F</item>
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#FF3D7F</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
+
+    <style name="NumberProgressBar_Warning_Red">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="max">100</item>
+        <item name="progress">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#E74C3C</item>
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#E74C3C</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
+
+    <style name="NumberProgressBar_Relax_Blue">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="max">100</item>
+        <item name="progress">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#6DBCDB</item>
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#6DBCDB</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
+
+    <style name="NumberProgressBar_Grace_Yellow">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="max">100</item>
+        <item name="progress">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#FFC73B</item>
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#FFC73B</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
+
+    <style name="NumberProgressBar_Funny_Orange">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="max">100</item>
+        <item name="progress">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#FF530D</item>
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#FF530D</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
+
+    <style name="NumberProgressBar_Twinkle_Night">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="max">100</item>
+        <item name="progress">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#ECF0F1</item>
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#ECF0F1</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
+
+    <style name="widget_listview">
+        <item name="android:background">@color/btn_color</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:listSelector">@drawable/list_pressed_yocatheme</item>
+        <item name="android:divider">@color/black</item>
+        <item name="android:dividerHeight">1.0dip</item>
+        <item name="android:fadingEdge">none</item>
+        <item name="android:scrollingCache">false</item>
+    </style>
+
+
+
+    <declare-styleable name="CircularProgressButton">
+        <attr name="cpb_selectorIdle" format="reference"/>
+        <attr name="cpb_selectorComplete" format="reference"/>
+        <attr name="cpb_selectorError" format="reference"/>
+        <attr name="cpb_textComplete" format="string"/>
+        <attr name="cpb_textIdle" format="string"/>
+        <attr name="cpb_textError" format="string"/>
+        <attr name="cpb_textProgress" format="string"/>
+        <attr name="cpb_colorProgress" format="color"/>
+        <attr name="cpb_colorIndicator" format="color"/>
+        <attr name="cpb_colorIndicatorBackground" format="color"/>
+        <attr name="cpb_iconError" format="reference"/>
+        <attr name="cpb_iconComplete" format="reference"/>
+        <attr name="cpb_cornerRadius" format="dimension"/>
+        <attr name="cpb_paddingProgress" format="dimension"/>
+    </declare-styleable>
+
+</resources>

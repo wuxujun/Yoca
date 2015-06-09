@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+    <LinearLayout android:orientation="horizontal"
+        android:id="@+id/lv_tab" android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chart_tab_height" >
+        <TextView android:id="@+id/tvChartDate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="1" android:text="@string/about_version"/>
+        <LinearLayout android:layout_weight="1"
+            android:layout_width="match_parent" android:layout_margin="5dp"
+            android:layout_height="@dimen/chart_item_height" android:gravity="center_vertical|center_horizontal">
+            <LinearLayout
+                android:layout_width="match_parent" android:id="@+id/llChartWeek" android:background="@color/btn_color_selected"
+                android:layout_height="match_parent" android:layout_weight="1" android:layout_marginRight="5dp">
+                <Button android:id="@+id/btnChartWeek" style="@style/input_item_button_selected"
+                    android:layout_width="match_parent" android:layout_weight="1" android:layout_margin="1dp"
+                    android:layout_height="match_parent" android:text="@string/chart_week"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent" android:id="@+id/llChartMonth" android:background="@color/btn_color"
+                android:layout_height="match_parent" android:layout_weight="1" android:layout_marginRight="5dp">
+                <Button android:id="@+id/btnChartMonth" style="@style/input_item_button_normal"
+                    android:layout_width="match_parent" android:layout_weight="1" android:layout_margin="1dp"
+                    android:layout_height="match_parent" android:text="@string/chart_month"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent" android:id="@+id/llChartYear" android:background="@color/btn_color"
+                android:layout_height="match_parent" android:layout_weight="1">
+                <Button style="@style/input_item_button_normal" android:id="@+id/btnChartYear" android:layout_margin="1dp"
+                    android:layout_width="match_parent" android:layout_weight="1"
+                    android:layout_height="match_parent" android:text="@string/chart_year" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+    <com.xujun.charting.charts.LineChart
+        android:id="@+id/lineChart" android:layout_above="@+id/llTarget"
+        android:layout_width="match_parent" android:layout_below="@id/lv_tab"
+        android:layout_height="match_parent" android:layout_weight="1"
+        />
+    <LinearLayout android:id="@+id/llTarget" android:layout_alignParentBottom="true"
+            android:layout_width="match_parent" android:orientation="vertical"
+            android:layout_height="80dp">
+           <LinearLayout android:id="@+id/llTargetContent"
+                android:layout_width="match_parent" android:layout_marginTop="5dp"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent" android:orientation="vertical"
+                    android:layout_height="wrap_content" android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent" android:gravity="center_horizontal" style="@style/main_text_label"
+                        android:layout_height="wrap_content" android:text="@string/chart_min_value"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:orientation="horizontal">
+                        <TextView android:id="@+id/tvMValue"
+                            android:layout_width="match_parent" android:layout_weight="1" android:gravity="center_horizontal"
+                            android:layout_height="wrap_content" android:text="0" style="@style/main_text_value" android:textColor="#808080"/>
+                        <TextView
+                            android:layout_width="wrap_content"  android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="10dp" android:layout_marginRight="20dp" android:visibility="gone"
+                            android:layout_height="match_parent" android:text="@string/main_kpi_unit" style="@style/main_text_unit"
+                            android:gravity="left|bottom" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent" android:orientation="vertical"
+                    android:layout_height="wrap_content" android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent" android:gravity="center_horizontal"  style="@style/main_text_label"
+                        android:layout_height="wrap_content" android:text="@string/chart_age_value"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvAValue"
+                            android:layout_width="match_parent" android:layout_weight="1" android:gravity="center_horizontal"
+                            android:layout_height="wrap_content" android:text="0" style="@style/main_text_value" android:textColor="#808080"/>
+                        <TextView
+                            android:layout_width="wrap_content"  android:layout_marginLeft="10dp" android:visibility="gone"
+                            android:layout_marginBottom="10dp" android:layout_marginRight="20dp"
+                            android:layout_height="match_parent" android:text="@string/main_kpi_unit" style="@style/main_text_unit"
+                            android:gravity="left|bottom" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent" android:orientation="vertical"
+                    android:layout_height="wrap_content" android:layout_weight="1">
+                    <TextView
+                        android:layout_width="match_parent" android:gravity="center_horizontal"  style="@style/main_text_label"
+                        android:layout_height="wrap_content" android:text="@string/chart_max_value"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:orientation="horizontal">
+                        <TextView android:id="@+id/tvHValue"
+                            android:layout_width="match_parent" android:layout_weight="1" android:gravity="center_horizontal"
+                            android:layout_height="wrap_content" android:text="0" style="@style/main_text_value" android:textColor="#808080"/>
+                        <TextView
+                            android:layout_width="wrap_content"  android:layout_marginLeft="10dp" android:visibility="gone"
+                            android:layout_marginBottom="10dp" android:layout_marginRight="20dp"
+                            android:layout_height="match_parent" android:text="@string/main_day_unit" style="@style/main_text_unit"
+                            android:gravity="left|bottom" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+</RelativeLayout>

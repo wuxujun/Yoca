@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     android:background="#303030" >
+
+    <LinearLayout android:id="@+id/llMainHeader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" android:gravity="center_vertical|center_horizontal">
+            <LinearLayout
+                android:layout_width="200dp" android:background="#45c878"
+                android:layout_height="200dp" android:gravity="center_horizontal|center_vertical">
+                    <FrameLayout
+                        android:layout_width="190dp"
+                        android:layout_height="190dp">
+                        <LinearLayout
+                            android:layout_width="190dp" android:orientation="vertical"
+                            android:layout_height="190dp" android:background="#303030" android:gravity="center_vertical|center_horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:text="YOCA" style="@style/ment_item_label" android:textColor="@color/main_text_color"/>
+                            <Button android:layout_margin="20dp" android:id="@+id/btnStart" android:visibility="invisible"
+                                android:layout_width="wrap_content" style="@style/input_item_button_normal" android:textColor="@color/cpb_green"
+                                android:layout_height="wrap_content" android:text="@string/main_click_weight" android:textSize="25sp"/>
+                            </LinearLayout>
+                        <ImageView android:layout_margin="10dp"
+                            android:layout_width="match_parent" android:id="@+id/ivScan"
+                            android:layout_height="2dp" android:background="@color/btn_color_selected" />
+
+                    </FrameLayout>
+
+            </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <TextView android:id="@+id/tvStatus" android:layout_marginBottom="20dp"
+            android:layout_width="match_parent" style="@style/ment_item_label" android:gravity="center_horizontal|center_vertical" android:textColor="@color/main_text_color"
+            android:layout_height="wrap_content" android:text="@string/main_connecting" android:layout_marginRight="16dp"/>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

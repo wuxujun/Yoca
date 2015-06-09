@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+    <com.xujun.widget.AnimatedExpandableListView
+        android:id="@+id/lvContent" android:background="@color/item_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

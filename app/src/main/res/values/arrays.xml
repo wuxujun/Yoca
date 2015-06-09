@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tab_title">
+        <item>BMI</item>
+        <item>体重</item>
+        <item>体脂率</item>
+        <item>皮下脂肪等级</item>
+        <item>内脏脂肪等级</item>
+        <item>水含量</item>
+        <item>基础代谢率</item>
+        <item>身体年龄</item>
+        <item>肌肉重量</item>
+        <item>骨量</item>
+        <item>蛋白质</item>
+    </string-array>
+
+</resources>
