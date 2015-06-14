@@ -3,15 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
     <item
-        android:id="@+id/itemChartWeek"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/chart_week"/>
-    <item
-        android:id="@+id/itemChartMonth"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/chart_month"/>
-    <item
-    android:id="@+id/itemChartYear"
+    android:id="@+id/item_chart_switch"
     android:showAsAction="ifRoom|withText"
-    android:title="@string/chart_year"/>
+    android:title="@string/btn_screen_swith"/>
 </menu>

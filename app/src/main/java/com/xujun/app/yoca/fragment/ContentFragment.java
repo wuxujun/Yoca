@@ -38,8 +38,6 @@ import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.xujun.app.yoca.AppConfig;
 import com.xujun.app.yoca.AppContext;
-import com.xujun.app.yoca.ChartActivity;
-import com.xujun.app.yoca.ContentEActivity;
 import com.xujun.app.yoca.DefaultActivity;
 import com.xujun.app.yoca.DetailActivity;
 import com.xujun.app.yoca.R;
@@ -48,21 +46,14 @@ import com.xujun.app.yoca.widget.ContentController;
 import com.xujun.app.yoca.widget.ContentHeader;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
-import com.xujun.sqlite.HealthEntity;
 import com.xujun.sqlite.HomeTargetEntity;
 import com.xujun.sqlite.TargetEntity;
 import com.xujun.sqlite.WeightEntity;
 import com.xujun.sqlite.WeightHisEntity;
 import com.xujun.util.DateUtil;
 import com.xujun.util.ImageUtils;
-import com.xujun.util.JsonUtil;
 import com.xujun.util.StringUtil;
-import com.xujun.util.URLs;
 import com.xujun.widget.MySeekBar;
-import com.xujun.widget.RunningTextView;
-import com.xujun.widget.SpringProgressView;
-
-import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -88,7 +79,6 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
     private LinearLayout            llContainer;
     private Animation anim_in,anim_out;
     private Handler                 mHandler;
-    private boolean                 runFlag=false;
     private int                     nIndex=0;
 
     private ListView                mListView;
@@ -96,7 +86,6 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
 
     private ContentHeader           mContentHeader;
 
-    private RunningTextView         runningTextView;
 
     private Context                 mContext;
     private AppContext appContext;
@@ -258,7 +247,6 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
     public void onPause()
     {
         super.onPause();
-        stopEffect();
     }
 
     private void loadWeightHis()
@@ -300,11 +288,6 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    private void stopEffect()
-    {
-        runFlag=false;
     }
 
     private void startEffect(){
@@ -479,8 +462,6 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
             }
             case 2:{
                 mContentHeader.stopEffect(val);
-//                runningTextView.stop();
-//                runningTextView.setText(val);
                 break;
             }
             default:
@@ -497,7 +478,6 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
     public void updateResult()
     {
         Log.e(TAG,"updateResult "+strTodayDay);
-        stopEffect();
         queryHealthData(strTodayDay);
         refreshView();
     }

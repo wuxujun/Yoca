@@ -246,7 +246,8 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 break;
             }
             case R.id.item_menu_setting:{
-
+                Intent intent=new Intent(TabActivity.this,SettingActivity.class);
+                startActivity(intent);
                 break;
             }
         }

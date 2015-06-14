@@ -133,6 +133,12 @@ public class DateUtil {
         return sf.format(calendar.getTime());
     }
 
+    public static String getDayForDate(String date) {
+        Date newDate=dayToDate(date);
+        SimpleDateFormat sf=new SimpleDateFormat("dd");
+        return sf.format(newDate.getTime());
+    }
+
     public static String getWeekForDate(String date){
         Calendar calendar=new GregorianCalendar();
         calendar.setTime(dayToDate(date));

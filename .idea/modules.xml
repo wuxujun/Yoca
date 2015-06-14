@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Crouton/Crouton.iml" filepath="$PROJECT_DIR$/Crouton/Crouton.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MPChartLib/MPChart.iml" filepath="$PROJECT_DIR$/MPChartLib/MPChart.iml" />
       <module fileurl="file://$PROJECT_DIR$/ViewPagerIndicator/ViewPagerIndicator.iml" filepath="$PROJECT_DIR$/ViewPagerIndicator/ViewPagerIndicator.iml" />
       <module fileurl="file://$PROJECT_DIR$/Yoca.iml" filepath="$PROJECT_DIR$/Yoca.iml" />
       <module fileurl="file://$PROJECT_DIR$/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/actionbarsherlock/actionbarsherlock.iml" />
@@ -14,4 +15,3 @@
     </modules>
   </component>
 </project>
-

@@ -13,21 +13,23 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.utils.Highlight;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.xujun.app.yoca.AppConfig;
 import com.xujun.app.yoca.AppContext;
 import com.xujun.app.yoca.R;
-import com.xujun.charting.charts.LineChart;
-import com.xujun.charting.data.Entry;
-import com.xujun.charting.data.LineData;
-import com.xujun.charting.data.LineDataSet;
-import com.xujun.charting.interfaces.OnChartGestureListener;
-import com.xujun.charting.interfaces.OnChartValueSelectedListener;
-import com.xujun.charting.utils.LimitLine;
-import com.xujun.charting.utils.XLabels;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.xujun.sqlite.AccountEntity;
+import com.xujun.sqlite.ConfigEntity;
 import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.sqlite.HealthEntity;
 import com.xujun.util.DateUtil;
@@ -35,6 +37,7 @@ import com.xujun.util.StringUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -65,6 +68,11 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
     private double                  minValue=0.0;
     private double                  maxValue=0.0;
     private double                  averageValue=0.0;
+
+    private TextView            mCurrentTimeTV;
+    private int                 nCurrentTimeIndex;
+
+    private List<ConfigEntity>  configEntityList=new ArrayList<ConfigEntity>();
 
 
     public DatabaseHelper getDatabaseHelper(){
@@ -103,26 +111,40 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e(TAG,"onCreateView()");
+        Log.e(TAG, "onCreateView()");
         mContentView=inflater.inflate(R.layout.layout_chart,null);
 
         mContentView.findViewById(R.id.btnChartWeek).setOnClickListener(this);
         mContentView.findViewById(R.id.btnChartMonth).setOnClickListener(this);
         mContentView.findViewById(R.id.btnChartYear).setOnClickListener(this);
-
+        mContentView.findViewById(R.id.ibDateLeft).setOnClickListener(this);
+        mContentView.findViewById(R.id.ibDateRight).setOnClickListener(this);
+        mCurrentTimeTV=(TextView)mContentView.findViewById(R.id.tvChartDate);
 
         mChart=(LineChart)mContentView.findViewById(R.id.lineChart);
         mChart.setOnChartGestureListener(this);
         mChart.setOnChartValueSelectedListener(this);
-        mChart.setStartAtZero(true);
-        mChart.setDrawYValues(true);
-        mChart.setDrawBorder(true);
         mChart.setDrawGridBackground(false);
-        mChart.setDrawHorizontalGrid(true);
-        mChart.setDrawVerticalGrid(true);
-        mChart.setDrawXLabels(true);
-        mChart.getXLabels().setPosition(XLabels.XLabelPosition.BOTTOM);
+        mChart.setDescriptionColor(Color.WHITE);
+        mChart.setNoDataText("无数据");
+        XAxis xAxis=mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(true);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setTextColor(Color.WHITE);
 
+        YAxis leftAxis=mChart.getAxisLeft();
+        leftAxis.setLabelCount(5);
+        leftAxis.setTextColor(Color.WHITE);
+
+        YAxis rightAxis=mChart.getAxisRight();
+        rightAxis.setLabelCount(5);
+        rightAxis.setTextColor(Color.WHITE);
+        rightAxis.setDrawGridLines(true);
+        mChart.setBackgroundColor(getResources().getColor(R.color.chart_background_color));
+        mChart.setGridBackgroundColor(Color.GRAY);
+        mChart.setHighlightEnabled(true);
+        mChart.setDescription("");
 
         mChart.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -130,27 +152,11 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
                 return false;
             }
         });
-
+        loadConfigData();
         if (localAccountEntity!=null){
             loadData();
-            initData();
         }
         return mContentView;
-    }
-
-    private void initData()
-    {
-        mChart.setValueTextColor(getResources().getColor(R.color.chart_label_color));
-        mChart.setBackgroundColor(getResources().getColor(R.color.chart_background_color));
-        mChart.setGridColor(Color.GRAY);
-        mChart.setHighlightEnabled(true);
-        mChart.setDescription("");
-        refreshData();
-        mChart.animateX(1500);
-
-        ((TextView)mContentView.findViewById(R.id.tvMValue)).setText(StringUtil.doubleToStringOne(minValue));
-        ((TextView)mContentView.findViewById(R.id.tvAValue)).setText(StringUtil.doubleToStringOne(averageValue));
-        ((TextView)mContentView.findViewById(R.id.tvHValue)).setText(StringUtil.doubleToStringOne(maxValue));
     }
 
     public void loadData(){
@@ -197,6 +203,11 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
         }catch (SQLException e){
             e.printStackTrace();
         }
+        refreshData();
+
+        ((TextView)mContentView.findViewById(R.id.tvMValue)).setText(StringUtil.doubleToStringOne(minValue));
+        ((TextView)mContentView.findViewById(R.id.tvAValue)).setText(StringUtil.doubleToStringOne(averageValue));
+        ((TextView)mContentView.findViewById(R.id.tvHValue)).setText(StringUtil.doubleToStringOne(maxValue));
     }
 
     private void refreshData()
@@ -211,7 +222,11 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
             if (entity!=null) {
                 date=entity.getPickTime();
 //                xVals.add(date.substring(date.indexOf("-")+1));
-                xVals.add(DateUtil.getWeekForDate(date));
+                if (showType==0) {
+                    xVals.add(DateUtil.getWeekForDate(date));
+                }else if (showType==1){
+                    xVals.add(DateUtil.getDayForDate(date));
+                }
                 yVals.add(new Entry(Float.parseFloat(entity.getTargetValue()),i));
             }
         }
@@ -230,6 +245,8 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
         set1.setCircleSize(4f);
         set1.setFillAlpha(65);
         set1.setDrawCubic(true);
+        set1.setDrawValues(true);
+        set1.setValueTextColor(Color.GREEN);
         set1.setFillColor(getResources().getColor(R.color.chart_line_color));
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
         dataSets.add(set1); // add the datasets
@@ -237,14 +254,9 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
         // create a data object with the datasets
         LineData data = new LineData(xVals, dataSets);
 
-        LimitLine ll1 = new LimitLine(getRefer());
-        ll1.setLineWidth(2f);
-        ll1.enableDashedLine(10f, 10f, 0f);
-        ll1.setDrawValue(true);
-        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT);
-        data.addLimitLine(ll1);
         // set data
         mChart.setData(data);
+        mChart.animateX(1500);
     }
 
     private float getRefer(){
@@ -354,8 +366,18 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
     }
 
     @Override
-    public void onValueSelected(Entry e, int dataSetIndex) {
-        Log.e(TAG,"onValueSelected =>"+e.getVal()+"  ");
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
     }
 
     @Override
@@ -368,17 +390,47 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
         switch (view.getId()){
             case R.id.btnChartWeek:
             {
+                showType=0;
                 setChartType(1);
+                loadConfigData();
                 break;
             }
             case R.id.btnChartMonth:
             {
+                showType=1;
                 setChartType(2);
+                loadConfigData();
                 break;
             }
             case R.id.btnChartYear:
             {
+                showType=2;
                 setChartType(3);
+                loadConfigData();
+                break;
+            }
+            case R.id.ibDateLeft:{
+                nCurrentTimeIndex++;
+                if (nCurrentTimeIndex>=configEntityList.size()){
+                    nCurrentTimeIndex=configEntityList.size();
+                }
+                ConfigEntity entity=configEntityList.get(nCurrentTimeIndex);
+                mCurrentTimeTV.setText(entity.getTitle());
+                beginDay=entity.getBeginDay();
+                endDay=entity.getEndDay();
+                loadData();
+                break;
+            }
+            case R.id.ibDateRight:{
+                nCurrentTimeIndex--;
+                if (nCurrentTimeIndex<0){
+                    nCurrentTimeIndex=0;
+                }
+                ConfigEntity entity=configEntityList.get(nCurrentTimeIndex);
+                mCurrentTimeTV.setText(entity.getTitle());
+                beginDay=entity.getBeginDay();
+                endDay=entity.getEndDay();
+                loadData();
                 break;
             }
         }
@@ -419,4 +471,38 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
         }
 
     }
+
+
+    private void loadConfigData(){
+        try{
+            Calendar c=Calendar.getInstance();
+            Log.e(TAG,"............."+c.get(Calendar.WEEK_OF_YEAR));
+            int week=c.get(Calendar.WEEK_OF_YEAR);
+            if (showType==1){
+                week=c.get(Calendar.MONTH)+1;
+            }
+            configEntityList.clear();
+            Dao<ConfigEntity,Integer> dao=getDatabaseHelper().getConfigDao();
+            GenericRawResults<String[]> rawResults=dao.queryRaw("select title,week,beginDay,endDay from t_config where type="+showType+" and week<="+week+" order by week desc");
+            List<String[]> results=rawResults.getResults();
+            if (results.size()>0) {
+                for (int i=0;i<results.size();i++){
+                    String[] rs=results.get(i);
+                    ConfigEntity entity=new ConfigEntity();
+                    entity.setTitle(rs[0]);
+                    entity.setWeek(Integer.parseInt(rs[1]));
+                    entity.setBeginDay(rs[2]);
+                    entity.setEndDay(rs[3]);
+                    configEntityList.add(entity);
+                    if (i==0){
+                        mCurrentTimeTV.setText(entity.getTitle());
+                    }
+                }
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
 }

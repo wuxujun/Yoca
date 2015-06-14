@@ -1,34 +1,30 @@
 package com.xujun.app.yoca;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SeekBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.utils.Highlight;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.xujun.app.yoca.Adapter.TabAdapter;
-import com.xujun.charting.charts.LineChart;
-import com.xujun.charting.data.Entry;
-import com.xujun.charting.data.LineData;
-import com.xujun.charting.data.LineDataSet;
-import com.xujun.charting.interfaces.OnChartGestureListener;
-import com.xujun.charting.interfaces.OnChartValueSelectedListener;
-import com.xujun.charting.utils.LimitLine;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.sqlite.HealthEntity;
@@ -37,9 +33,7 @@ import com.xujun.widget.HorizontalListView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -99,13 +93,21 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
         mChart=(LineChart)findViewById(R.id.lineChart);
         mChart.setOnChartGestureListener(this);
         mChart.setOnChartValueSelectedListener(this);
-        mChart.setStartAtZero(true);
-        mChart.setDrawYValues(false);
-        mChart.setDrawBorder(true);
         mChart.setDrawGridBackground(false);
-        mChart.setDrawHorizontalGrid(true);
-        mChart.setDrawVerticalGrid(true);
-        mChart.setDrawXLabels(true);
+
+        XAxis xAxis=mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(true);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setTextColor(Color.WHITE);
+
+        YAxis leftAxis=mChart.getAxisLeft();
+        leftAxis.setLabelCount(5);
+        YAxis rightAxis=mChart.getAxisRight();
+        rightAxis.setLabelCount(5);
+        rightAxis.setTextColor(Color.WHITE);
+        rightAxis.setDrawGridLines(true);
+
         initBottomTabbar();
 
         mChart.setOnTouchListener(new View.OnTouchListener() {
@@ -154,7 +156,7 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
         tabListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-               tabAdapter.setCurrentIndex(i);
+                tabAdapter.setCurrentIndex(i);
                 tabAdapter.notifyDataSetChanged();
             }
         });
@@ -162,9 +164,8 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
 
     private void initData()
     {
-        mChart.setValueTextColor(getResources().getColor(R.color.chart_label_color));
         mChart.setBackgroundColor(getResources().getColor(R.color.chart_background_color));
-        mChart.setGridColor(Color.GRAY);
+        mChart.setGridBackgroundColor(Color.GRAY);
         mChart.setHighlightEnabled(true);
         mChart.setDescription("");
         refreshData();
@@ -220,7 +221,18 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
     }
 
     @Override
-    public void onValueSelected(Entry entry, int i) {
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+    }
+
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
     }
 
@@ -270,19 +282,14 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
         set1.setCircleSize(4f);
         set1.setFillAlpha(65);
         set1.setDrawCubic(true);
+        set1.setValueTextColor(Color.WHITE);
+        set1.setDrawValues(true);
         set1.setFillColor(getResources().getColor(R.color.chart_line_color));
         ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
         dataSets.add(set1); // add the datasets
 
         // create a data object with the datasets
         LineData data = new LineData(xVals, dataSets);
-
-        LimitLine ll1 = new LimitLine(getRefer());
-        ll1.setLineWidth(2f);
-        ll1.enableDashedLine(10f, 10f, 0f);
-        ll1.setDrawValue(true);
-        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT);
-        data.addLimitLine(ll1);
         // set data
         mChart.setData(data);
     }
@@ -341,66 +348,5 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
         return result;
     }
 
-    private void setData(int count, float range) {
 
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < count; i++) {
-            xVals.add((i) + "");
-        }
-
-        ArrayList<Entry> yVals = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-            float mult = (range + 1);
-            float val = (float) (Math.random() * mult) + 3;// + (float)
-            // ((mult *
-            // 0.1) / 10);
-            yVals.add(new Entry(val, i));
-        }
-
-        // create a dataset and give it a type
-        LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
-        // set1.setFillAlpha(110);
-        // set1.setFillColor(Color.RED);
-
-        // set the line to be drawn like this "- - - - - -"
-//        set1.enableDashedLine(10f, 5f, 0f);
-        set1.setColor(getResources().getColor(R.color.chart_line_color));
-        set1.setCircleColor(getResources().getColor(R.color.chart_line_color));
-        set1.setLineWidth(2f);
-        set1.setHighLightColor(getResources().getColor(R.color.chart_line_color));
-        set1.setCircleSize(4f);
-        set1.setFillAlpha(65);
-        set1.setDrawCubic(true);
-
-//        set1.setDrawCircles(false);
-        set1.setFillColor(getResources().getColor(R.color.chart_line_color));
-
-        // set1.setShader(new LinearGradient(0, 0, 0, mChart.getHeight(),
-        // Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
-
-        ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        dataSets.add(set1); // add the datasets
-
-        // create a data object with the datasets
-        LineData data = new LineData(xVals, dataSets);
-
-        LimitLine ll1 = new LimitLine(30f);
-        ll1.setLineWidth(2f);
-        ll1.enableDashedLine(10f, 10f, 0f);
-        ll1.setDrawValue(true);
-        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT);
-
-//        LimitLine ll2 = new LimitLine(-30f);
-//        ll2.setLineWidth(4f);
-//        ll2.enableDashedLine(10f, 10f, 0f);
-//        ll2.setDrawValue(true);
-//        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT);
-
-        data.addLimitLine(ll1);
-//        data.addLimitLine(ll2);
-
-        // set data
-        mChart.setData(data);
-    }
 }

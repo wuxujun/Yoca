@@ -18,6 +18,7 @@
     <string name="btn_history">历史</string>
     <string name="btn_setting">设置</string>
     <string name="btn_shared">分享</string>
+    <string name="btn_screen_swith">横屏</string>
 
     <string name="menu_member">成员</string>
     <string name="menu_account_manager">成员管理</string>

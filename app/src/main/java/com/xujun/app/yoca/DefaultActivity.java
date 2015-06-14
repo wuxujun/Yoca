@@ -202,19 +202,19 @@ public class DefaultActivity extends SherlockFragmentActivity implements ActionB
                 finish();
                 break;
             }
-            case R.id.itemChartWeek:{
-                Intent intent=new Intent(DefaultActivity.this,SelectDialog.class);
-                intent.putExtra("dataType",0);
-                startActivityForResult(intent,1);
-                break;
-            }
-            case R.id.itemChartMonth:{
-                Intent intent=new Intent(DefaultActivity.this,SelectDialog.class);
-                intent.putExtra("dataType",1);
-                startActivityForResult(intent,2);
-                break;
-            }
-            case R.id.itemChartYear:{
+//            case R.id.itemChartWeek:{
+//                Intent intent=new Intent(DefaultActivity.this,SelectDialog.class);
+//                intent.putExtra("dataType",0);
+//                startActivityForResult(intent,1);
+//                break;
+//            }
+//            case R.id.itemChartMonth:{
+//                Intent intent=new Intent(DefaultActivity.this,SelectDialog.class);
+//                intent.putExtra("dataType",1);
+//                startActivityForResult(intent,2);
+//                break;
+//            }
+            case R.id.item_chart_switch:{
 
                 break;
             }

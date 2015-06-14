@@ -4,7 +4,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,7 +31,13 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
     public TextView         currentDate;
     public ImageButton      sharedButton;
 
-    public RunningTextView  runningTextView;
+    public ImageView        scanLine;
+
+    public TextView         weightTextView;
+
+    private boolean         isScan=false;
+
+    private TranslateAnimation  mAnimation;
 
 
     public ContentHeader(Context context){
@@ -46,7 +56,9 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
 
         mContentView.findViewById(R.id.ibMainShared).setOnClickListener(this);
         sharedButton=(ImageButton)mContentView.findViewById(R.id.ibMainShared);
-        runningTextView=(RunningTextView)mContentView.findViewById(R.id.tvWeightValue);
+        weightTextView=(TextView)mContentView.findViewById(R.id.tvWeightValue);
+        scanLine=(ImageView)mContentView.findViewById(R.id.ivScan);
+        scanLine.setVisibility(GONE);
 
         targetValue=(TextView)mContentView.findViewById(R.id.tvTargetValueTotal);
         targetDay=(TextView)mContentView.findViewById(R.id.tvTargetDayNum);
@@ -95,16 +107,33 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
 
 
     public void startEffect() {
-
         mContentView.findViewById(R.id.ivMainFooter).setVisibility(View.GONE);
-        runningTextView.setFormat("00.0");
-        runningTextView.playNumber(88.8);
-        runningTextView.setVisibility(View.VISIBLE);
+        weightTextView.setVisibility(View.INVISIBLE);
+        scanLine.setVisibility(View.VISIBLE);
+        if (!isScan) {
+            if (mAnimation==null){
+                mAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0f, TranslateAnimation.ABSOLUTE, 0f,
+                        TranslateAnimation.RELATIVE_TO_PARENT, 0f, TranslateAnimation.RELATIVE_TO_PARENT, 0.85f);
+                mAnimation.setDuration(2000);
+                mAnimation.setRepeatCount(-1);
+                mAnimation.setRepeatMode(Animation.REVERSE);
+                mAnimation.setInterpolator(new LinearInterpolator());
+            }
+            scanLine.setAnimation(mAnimation);
+            isScan=true;
+        }
     }
 
     public void stopEffect(String val){
-        runningTextView.stop();
-        runningTextView.setText(val);
+        weightTextView.setVisibility(VISIBLE);
+        weightTextView.setText(val);
+        scanLine.setVisibility(GONE);
+        if (mAnimation!=null){
+            mAnimation.cancel();
+            scanLine.clearAnimation();
+        }
+        isScan=false;
+
     }
 
     public void setStatus(String val){
@@ -115,7 +144,7 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
     {
         mContentView.findViewById(R.id.ivMainFooter).setVisibility(flag?View.GONE:View.VISIBLE);
         mContentView.findViewById(R.id.tvMainHeadDesc).setVisibility(flag?View.VISIBLE:View.GONE);
-        runningTextView.setVisibility(flag?View.VISIBLE:View.GONE);
+        weightTextView.setVisibility(flag ? View.VISIBLE : View.INVISIBLE);
         mContentView.findViewById(R.id.ivInfo).setVisibility(flag?View.VISIBLE:View.GONE);
         mContentView.findViewById(R.id.ibMainShared).setVisibility(flag?View.VISIBLE:View.INVISIBLE);
         mContentView.findViewById(R.id.tvHeaderStatus).setVisibility(flag?View.VISIBLE:View.GONE);
@@ -125,7 +154,8 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
 
     public void setWeightValue(String value)
     {
-       isShowContent(true);
-       runningTextView.setText(value);
+        scanLine.setVisibility(View.GONE);
+        isShowContent(true);
+       stopEffect(value);
     }
 }
