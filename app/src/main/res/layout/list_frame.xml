@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:background="#2A2A2A">
     <ListView
-        android:layout_width="match_parent" android:divider="@null"
+        android:layout_width="match_parent" android:divider="@null" android:cacheColorHint="@android:color/transparent"
         android:layout_height="match_parent" android:id="@+id/lvList"></ListView>
 
 </LinearLayout>

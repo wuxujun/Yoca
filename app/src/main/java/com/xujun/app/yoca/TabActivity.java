@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -38,8 +40,11 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 import com.umeng.update.UmengUpdateAgent;
 import com.xujun.app.yoca.fragment.AccountFragment;
+import com.xujun.app.yoca.fragment.ChartFrgment;
+import com.xujun.app.yoca.fragment.ChartLFragment;
 import com.xujun.app.yoca.fragment.ContentFragment;
 import com.xujun.app.yoca.fragment.InfoFragment;
 import com.xujun.app.yoca.fragment.MemberMFragment;
@@ -58,6 +63,7 @@ import com.xujun.util.StringUtil;
 import com.xujun.util.URLs;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -92,19 +98,24 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
     private LinearLayout mTabMy;
     private LinearLayout mTabInfo;
     private LinearLayout mTabWeight;
-//    private LinearLayout mTabGroup;
+    private LinearLayout mTabChart;
 //    private LinearLayout mTabSettings;
 
     private ImageButton mImgMy;
     private ImageButton mImgInfo;
     private ImageButton mImgWeight;
-//    private ImageButton mImgGroup;
+    private ImageButton mImgChart;
 //    private ImageButton mImgSettings;
+
+    private TextView    mTvMy;
+    private TextView    mTvWeight;
+    private TextView    mTvChart;
+    private TextView    mTvInfo;
 
     private SherlockFragment mTab01;
     private SherlockFragment mTab02;
     private SherlockFragment mTab03;
-//    private SherlockFragment mTab04;
+    private SherlockFragment mTab04;
 //    private SherlockFragment mTab05;
 
     private SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
@@ -179,7 +190,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         getSupportActionBar().setTitle("Yoca");
         initView();
         initEvent();
-        setSelect(0);
+        setSelect(1);
     }
 
     @Override
@@ -203,7 +214,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         startScan();
         MobclickAgent.onPageStart(TAG);
         MobclickAgent.onResume(mContext);
-//        Log.e(TAG, " ===>"+ UmengRegistrar.getRegistrationId(mContext));
+        Log.e(TAG, " ===>" + UmengRegistrar.getRegistrationId(mContext));
         synchWeightData();
     }
 
@@ -959,7 +970,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 
 
     private void parserResp(String resp){
-        Log.e(TAG,"parserResp:"+resp);
+        Log.e(TAG, "parserResp:" + resp);
         try{
             BaseResp baseResp=(BaseResp)JsonUtil.ObjFromJson(resp,BaseResp.class);
             if (baseResp.getDataType().equals("syncweighthis")){
@@ -1029,7 +1040,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             Dao<WeightHisEntity,Integer> dao=getDatabaseHelper().getWeightHisEntityDao();
             GenericRawResults<String[]> rawResults=dao.queryRaw("select max(syncid) from t_weight_his ");
             List<String[]> results=rawResults.getResults();
-            Log.e(TAG," select result size:"+results.size());
+            Log.e(TAG, " select result size:" + results.size());
             if (results.size()>0) {
                 String[] resultArray = results.get(0);
                 if (!StringUtil.isEmpty(resultArray[0])) {
@@ -1087,7 +1098,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             Dao<AccountEntity,Integer> dao=getDatabaseHelper().getAccountEntityDao();
             QueryBuilder<AccountEntity,Integer> queryBuilder=dao.queryBuilder();
             queryBuilder.where().eq("type",1);
-            queryBuilder.orderBy("id",true);
+            queryBuilder.orderBy("id", true);
             PreparedQuery<AccountEntity> preparedQuery1=queryBuilder.prepare();
             List<AccountEntity> list=dao.query(preparedQuery1);
             if (list.size()>0){
@@ -1104,7 +1115,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         mTabMy.setOnClickListener(this);
         mTabInfo.setOnClickListener(this);
         mTabWeight.setOnClickListener(this);
-//        mTabGroup.setOnClickListener(this);
+        mTabChart.setOnClickListener(this);
 //        mTabSettings.setOnClickListener(this);
     }
 
@@ -1113,18 +1124,23 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         mTabMy = (LinearLayout) findViewById(R.id.id_tab_my);
         mTabInfo = (LinearLayout) findViewById(R.id.id_tab_info);
         mTabWeight = (LinearLayout) findViewById(R.id.id_tab_weight);
-//        mTabGroup = (LinearLayout) findViewById(R.id.id_tab_group);
+        mTabChart = (LinearLayout) findViewById(R.id.id_tab_chart);
 //        mTabSettings = (LinearLayout) findViewById(R.id.id_tab_settings);
 
         mImgMy = (ImageButton) findViewById(R.id.id_tab_my_img);
         mImgInfo = (ImageButton) findViewById(R.id.id_tab_info_img);
         mImgWeight = (ImageButton) findViewById(R.id.id_tab_weight_img);
-//        mImgGroup = (ImageButton) findViewById(R.id.id_tab_group_img);
+        mImgChart = (ImageButton) findViewById(R.id.id_tab_chart_img);
 //        mImgSettings = (ImageButton) findViewById(R.id.id_tab_settings_img);
+
+        mTvMy=(TextView)findViewById(R.id.tv_tab_my);
+        mTvWeight=(TextView)findViewById(R.id.tv_tab_weight);
+        mTvChart=(TextView)findViewById(R.id.tv_tab_chart);
+        mTvInfo=(TextView)findViewById(R.id.tv_tab_info);
     }
 
-    private void setSelect(int i)
-    {
+    public void setSelect(int i){
+        resetImgs();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         hideFragment(transaction);
@@ -1139,6 +1155,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 {
                     transaction.attach(mTab01);
                 }
+                mTvMy.setTextColor(getResources().getColor(R.color.btn_color_selected));
 //                mImgWeixin.setImageResource(R.drawable.tab_weixin_pressed);
                 break;
             case 1:
@@ -1152,30 +1169,34 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                     transaction.attach(mTab02);
 
                 }
+                mTvWeight.setTextColor(getResources().getColor(R.color.btn_color_selected));
 //                mImgFrd.setImageResource(R.drawable.tab_find_frd_pressed);
                 break;
             case 2:
                 if (mTab03 == null)
                 {
-                    mTab03 = new InfoFragment();
+                    mTab03 = new ChartLFragment();
+                    ((ChartLFragment)mTab03).setLocalAccountEntity(getAccountEntity());
                     transaction.add(R.id.content_frame, mTab03);
                 } else
                 {
                     transaction.attach(mTab03);
                 }
 //                mImgAddress.setImageResource(R.drawable.tab_address_pressed);
+                mTvChart.setTextColor(getResources().getColor(R.color.btn_color_selected));
                 break;
-//            case 3:
-//                if (mTab04 == null)
-//                {
-//                    mTab04 = new GroupFragment();
-//                    transaction.add(R.id.content_frame, mTab04);
-//                } else
-//                {
-//                    transaction.show(mTab04);
-//                }
-////                mImgSettings.setImageResource(R.drawable.tab_settings_pressed);
-//                break;
+            case 3:
+                if (mTab04 == null)
+                {
+                    mTab04 = new InfoFragment();
+                    transaction.add(R.id.content_frame, mTab04);
+                } else
+                {
+                    transaction.attach(mTab04);
+                }
+                mTvInfo.setTextColor(getResources().getColor(R.color.btn_color_selected));
+//                mImgSettings.setImageResource(R.drawable.tab_settings_pressed);
+                break;
 //            case 4:
 //                if (mTab05 == null)
 //                {
@@ -1209,10 +1230,10 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         {
             transaction.detach(mTab03);
         }
-//        if (mTab04 != null)
-//        {
-//            transaction.hide(mTab04);
-//        }
+        if (mTab04 != null)
+        {
+            transaction.detach(mTab04);
+        }
 //        if (mTab05 != null)
 //        {
 //            transaction.hide(mTab05);
@@ -1222,21 +1243,20 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
     @Override
     public void onClick(View v)
     {
-        resetImgs();
         switch (v.getId())
         {
             case R.id.id_tab_my:
                 setSelect(0);
                 break;
-            case R.id.id_tab_info:
-                setSelect(2);
-                break;
             case R.id.id_tab_weight:
                 setSelect(1);
                 break;
-//            case R.id.id_tab_group:
-//                setSelect(3);
-//                break;
+            case R.id.id_tab_chart:
+                setSelect(2);
+                break;
+            case R.id.id_tab_info:
+                setSelect(3);
+                break;
 //            case R.id.id_tab_settings:
 //                setSelect(4);
 //                break;
@@ -1255,6 +1275,12 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 //        mImgFrd.setImageResource(R.drawable.tab_find_frd_normal);
 //        mImgAddress.setImageResource(R.drawable.tab_address_normal);
 //        mImgSettings.setImageResource(R.drawable.tab_settings_normal);
+
+        mTvMy.setTextColor(getResources().getColor(R.color.white));
+        mTvWeight.setTextColor(getResources().getColor(R.color.white));
+        mTvChart.setTextColor(getResources().getColor(R.color.white));
+        mTvInfo.setTextColor(getResources().getColor(R.color.white));
+
     }
 
 
