@@ -18,6 +18,8 @@ import java.util.Properties;
 public class AppConfig {
     private final static String APP_CONFIG="config";
 
+    public final static String APP_DEVICE_UUID="WSD01";
+
     public final static String ACTION_START_WEIGH="com.xujun.yoca.ACTION_START_WEIGH";
 
 
@@ -35,6 +37,7 @@ public class AppConfig {
     public final static int    REQUEST_TAKE_PHOTO=3;
     public final static int    REQUEST_CHOOSE_PIC=4;
     public final static int    REQUEST_CROP_PHOTO=5;
+    public final static int    REQUEST_SWITCH_ACCOUNT=6;
 
 
     public final static int   REQUEST_ACCOUNT_FRAGMENT_TYPE_NORMAL=100;
@@ -48,6 +51,11 @@ public class AppConfig {
     public final static String USER_AUTO_LOGIN="pre_auto_login";
     public final static String USER_LOCK_PASS="pre_user_lock";
     public final static String USER_LOCK_TYPE="pre_user_lock_type";
+
+    public final static String DEVICE_SET_SHOW_MODEL="pre_device_show_model";
+    public final static String DEVICE_SET_WEIGHT_MODEL="pre_device_weight_model";
+    public final static String DEVICE_SET_SHOW_UNIT="pre_device_show_unit";
+    public final static String DEVICE_SET_LED_LEVEL="pre_device_led_level";
 
     public final static String WEIXIN_APPID="";
     public final static String WEIBO_APPID="";
@@ -181,7 +189,7 @@ public class AppConfig {
     }
 
     public String getTargetTypeUnit(int type){
-        String result="";
+        String result="0";
         switch (type){
             case 1:
                 return "Kg";
@@ -190,20 +198,19 @@ public class AppConfig {
             case 3:
                 return "%";
             case 4:
-                return "";
+                return "0";
             case 5:
                 return "%";
             case 6:
                 return "cal";
             case 7:
-                return "";
+                return "0";
             case 8:
                 return "Kg";
             case 9:
                 return "Kg";
         }
         return result;
-
     }
 
     public String getChartTitle(int type){

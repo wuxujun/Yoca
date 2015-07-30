@@ -23,7 +23,7 @@
             android:gravity="center_vertical|right" style="@style/input_item_title"
             android:layout_width="100dp" android:text="@string/login_Mobileoremail"
             android:layout_height="match_parent" />
-        <com.andreabaccega.widget.FormEditText android:hint="@string/login_Mobileoremail_Hit" android:id="@+id/etForgotAccount"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/login_Mobileoremail_Hit" android:id="@+id/etForgotAccount"
             android:layout_width="match_parent" android:layout_weight="1" style="@style/input_item_edit"
             android:layout_height="match_parent" android:imeOptions="actionNext"/>
         </LinearLayout>
@@ -37,7 +37,7 @@
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
 
-        <com.andreabaccega.widget.FormEditText android:layout_marginLeft="40dp" android:hint="@string/login_VerCode_Hit"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:layout_marginLeft="40dp" android:hint="@string/login_VerCode_Hit"
             android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/etForgotCode" style="@style/input_item_edit"
             android:layout_height="match_parent" android:imeOptions="actionDone" />
         <TextView android:layout_marginLeft="10dp" style="@style/input_item_title"
@@ -66,7 +66,7 @@
                     android:gravity="center_vertical|right" style="@style/input_item_title"
                     android:layout_width="100dp" android:text="@string/forgot_NewPassword"
                     android:layout_height="match_parent" />
-                <com.andreabaccega.widget.FormEditText android:hint="@string/login_Password_Hit" android:id="@+id/etForgotPassword"
+                <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/login_Password_Hit" android:id="@+id/etForgotPassword"
                     android:layout_width="match_parent" android:layout_weight="1" android:password="true" style="@style/input_item_edit"
                     android:layout_height="match_parent" android:imeOptions="actionNext"/>
             </LinearLayout>

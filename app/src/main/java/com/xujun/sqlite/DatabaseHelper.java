@@ -16,7 +16,7 @@ import com.j256.ormlite.table.TableUtils;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME="yoca.db";
-    private static final int    DATABASE_VERSION=10;
+    private static final int    DATABASE_VERSION=12;
 
     private Dao<AccountEntity,Integer>   accountDao;
     private Dao<WarnEntity,Integer>      warnDao;
@@ -84,7 +84,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource,HomeTargetEntity.class,true);
                 TableUtils.createTable(connectionSource,HomeTargetEntity.class);
             }
-            if (i<10){
+            if (i<12){
                 TableUtils.dropTable(connectionSource,AccountEntity.class,true);
                 TableUtils.dropTable(connectionSource, WarnEntity.class, true);
                 TableUtils.dropTable(connectionSource, WeightEntity.class, true);

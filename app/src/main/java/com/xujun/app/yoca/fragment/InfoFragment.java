@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -55,36 +56,18 @@ import java.util.Map;
 /**
  * Created by xujunwu on 15/6/7.
  */
-public class InfoFragment extends SherlockFragment {
-    public static final String TAG = "InfoFragment";
+public class InfoFragment extends BaseFragment {
 
-    private View mContentView;
-
-    private Context mContext;
-    private AppContext appContext;
-
-
+    private static final String TAG = "InfoFragment";
     private ProgressDialog progress;
 
     private ItemAdapter         mAdapter;
-    private ListView mListView;
 
     private boolean             isEdit=false;
 
     private AppConfig appConfig;
 
     private List<ArticleInfo> items=new ArrayList<ArticleInfo>();
-
-
-    private DatabaseHelper databaseHelper;
-
-
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,35 +96,19 @@ public class InfoFragment extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext=getActivity().getApplicationContext();
-        appContext=(AppContext)getActivity().getApplication();
-
         appConfig=AppConfig.getAppConfig(mContext);
-
         mAdapter=new ItemAdapter();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        setHasOptionsMenu(true);
         Log.e(TAG, "onResume()");
         load();
     }
 
-    @Override
-    public void onDestroy() {
-        if (databaseHelper!=null){
-            databaseHelper.close();
-            databaseHelper=null;
-        }
-        super.onDestroy();
-    }
-
     private void load(){
-
-        getSherlockActivity().getActionBar().setTitle("资讯信息");
-        getSherlockActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-        getSherlockActivity().getActionBar().setDisplayShowHomeEnabled(false);
         if (items.size()==0) {
 
             Map<String, String> sb = new HashMap<String, String>();

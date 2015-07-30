@@ -136,19 +136,25 @@ public class BluetoothLeService extends Service{
 
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            BluetoothDevice device=gatt.getDevice();
-            broadcaseUpdate(ACTION_GATT_SERVICES_DISCOVERED,device.getAddress(),status);
+            if (status==BluetoothGatt.GATT_SUCCESS) {
+                BluetoothDevice device = gatt.getDevice();
+                broadcaseUpdate(ACTION_GATT_SERVICES_DISCOVERED, device.getAddress(), status);
+            }else{
+                Log.w(TAG,"onServicesDiscovered received:"+status);
+            }
         }
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            Log.e(TAG,"onCharacteristicRead  "+characteristic.getUuid()+"  "+characteristic.getValue());
-            broadcaseUpdate(ACTION_DATA_READ,characteristic,status);
+            Log.e(TAG, "onCharacteristicRead  " + characteristic.getUuid() + "  " + characteristic.getValue() + "  " + status);
+            if (status==BluetoothGatt.GATT_SUCCESS) {
+                broadcaseUpdate(ACTION_DATA_READ, characteristic, status);
+            }
         }
 
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            Log.e(TAG,"onCharacteristicWrite "+characteristic.getUuid()+"  "+characteristic.getValue());
+            Log.e(TAG,"onCharacteristicWrite "+characteristic.getUuid()+"  "+characteristic.getValue()+"  "+status);
             broadcaseUpdate(ACTION_DATA_WRITE,characteristic,status);
         }
 
@@ -438,6 +444,7 @@ public class BluetoothLeService extends Service{
         if (getConnectionState(address)==BluetoothProfile.STATE_CONNECTED){
             BluetoothGatt gatt=MyGattList.getGatt(address);
             if (gatt!=null){
+                Log.e(TAG,"gatt.readCharacteristic(characteristic) .....");
                 return gatt.readCharacteristic(characteristic);
             }else{
                 Log.e(TAG,"gatt=null read Characteristic failed.");
@@ -453,6 +460,7 @@ public class BluetoothLeService extends Service{
         if (getConnectionState(address)==BluetoothProfile.STATE_CONNECTED) {
             BluetoothGatt gatt=MyGattList.getGatt(address);
             if (gatt!=null){
+                Log.e(TAG,"gatt.writeCharacteristic(characteristic) .....");
                 return gatt.writeCharacteristic(characteristic);
             }else{
                 Log.e(TAG,"gatt =null writeCharacteristic failed.");

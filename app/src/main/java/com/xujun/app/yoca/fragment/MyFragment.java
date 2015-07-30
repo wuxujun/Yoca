@@ -1,256 +1,195 @@
 package com.xujun.app.yoca.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.xujun.app.yoca.AccountMActivity;
+import com.xujun.app.yoca.AppConfig;
 import com.xujun.app.yoca.AppContext;
+import com.xujun.app.yoca.AvatarMActivity;
+import com.xujun.app.yoca.HomeActivity;
 import com.xujun.app.yoca.MainActivity;
 import com.xujun.app.yoca.R;
+import com.xujun.app.yoca.SettingActivity;
 import com.xujun.app.yoca.TabActivity;
+import com.xujun.app.yoca.WarnActivity;
+import com.xujun.app.yoca.WebActivity;
 import com.xujun.app.yoca.widget.MenuFooter;
+import com.xujun.model.ArticleInfo;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.util.ImageUtils;
+import com.xujun.util.StringUtil;
 import com.xujun.widget.AnimatedExpandableListView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.smssdk.gui.GroupListView;
+
 /**
  * Created by xujunwu on 15/4/6.
  */
-public class MyFragment  extends SherlockFragment {
+public class MyFragment  extends BaseFragment implements View.OnClickListener {
     public static final String TAG = "MyFragment";
 
-    private View mContentView;
-
-    private Context mContext;
-    private AppContext appContext;
-
-    List<GroupItem> groupItems=new ArrayList<GroupItem>();
-    private AnimatedExpandableListView mListView;
+    List<String> items=new ArrayList<String>();
     private ItemAdapter         adapter;
 
-    private DatabaseHelper databaseHelper;
 
-    private AccountEntity           localAccountEngity=null;
+    private AccountEntity           localAccountEntity=null;
 
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
-
+    private TextView                userNick;
+    private ImageView               userAvatar;
+    private TextView                userAccount;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext=getSherlockActivity().getApplicationContext();
-        appContext=(AppContext)getActivity().getApplication();
-        adapter=new ItemAdapter(getActivity());
+        adapter=new ItemAdapter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mContentView = inflater.inflate(R.layout.layout_my, null);
+        userNick=(TextView)mContentView.findViewById(R.id.tvUserNick);
+        userAccount=(TextView)mContentView.findViewById(R.id.tvAccount);
+        userAvatar=(ImageView)mContentView.findViewById(R.id.ivMyAvatar);
 
-        mListView=(AnimatedExpandableListView)mContentView.findViewById(R.id.lvContent);
+        mListView=(ListView)mContentView.findViewById(R.id.list);
         mListView.setAdapter(adapter);
-        mListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                if (mListView.isGroupExpanded(i)) {
-                    mListView.collapseGroupWithAnimation(i);
-                } else {
-                    mListView.expandGroupWithAnimation(i);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.e(TAG, "onItemClick  " + i);
+                if (i == 0) {
+                    Intent intent = new Intent(getActivity(), AccountMActivity.class);
+                    startActivity(intent);
+                } else if (i == 1) {
+//                    Intent intent = new Intent(getActivity(), WarnActivity.class);
+//                    startActivity(intent);
+                } else if (i == 2) {
+                    Intent intent = new Intent(getActivity(), SettingActivity.class);
+                    startActivity(intent);
+                }else if (i==3){
+                    Intent intent=new Intent(getActivity(),AvatarMActivity.class);
+                    startActivity(intent);
                 }
-                return true;
-            }
-        });
-        mListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i2, long l) {
-                GroupItem groupItem=groupItems.get(i);
-                AccountEntity accountEntity=groupItem.items.get(i2);
-//                SherlockFragment fragment=(SherlockFragment)getFragmentManager().findFragmentById(R.id.content_frame);
-//                if(fragment instanceof ContentFragment) {
-//                    ((ContentFragment)fragment).loadData(accountEntity);
-//                    getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment);
-//                }else{
-//                    getFragmentManager().beginTransaction().replace(R.id.content_frame,new ContentFragment()).commit();
-//                }
-                ((TabActivity)getSherlockActivity()).setSelect(1);
-                return false;
             }
         });
         return mContentView;
     }
 
-    private void queryAccountEntity(){
-        groupItems.clear();
-        GroupItem groupItem=new GroupItem();
-        groupItem.title="家庭成员";
+    @Override
+    public void onResume(){
+        super.onResume();
+        setHasOptionsMenu(true);
+        loadData();
+    }
+
+    private void loadData() {
+        items.clear();
+        items.add("用户管理");
+        items.add("数据管理");
+        items.add("设置");
+        items.add("减肥像册");
+        adapter.notifyDataSetChanged();
         try{
             Dao<AccountEntity,Integer> dao=getDatabaseHelper().getAccountEntityDao();
-            QueryBuilder<AccountEntity,Integer> queryBuilder=dao.queryBuilder();
-//            Where<AccountEntity,Integer> where=queryBuilder.where();
-//            where.or(where.eq("type", 0), where.eq("type", 1));
-            queryBuilder.where().eq("type",0);
-            queryBuilder.orderBy("id",true);
-            PreparedQuery<AccountEntity> preparedQuery=queryBuilder.prepare();
-            List<AccountEntity> lists=dao.query(preparedQuery);
-            if (lists.size()>0){
-                for (int i=0;i<lists.size();i++){
-                    AccountEntity ae=lists.get(i);
-                    groupItem.items.add(ae);
-                }
-            }
-
-
             QueryBuilder<AccountEntity,Integer> queryBuilder1=dao.queryBuilder();
             queryBuilder1.where().eq("type",1);
             queryBuilder1.orderBy("id",true);
             PreparedQuery<AccountEntity> preparedQuery1=queryBuilder1.prepare();
             List<AccountEntity> list=dao.query(preparedQuery1);
             if (list.size()>0){
-                localAccountEngity=list.get(0);
+                localAccountEntity=list.get(0);
+            }
+            if (localAccountEntity!=null){
+                userNick.setText(localAccountEntity.getUserNick());
+                if (!StringUtil.isEmpty(localAccountEntity.getAvatar())){
+                    Log.e(TAG, localAccountEntity.getAvatar());
+                    userAvatar.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                }
+                userAccount.setText(AppConfig.getAppConfig(mContext).get(AppConfig.CONF_LOGIN_ACCOUNT));
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
-        groupItems.add(groupItem);
+    }
 
-        if (localAccountEngity!=null&&mContentView!=null){
-            ((TextView)mContentView.findViewById(R.id.tvMenuUserNick)).setText(localAccountEngity.getUserNick());
-            if (localAccountEngity.getAvatar()!=null) {
-                ((ImageView) mContentView.findViewById(R.id.ivMyAvatar)).setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEngity.getAvatar()));
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnHeadEdit:{
+                Intent intent=new Intent(getSherlockActivity(),HomeActivity.class);
+                startActivity(intent);
+                getSherlockActivity().finish();
+                break;
             }
         }
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        getSherlockActivity().getActionBar().setTitle("我");
-        getSherlockActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-        getSherlockActivity().getActionBar().setDisplayShowHomeEnabled(false);
-        queryAccountEntity();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy");
-        if (databaseHelper!=null){
-            databaseHelper.close();
-            databaseHelper=null;
-        }
-        super.onDestroy();
-    }
-
-    static class GroupItem{
-        String title;
-        List<AccountEntity> items=new ArrayList<AccountEntity>();
-    }
-
-    static  class MenuItemView{
-
+    static  class ItemView{
         public ImageView icon;
         public TextView         title;
     }
-    class ItemAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter{
+    class ItemAdapter extends BaseAdapter{
 
-        private LayoutInflater  inflater;
 
-        public ItemAdapter(Context context){
-            inflater=LayoutInflater.from(context);
+        @Override
+        public int getCount() {
+            return items.size();
         }
 
-
-        public AccountEntity getChild(int gPosition,int childPosition){
-            return groupItems.get(gPosition).items.get(childPosition);
+        @Override
+        public Object getItem(int i) {
+            return null;
         }
 
-        public long getChildId(int gPosition,int childPosition){
-            return childPosition;
+        @Override
+        public long getItemId(int i) {
+            return 0;
         }
 
-        public View getRealChildView(int gPosition,int childPosition,boolean isLastChild,View convertView,ViewGroup parent){
-            MenuItemView holder;
-            AccountEntity item=getChild(gPosition,childPosition);
+        @Override
+        public View getView(int i, View convertView, ViewGroup viewGroup) {
+            ItemView holder;
             if (convertView==null){
-                holder=new MenuItemView();
-                convertView=inflater.inflate(R.layout.menu_item,parent,false);
-                convertView.findViewById(R.id.llGroupItem).setVisibility(View.GONE);
-                convertView.findViewById(R.id.llMemberItem).setVisibility(View.VISIBLE);
+                convertView= LayoutInflater.from(mContext).inflate(R.layout.account_item,null);
+                holder=new ItemView();
                 holder.title=(TextView)convertView.findViewById(R.id.tvMenuItemTitle);
                 holder.icon=(ImageView)convertView.findViewById(R.id.ivMenuItemIcon);
                 convertView.setTag(holder);
-            }else{
-                holder=(MenuItemView)convertView.getTag();
-            }
-            holder.title.setText(item.getUserNick());
-            if (item.getAvatar()!=null){
-                holder.icon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + item.getAvatar()));
-            }
-            Log.e(TAG, "......");
-            return convertView;
-        }
-
-        public int getRealChildrenCount(int gPosition){
-            return  groupItems.get(gPosition).items.size();
-        }
-        @Override
-        public int getGroupCount(){
-            return groupItems.size();
-        }
-
-        @Override
-        public GroupItem getGroup(int position){
-            return groupItems.get(position);
-        }
-
-        @Override
-        public long getGroupId(int position){
-            return position;
-        }
-
-        @Override
-        public View getGroupView(int position,boolean isExpanded,View convertView,ViewGroup parent){
-            MenuItemView holder;
-            GroupItem gItem=getGroup(position);
-            if (convertView==null){
-                convertView=inflater.inflate(R.layout.menu_item,parent,false);
-                convertView.findViewById(R.id.llGroupItem).setVisibility(View.VISIBLE);
-                convertView.findViewById(R.id.llMemberItem).setVisibility(View.GONE);
-                holder=new MenuItemView();
-                holder.icon=(ImageView)convertView.findViewById(R.id.ivGroupItemIcon);
-                holder.title=(TextView)convertView.findViewById(R.id.tvGroupItemTitle);
-                convertView.setTag(holder);
             }else {
-                holder = (MenuItemView) convertView.getTag();
+                holder = (ItemView) convertView.getTag();
             }
-            holder.title.setText(gItem.title);
+            String msg=items.get(i);
+            if (msg!=null){
+                holder.title.setText(msg);
+            }
+            if (i==2){
+                holder.icon.setImageResource(R.drawable.seting);
+            }
             return convertView;
-        }
-
-        public boolean hasStableIds(){
-            return true;
-        }
-        public boolean isChildSelectable(int i,int j){
-            return true;
         }
     }
 

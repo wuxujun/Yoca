@@ -46,7 +46,7 @@
             android:gravity="center_vertical|right" style="@style/input_item_title"
             android:layout_width="80dp" android:text="@string/account_Nick"
             android:layout_height="match_parent" />
-        <com.andreabaccega.widget.FormEditText android:hint="@string/account_Nick_Hit" android:id="@+id/etAccountNick" style="@style/input_item_edit"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/account_Nick_Hit" android:id="@+id/etAccountNick" style="@style/input_item_edit"
             android:layout_width="match_parent" android:layout_weight="1" android:imeOptions="actionNext" android:singleLine="true"
             android:layout_height="match_parent" android:maxLength="20"/>
         </LinearLayout>
@@ -62,7 +62,7 @@
             android:gravity="center_vertical|right" android:id="@+id/tvAccountBirthday"
             android:layout_width="80dp" android:text="@string/account_Birthday"
             android:layout_height="match_parent" />
-        <com.andreabaccega.widget.FormEditText android:hint="@string/account_Birthday_Hit" android:inputType="date" style="@style/input_item_edit" android:maxLength="8"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/account_Birthday_Hit" android:inputType="date" style="@style/input_item_edit" android:maxLength="8"
             android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/etAccountBirthday" android:singleLine="true"
             android:layout_height="match_parent" android:imeOptions="actionDone" />
     </LinearLayout>
@@ -78,7 +78,7 @@
             android:gravity="center_vertical|right" android:id="@+id/tvAccountHasHan"
             android:layout_width="80dp" android:text="@string/account_Heshan"
             android:layout_height="match_parent" />
-        <com.andreabaccega.widget.FormEditText android:hint="@string/account_Heshan_Hit" android:id="@+id/etAccountHasHan" android:singleLine="true"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/account_Heshan_Hit" android:id="@+id/etAccountHasHan" android:singleLine="true"
             android:layout_width="match_parent" android:layout_weight="1" android:imeOptions="actionDone" style="@style/input_item_edit"
             android:layout_height="match_parent" android:inputType="number"  android:maxLength="3"/>
         <TextView

@@ -233,7 +233,7 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
 //        xVals.add("0");
 //        yVals.add(new Entry(0,count));
         String title=appConfig.getTargetType(nTargetType)+"  单位:"+appConfig.getTargetTypeUnit(nTargetType);
-        if (nTargetType==0||nTargetType==4){
+        if (nTargetType==0||nTargetType==4||nTargetType==7){
             title=appConfig.getTargetType(nTargetType);
         }
         LineDataSet set1 = new LineDataSet(yVals, title);

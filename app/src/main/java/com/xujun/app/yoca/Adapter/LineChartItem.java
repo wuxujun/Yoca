@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.ChartData;
@@ -35,6 +37,8 @@ public class LineChartItem extends ChartData{
             holder=new ViewHolder();
             convertView= LayoutInflater.from(context).inflate(R.layout.line_chart_item,null);
             holder.chart=(LineChart)convertView.findViewById(R.id.lineChart);
+            holder.title=(TextView)convertView.findViewById(R.id.tvChartTitle);
+            holder.average=(TextView)convertView.findViewById(R.id.tvChartAverage);
             convertView.setTag(holder);
         }else {
             holder=(ViewHolder)convertView.getTag();
@@ -42,6 +46,7 @@ public class LineChartItem extends ChartData{
         holder.chart.setDescription("");
         holder.chart.setDrawGridBackground(false);
         holder.chart.setTouchEnabled(false);
+        holder.chart.getLegend().setEnabled(false);
         holder.chart.getLegend().setTextColor(Color.WHITE);
         XAxis xAxis=holder.chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -65,5 +70,7 @@ public class LineChartItem extends ChartData{
 
     private static class ViewHolder{
         LineChart   chart;
+        TextView    title;
+        TextView    average;
     }
 }

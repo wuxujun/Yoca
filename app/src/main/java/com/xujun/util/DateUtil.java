@@ -115,6 +115,12 @@ public class DateUtil {
         return sf.format(dt);
     }
 
+    public static String getTimeString(long time){
+        SimpleDateFormat sf=new SimpleDateFormat("HH:mm");
+        java.util.Date dt=new Date(time);
+        return sf.format(dt);
+    }
+
     /**
      * 周日
      * @return
@@ -131,6 +137,12 @@ public class DateUtil {
         }
         SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
         return sf.format(calendar.getTime());
+    }
+
+    public static String getMonthForDate(String date) {
+        Date newDate=dayToDate(date);
+        SimpleDateFormat sf=new SimpleDateFormat("MM-dd");
+        return sf.format(newDate.getTime());
     }
 
     public static String getDayForDate(String date) {

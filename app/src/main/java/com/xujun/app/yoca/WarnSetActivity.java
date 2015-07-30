@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by xujunwu on 15/4/6.
  */
-public class WarnSetActivity extends SherlockActivity implements View.OnClickListener{
+public class WarnSetActivity extends BaseActivity implements View.OnClickListener{
 
     private FormEditText tagET;
     private PickerView minutesPV;
@@ -51,30 +51,22 @@ public class WarnSetActivity extends SherlockActivity implements View.OnClickLis
     List<String> hoursData = new ArrayList<String>();
     List<String> minutesData = new ArrayList<String>();
 
-    private Context mContext;
-    private AppContext appContext;
-
-    private DatabaseHelper databaseHelper;
 
     private WarnEntity localWarnEntity;
 
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_setting_weight);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
 
-        getActionBar().setTitle(getResources().getString(R.string.setting_warn));
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mHeadTitle.setText(getResources().getString(R.string.setting_warn));
+
+        mHeadButton.setText(getResources().getString(R.string.btn_Save));
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(this);
+        mHeadButton.setOnClickListener(this);
+
         for (int i = 0; i < 24; i++)
         {
             hoursData.add(i<10? "0" + i:""+i);
@@ -124,36 +116,6 @@ public class WarnSetActivity extends SherlockActivity implements View.OnClickLis
         initWarnEntityData();
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event){
-        int keyCode=event.getKeyCode();
-        if (event.getAction()==KeyEvent.ACTION_DOWN&&keyCode==KeyEvent.KEYCODE_BACK){
-            finish();
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getSupportMenuInflater().inflate(R.menu.warnset, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:{
-                finish();
-                return true;
-            }
-            case R.id.itemMenuSave:{
-                onMenuSave();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public void loadData(WarnEntity warnEntity){
         if (warnEntity.getType()>0){
             localWarnEntity=warnEntity;
@@ -180,6 +142,14 @@ public class WarnSetActivity extends SherlockActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.ibHeadBack:{
+                finish();
+                break;
+            }
+            case R.id.itemMenuSave:{
+                onMenuSave();
+                break;
+            }
             case R.id.btnWeekMon:{
                 week1=!week1;
                 if (week1) {

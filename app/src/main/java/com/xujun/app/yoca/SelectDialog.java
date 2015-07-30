@@ -30,10 +30,7 @@ import java.util.List;
 /**
  * Created by xujunwu on 15/4/27.
  */
-public class SelectDialog extends SherlockActivity implements View.OnClickListener{
-
-    private Context mContext;
-    private AppContext appContext;
+public class SelectDialog extends BaseActivity implements View.OnClickListener{
 
     private List<ConfigEntity>  configEntityList=new ArrayList<ConfigEntity>();
 
@@ -42,24 +39,12 @@ public class SelectDialog extends SherlockActivity implements View.OnClickListen
 
     private int                 dataType;
 
-
     private ItemAdapter      mAdapter;
-    private ListView         mListView;
-
-    private DatabaseHelper  databaseHelper;
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(SelectDialog.this);
-        }
-        return databaseHelper;
-    }
 
     @Override
     public void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
         setContentView(R.layout.select_dialog);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
 
         dataType=getIntent().getIntExtra("dataType",0);
 
@@ -136,13 +121,6 @@ public class SelectDialog extends SherlockActivity implements View.OnClickListen
                 }
             }
 
-//            QueryBuilder<ConfigEntity,Integer> queryBuilder=dao.queryBuilder();
-//            queryBuilder.where().eq("type",0).and().eq("week",week);
-//            PreparedQuery<ConfigEntity> preparedQuery=queryBuilder.prepare();
-//            List<ConfigEntity> lists=dao.query(preparedQuery);
-//            if (lists.size()>0){
-//                configEntityList.addAll(lists);
-//            }
         }catch (SQLException e){
             e.printStackTrace();
         }

@@ -43,7 +43,7 @@ import java.util.Calendar;
 /**
  * Created by xujunwu on 14/12/28.
  */
-public class TargetActivity extends SherlockActivity implements View.OnClickListener {
+public class TargetActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String TAG = "TargetFragment";
 
@@ -65,19 +65,9 @@ public class TargetActivity extends SherlockActivity implements View.OnClickList
 
 
     private InputMethodManager      imm;
-    private Context mContext;
-    private AppContext      appContext;
-
-    private DatabaseHelper databaseHelper;
 
     private AccountEntity localAccountEntity;
 
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
 
     public AccountEntity getAccountEntity(){
         return localAccountEntity;
@@ -87,14 +77,14 @@ public class TargetActivity extends SherlockActivity implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_target);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
+
         imm=(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 
-        getSupportActionBar().setTitle(getResources().getString(R.string.target_setting));
         localAccountEntity=(AccountEntity)getIntent().getSerializableExtra("account");
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mHeadTitle.setText(getResources().getString(R.string.target_setting));
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(this);
+        mHeadButton.setVisibility(View.INVISIBLE);
 
         initView();
     }
@@ -187,15 +177,6 @@ public class TargetActivity extends SherlockActivity implements View.OnClickList
 
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy");
-        if (databaseHelper!=null){
-            databaseHelper.close();
-            databaseHelper=null;
-        }
-        super.onDestroy();
-    }
 
     @Override
     public void onResume() {
@@ -203,16 +184,6 @@ public class TargetActivity extends SherlockActivity implements View.OnClickList
         if (localAccountEntity!=null){
             initTargetData();
         }
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:{
-                finish();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -249,6 +220,11 @@ public class TargetActivity extends SherlockActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.ibHeadBack:{
+                finish();
+                break;
+            }
+
             case R.id.btnTargetType:{
                 setTargetType(1);
                 break;

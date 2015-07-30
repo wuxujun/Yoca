@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
 /**
  * Created by xujunwu on 14/12/17.
  */
-public class AccountActivity extends SherlockActivity implements View.OnClickListener{
+public class AccountActivity extends BaseActivity implements View.OnClickListener{
 
     public static final String TAG = "AccountActivity";
 
@@ -82,10 +82,6 @@ public class AccountActivity extends SherlockActivity implements View.OnClickLis
     private boolean         isKeyboardVisible;
     private int             dataType= AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_NORMAL;
 
-    private Context         mContext;
-    private AppContext appContext;
-
-    private DatabaseHelper databaseHelper;
 
     private AccountEntity       localAccountEntity;
 
@@ -93,12 +89,6 @@ public class AccountActivity extends SherlockActivity implements View.OnClickLis
         return localAccountEntity;
     }
 
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
     public void setDataType(int type){
         dataType=type;
     }
@@ -110,22 +100,22 @@ public class AccountActivity extends SherlockActivity implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_account);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
+
+
         imm=(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-        getSupportActionBar().setTitle(getResources().getString(R.string.account_Edit));
 
+        mHeadTitle.setText(getResources().getString(R.string.account_Edit));
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(this);
+        mHeadButton.setOnClickListener(this);
+        mHeadButton.setText(getText(R.string.btn_Target));
         localAccountEntity=(AccountEntity)getIntent().getSerializableExtra("account");
-
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         dataType=AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_OTHER;
         initView();
     }
 
 
     public void initView() {
-        findViewById(R.id.ibAvatar).setOnClickListener(this);
         nickET=(FormEditText)findViewById(R.id.etAccountNick);
         nickET.addValidator(new EmptyValidator(getResources().getString(R.string.account_Nick_Hit)));
         nickET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -288,49 +278,15 @@ public class AccountActivity extends SherlockActivity implements View.OnClickLis
 
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy");
-        if (databaseHelper!=null){
-            databaseHelper.close();
-            databaseHelper=null;
-        }
-        super.onDestroy();
-    }
 
     @Override
     public void onResume() {
         super.onResume();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getSupportMenuInflater().inflate(R.menu.account, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.itemMenuTarget:{
-                Intent intent=new Intent(AccountActivity.this,TargetActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putSerializable("account",localAccountEntity);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                break;
-            }
-            case android.R.id.home:{
-                finish();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
     public void loadData(AccountEntity accountEntity){
         dataType=AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_MANAGER;
-        Log.e(TAG,"loadData accountEngity....");
+        Log.e(TAG, "loadData accountEngity....");
 
         if (accountEntity!=null&&accountEntity.getType()!=2){
             localAccountEntity=accountEntity;
@@ -356,6 +312,18 @@ public class AccountActivity extends SherlockActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.ibHeadBack:{
+                finish();
+                break;
+            }
+            case R.id.btnHeadEdit:{
+                Intent intent=new Intent(AccountActivity.this,TargetActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("account",localAccountEntity);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
+            }
             case R.id.ibAvatar:{
                 CharSequence[] items={"手机相册","手机拍照"};
                 imageChooseItem(items);

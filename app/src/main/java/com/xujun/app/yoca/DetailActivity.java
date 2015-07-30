@@ -43,12 +43,9 @@ import java.util.List;
  */
 
 @SuppressLint("ValidFragment")
-public class DetailActivity extends SherlockActivity{
+public class DetailActivity extends BaseActivity{
 
     public static final String TAG = "DetailActivity";
-
-    private Context mContext;
-    private AppContext      appContext;
 
     private int                     height;
     private int                     sex;
@@ -65,23 +62,11 @@ public class DetailActivity extends SherlockActivity{
 
     private AccountEntity localAccountEntity=null;
 
-    private DatabaseHelper          databaseHelper;
-
-
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
+
         targetInfoResp=(TargetInfoResp)appContext.readObject("TargetInfoResp");
         if (targetInfoResp!=null){
             Log.e(TAG, ":" + targetInfoResp.getTargetList().size());
@@ -97,9 +82,26 @@ public class DetailActivity extends SherlockActivity{
         }
         adapter=new ItemAdapter(this);
         initView();
+        mHeadTitle.setText(getText(R.string.main_detail));
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setDisplayShowHomeEnabled(false);
+        mHeadButton.setText(getText(R.string.btn_history));
+        mHeadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(DetailActivity.this,HistoryActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("account",localAccountEntity);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initView()
@@ -132,41 +134,6 @@ public class DetailActivity extends SherlockActivity{
     public void onResume() {
         super.onResume();
         queryHealthData("2015-04-11");
-    }
-
-    @Override
-    public void onDestroy() {
-        if (databaseHelper!=null){
-            databaseHelper.close();
-            databaseHelper=null;
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case android.R.id.home: {
-                finish();
-                return true;
-            }
-            case R.id.itemMenuHistory:{
-                Intent intent=new Intent(DetailActivity.this,HistoryActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putSerializable("account",localAccountEntity);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
-        menu.clear();
-        getSupportMenuInflater().inflate(R.menu.history,menu);
-        return super.onPrepareOptionsMenu(menu);
     }
 
     private void queryHealthData(String pickTime){

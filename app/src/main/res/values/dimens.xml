@@ -5,10 +5,10 @@
     <dimen name="shadow_width">15dp</dimen>
 
     <dimen name="input_item_height">56dp</dimen>
-
+    <dimen name="avatar_input_item_height">36dp</dimen>
     <dimen name="chart_item_height">38dp</dimen>
 
-    <dimen name="popmenu_width">160dip</dimen>
+    <dimen name="popmenu_width">300dip</dimen>
     <dimen name="popmenu_yoff">3.0dip</dimen>
     <dimen name="dip2pix">1.0dip</dimen>
 

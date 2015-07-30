@@ -17,11 +17,8 @@ import com.xujun.widget.ToggleButton;
  * 设置
  * Created by xujunwu on 15/6/9.
  */
-public class SettingActivity extends SherlockActivity implements View.OnClickListener{
+public class SettingActivity extends BaseActivity implements View.OnClickListener{
     public static final String TAG = "SettingActivity";
-
-    private Context mContext;
-    private AppContext      appContext;
 
     private ToggleButton mPrePassTB;
     private ToggleButton            mAutoLoginTB;
@@ -34,8 +31,6 @@ public class SettingActivity extends SherlockActivity implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_setting);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
 
         mAutoLogin=AppConfig.getAppConfig(mContext).get(AppConfig.USER_AUTO_LOGIN);
 
@@ -43,12 +38,12 @@ public class SettingActivity extends SherlockActivity implements View.OnClickLis
         mPrePassTB.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {
-                if (on){
-                    Intent intent=new Intent(SettingActivity.this,LockSetupActivity.class);
+                if (on) {
+                    Intent intent = new Intent(SettingActivity.this, LockSetupActivity.class);
                     startActivity(intent);
-                }else{
-                    AppConfig.getAppConfig(mContext).set(AppConfig.USER_LOCK_TYPE,"0");
-                    Intent intent=new Intent(SettingActivity.this,LockActivity.class);
+                } else {
+                    AppConfig.getAppConfig(mContext).set(AppConfig.USER_LOCK_TYPE, "0");
+                    Intent intent = new Intent(SettingActivity.this, LockActivity.class);
                     startActivity(intent);
                 }
             }
@@ -82,22 +77,28 @@ public class SettingActivity extends SherlockActivity implements View.OnClickLis
         findViewById(R.id.tvLogout).setOnClickListener(this);
 
 
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("设置");
+        mHeadTitle.setText(getResources().getString(R.string.btn_setting));
+        mHeadButton.setVisibility(View.INVISIBLE);
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
 
         switch (view.getId()){
+            case R.id.ibHeadBack:{
+                finish();
+                break;
+            }
             case R.id.llWarn:{
                 Intent intent=new Intent(SettingActivity.this,WarnActivity.class);
                 startActivity(intent);
                 break;
             }
             case R.id.llGroup:{
-
+                Intent intent=new Intent(SettingActivity.this,DeviceActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.llPrvPassword:{
@@ -138,23 +139,5 @@ public class SettingActivity extends SherlockActivity implements View.OnClickLis
         }
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event){
-        int keyCode=event.getKeyCode();
-        if (event.getAction()==KeyEvent.ACTION_DOWN&&keyCode==KeyEvent.KEYCODE_BACK){
-            finish();
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:{
-                finish();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

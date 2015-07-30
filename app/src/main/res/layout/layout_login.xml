@@ -19,7 +19,7 @@
             android:gravity="center_vertical" style="@style/input_item_title"
             android:layout_width="wrap_content" android:text="@string/login_Account"
             android:layout_height="match_parent" />
-        <com.andreabaccega.widget.FormEditText android:id="@+id/etLoginAccount"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:id="@+id/etLoginAccount"
             android:layout_width="match_parent" android:layout_weight="1" android:singleLine="true"
             android:layout_height="match_parent" android:hint="@string/login_Account_Hit" style="@style/input_item_edit" android:imeOptions="actionNext"
             />
@@ -36,7 +36,7 @@
             android:gravity="center_vertical"  style="@style/input_item_title"
             android:layout_width="wrap_content" android:text="@string/login_Password"
             android:layout_height="match_parent" />
-        <com.andreabaccega.widget.FormEditText android:id="@+id/etLoginPassword" android:singleLine="true"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:id="@+id/etLoginPassword" android:singleLine="true"
             android:layout_width="match_parent" android:layout_weight="1" android:hint="@string/login_Password_Hit" style="@style/input_item_edit"
             android:layout_height="match_parent"  android:password="true" android:imeOptions="actionDone"/>
             </LinearLayout>

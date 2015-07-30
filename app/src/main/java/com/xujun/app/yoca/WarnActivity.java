@@ -49,21 +49,7 @@ import java.util.Map;
 /**
  * Created by xujunwu on 15/4/6.
  */
-public class WarnActivity extends SherlockActivity{
-
-    private Context mContext;
-    private AppContext      appContext;
-
-    private ListView mListView;
-
-    private DatabaseHelper databaseHelper;
-
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
+public class WarnActivity extends BaseActivity{
 
     private List<WarnEntity> items=new ArrayList<WarnEntity>();
 
@@ -73,24 +59,34 @@ public class WarnActivity extends SherlockActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_frame);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
 
         mListView=(ListView)findViewById(R.id.lvList);
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                 WarnEntity entity=items.get(i);
-                if (entity!=null) {
-                    Intent intent=new Intent(WarnActivity.this,WarnSetActivity.class);
+                WarnEntity entity = items.get(i);
+                if (entity != null) {
+                    Intent intent = new Intent(WarnActivity.this, WarnSetActivity.class);
                     startActivity(intent);
                 }
             }
         });
-        getActionBar().setTitle(getResources().getString(R.string.setting_warn));
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mHeadTitle.setText(getResources().getString(R.string.setting_warn));
+        mHeadButton.setText(getResources().getString(R.string.btn_Edit));
+        mHeadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -122,7 +118,7 @@ public class WarnActivity extends SherlockActivity{
             Dao<WarnEntity,Integer> dao=getDatabaseHelper().getWarnEntityDao();
             QueryBuilder<WarnEntity,Integer> queryBuilder=dao.queryBuilder();
             queryBuilder.where().eq("status",0);
-            queryBuilder.orderBy("wid",false);
+            queryBuilder.orderBy("wid", false);
             PreparedQuery<WarnEntity> preparedQuery=queryBuilder.prepare();
             List<WarnEntity> lists=dao.query(preparedQuery);
             if (lists.size()>0){
@@ -205,27 +201,6 @@ public class WarnActivity extends SherlockActivity{
             }
         }.start();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getSupportMenuInflater().inflate(R.menu.warn, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:{
-                finish();
-                return true;
-            }
-            case R.id.itemMenuEdit:{
-
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     static  class ItemView{
 

@@ -64,6 +64,18 @@ public class WeightHisEntity implements Serializable{
     @DatabaseField
     long             changetime;
 
+    @DatabaseField
+    String              bust;
+
+    @DatabaseField
+    String              waistline;
+
+    @DatabaseField
+    String              hips;
+
+    @DatabaseField
+    String              avatar;
+
     public Integer getWid() {
         return wid;
     }
@@ -206,5 +218,37 @@ public class WeightHisEntity implements Serializable{
 
     public void setSyncid(Integer syncid) {
         this.syncid = syncid;
+    }
+
+    public String getBust() {
+        return bust;
+    }
+
+    public void setBust(String bust) {
+        this.bust = bust;
+    }
+
+    public String getWaistline() {
+        return waistline;
+    }
+
+    public void setWaistline(String waistline) {
+        this.waistline = waistline;
+    }
+
+    public String getHips() {
+        return hips;
+    }
+
+    public void setHips(String hips) {
+        this.hips = hips;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

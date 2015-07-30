@@ -86,33 +86,34 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="umeng_social_sdk" level="project" />
-    <orderEntry type="library" exported="" name="ormlite-android-4.48" level="project" />
-    <orderEntry type="library" exported="" name="nineoldandroids-2.4.0-2" level="project" />
-    <orderEntry type="library" exported="" name="umeng-analytics-v5.4.2" level="project" />
-    <orderEntry type="library" exported="" name="com.umeng.message.lib_v2.0.0" level="project" />
-    <orderEntry type="library" exported="" name="SocialSDK_QQZone_1" level="project" />
-    <orderEntry type="library" exported="" name="SocialSDK_QQZone_2" level="project" />
-    <orderEntry type="library" exported="" name="SocialSDK_QQZone_3" level="project" />
-    <orderEntry type="library" exported="" name="httpmime-4.1.3" level="project" />
-    <orderEntry type="library" exported="" name="SocialSDK_email" level="project" />
-    <orderEntry type="library" exported="" name="SocialSDK_WeiXin_2" level="project" />
-    <orderEntry type="library" exported="" name="SocialSDK_WeiXin_1" level="project" />
-    <orderEntry type="library" exported="" name="SocialSDK_Sina" level="project" />
-    <orderEntry type="library" exported="" name="ormlite-core-4.48" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
-    <orderEntry type="library" exported="" name="universal-image-loader-1.9.4" level="project" />
     <orderEntry type="library" exported="" name="gson-2.0" level="project" />
-    <orderEntry type="library" exported="" name="commons-httpclient-3.1" level="project" />
+    <orderEntry type="library" exported="" name="nineoldandroids-2.4.0-2" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_email" level="project" />
+    <orderEntry type="library" exported="" name="httpmime-4.1.3" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_Sina" level="project" />
+    <orderEntry type="library" exported="" name="umeng_social_sdk" level="project" />
+    <orderEntry type="library" exported="" name="universal-image-loader-1.9.4" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="ormlite-android-4.48" level="project" />
+    <orderEntry type="library" exported="" name="ormlite-core-4.48" level="project" />
     <orderEntry type="library" exported="" name="umeng-update-v2.6.0.1" level="project" />
+    <orderEntry type="library" exported="" name="xUtils-2.6.14" level="project" />
+    <orderEntry type="library" exported="" name="umeng-analytics-v5.4.2" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_QQZone_1" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_WeiXin_1" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_QQZone_2" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_WeiXin_2" level="project" />
+    <orderEntry type="library" exported="" name="SocialSDK_QQZone_3" level="project" />
+    <orderEntry type="library" exported="" name="commons-httpclient-3.1" level="project" />
     <orderEntry type="library" exported="" name="SocialSDK_sms" level="project" />
-    <orderEntry type="module" module-name="rebound-core" exported="" />
-    <orderEntry type="module" module-name="Crouton" exported="" />
+    <orderEntry type="library" exported="" name="com.umeng.message.lib_v2.0.0" level="project" />
     <orderEntry type="module" module-name="sMSSDK" exported="" />
-    <orderEntry type="module" module-name="ViewPagerIndicator" exported="" />
-    <orderEntry type="module" module-name="MPChart" exported="" />
-    <orderEntry type="module" module-name="rebound-android" exported="" />
-    <orderEntry type="module" module-name="actionbarsherlock" exported="" />
     <orderEntry type="module" module-name="edittextvalidator" exported="" />
+    <orderEntry type="module" module-name="Crouton" exported="" />
+    <orderEntry type="module" module-name="actionbarsherlock" exported="" />
+    <orderEntry type="module" module-name="rebound-core" exported="" />
+    <orderEntry type="module" module-name="MPChart" exported="" />
+    <orderEntry type="module" module-name="ViewPagerIndicator" exported="" />
+    <orderEntry type="module" module-name="rebound-android" exported="" />
   </component>
 </module>

@@ -1,4 +1,4 @@
-package com.xujun.app.yoca;
+package com.xujun.app.yoca.fragment;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -17,6 +17,10 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.xujun.app.yoca.AppConfig;
+import com.xujun.app.yoca.AppContext;
+import com.xujun.app.yoca.MainActivity;
+import com.xujun.app.yoca.R;
 import com.xujun.app.yoca.fragment.AccountFragment;
 import com.xujun.app.yoca.fragment.ContentFragment;
 import com.xujun.app.yoca.fragment.MemberMFragment;
@@ -46,7 +50,7 @@ public class MenuFragment extends SherlockFragment implements MenuController{
 
     private MenuFooter          mMenuFooterView;
 
-    private AppContext              appContext;
+    private AppContext appContext;
     private DatabaseHelper          databaseHelper;
 
     private AccountEntity           localAccountEngity=null;

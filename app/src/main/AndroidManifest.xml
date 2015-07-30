@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca" android:versionCode="20"
-    android:versionName="1.0.19">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca" android:versionCode="23"
+    android:versionName="1.0.22">
 
     <application android:allowBackup="true" android:label="@string/app_name" android:name=".AppContext"
         android:icon="@drawable/ic_launcher" android:theme="@style/Theme.Yocatheme">
@@ -13,7 +13,14 @@
         <activity android:name=".HistoryActivity"/>
         <activity android:name=".TabActivity"/>
         <activity android:name=".WebActivity"/>
+        <activity android:name=".AccountMActivity"/>
+        <activity android:name=".DeviceSetActivity"/>
+        <activity android:name=".ChartDActivity"/>
+        <activity android:name=".HistoryDActivity"/>
         <activity android:name=".SettingActivity"/>
+        <activity android:name=".DeviceActivity"/>
+        <activity android:name=".AvatarEditAvtivity"/>
+        <activity android:name=".AvatarMActivity"/>
         <activity android:name=".HomeActivity"/>
         <activity android:name=".LoginActivity" android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
         <activity android:name=".ForgotPwdActivity"/>

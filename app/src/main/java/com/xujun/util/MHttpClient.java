@@ -451,7 +451,7 @@ public class MHttpClient {
     public static String sendRequestData(AppContext appContext,String requestUrl,String para,Map<String,File> files)throws AppException{
         Map<String,Object> params=new HashMap<String, Object>();
         params.put("content",para);
-        Log.e("MHttpClient",""+params.toString());
+        Log.i("MHttpClient",""+params.toString());
         try {
             return _post(appContext,requestUrl,params,files);
         }catch (Exception e) {
@@ -519,7 +519,7 @@ public class MHttpClient {
         md5Str+="dpgcibw3-c7nr-ufro-u1r9-0c706k2hriyi";
         para+="sig="+md5.getMD5ofStr(md5Str).toLowerCase();
         String url=requestUrl+"?"+para;
-        Log.e("MHttpClient", url);
+        Log.i("MHttpClient", url);
         try {
             return http_get(appContext,url);
         }catch (Exception e) {

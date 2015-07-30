@@ -29,6 +29,9 @@ public class TargetEntity implements Serializable{
     @DatabaseField
     private String  unit;
 
+    @DatabaseField
+    private String  unitTitle;
+
     public Integer getId() {
         return id;
     }
@@ -75,5 +78,13 @@ public class TargetEntity implements Serializable{
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getUnitTitle() {
+        return unitTitle;
+    }
+
+    public void setUnitTitle(String unitTitle) {
+        this.unitTitle = unitTitle;
     }
 }

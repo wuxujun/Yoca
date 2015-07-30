@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -29,12 +30,7 @@ import com.xujun.util.StringUtil;
 /**
  * Created by xujunwu on 15/6/9.
  */
-public class WebActivity extends SherlockActivity {
-
-
-
-    private Context mContext;
-    private AppContext appContext;
+public class WebActivity extends BaseActivity {
 
     private ArticleInfo     localArticelInfo;
 
@@ -53,49 +49,49 @@ public class WebActivity extends SherlockActivity {
         mWebView=(WebView)findViewById(R.id.webView);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDefaultFixedFontSize(15);
-        mWebView.setWebViewClient(new WebViewClient(){
-            public boolean shouldOverrideUrlLoading(final WebView view,final String url){
+        mWebView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
                 view.loadUrl(url);
                 return true;
             }
         });
 
-        mWebView.setWebChromeClient(new WebChromeClient(){
-            public void onProgressChanged(WebView view,int progress){
-                if (progress==100){
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress == 100) {
 
                 }
-                super.onProgressChanged(view,progress);
+                super.onProgressChanged(view, progress);
             }
         });
         if (localArticelInfo!=null){
-            getActionBar().setTitle(localArticelInfo.getTitle());
+            mHeadButton.setText(localArticelInfo.getTitle());
 
             if (!StringUtil.isEmpty(localArticelInfo.getContent())){
                 mWebView.loadDataWithBaseURL(null,localArticelInfo.getContent(),"text/html","utf-8",null);
             }
         }
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mHeadButton.setText(getText(R.string.btn_shared));
+        mHeadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mController.getConfig().setPlatforms(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SMS, SHARE_MEDIA.EMAIL);
+                mController.openShare(WebActivity.this, false);
+            }
+        });
+
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         configPlatforms();
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event){
-        int keyCode=event.getKeyCode();
-        if (event.getAction()==KeyEvent.ACTION_DOWN&&keyCode==KeyEvent.KEYCODE_BACK){
-            finish();
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getSupportMenuInflater().inflate(R.menu.shared, menu);
-        return true;
-    }
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:{
@@ -103,9 +99,7 @@ public class WebActivity extends SherlockActivity {
                 return true;
             }
             case R.id.item_menu_shared:{
-                mController.getConfig().setPlatforms(SHARE_MEDIA.SINA,SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.WEIXIN,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE,SHARE_MEDIA.SMS,SHARE_MEDIA.EMAIL);
-                mController.openShare(this,false);
-                break;
+               break;
             }
         }
         return super.onOptionsItemSelected(item);

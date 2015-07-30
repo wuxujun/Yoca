@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_margin="10dp" android:gravity="center_vertical"
+        android:layout_height="48dp" android:orientation="horizontal" >
+    <TextView
+        android:id="@+id/tvItemTitle"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="@string/menu_member"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/ment_item_label" />
+        <TextView android:id="@+id/tvItemUnit"
+            android:layout_width="wrap_content" android:gravity="center_vertical"
+            android:layout_height="match_parent" />
+    <ImageView android:id="@+id/ivItemEnter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"  android:background="@drawable/enter"/>
+        </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tvLogout"
+        android:orientation="vertical">
+
+    <LinearLayout android:id="@+id/llShowModel" android:layout_marginBottom="2dp"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="56dp" android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/tvOtherTitle" android:text="@string/device_show_model"
+            android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" />
+        <TextView android:text="V0.1" android:textColor="#808080" android:id="@+id/tvShowModel"
+            android:layout_weight="1" android:layout_marginRight="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical|right"
+            android:layout_height="match_parent" />
+        <ImageView android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/enter"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/llGroup" android:layout_marginBottom="2dp"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="56dp" android:gravity="center_vertical" android:visibility="gone">
+        <TextView
+            android:id="@+id/tvGroupTitle" android:text="@string/setting_device" style="@style/setting_item_label"
+            android:layout_weight="1" android:layout_marginLeft="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent"/>
+        <ImageView android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/enter"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/llWeightModel" android:layout_marginBottom="2dp"
+        android:layout_width="match_parent" android:background="@color/item_background"
+        android:layout_height="56dp" android:gravity="center_vertical">
+        <ImageView  android:layout_marginLeft="40dp"
+            android:layout_width="60dp" android:visibility="gone"
+            android:layout_height="60dp" android:src="@drawable/ic_launcher"/>
+        <TextView android:text="@string/device_weight_model"
+            android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" />
+        <TextView android:text="V0.1" android:textColor="#808080" android:id="@+id/tvWeightModel"
+            android:layout_weight="1" android:layout_marginRight="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical|right"
+            android:layout_height="match_parent" />
+        <com.xujun.widget.ToggleButton android:id="@+id/tbWeightModel"
+            android:layout_width="54dp" android:layout_marginRight="20dp"
+            android:layout_height="30dp"
+            toggle:onColor="#45c878"
+            toggle:offColor="#ddd"
+            toggle:spotColor="@color/chart_grid_color"
+            toggle:offBorderColor="#000"
+            />
+    </LinearLayout>
+
+        <LinearLayout android:id="@+id/llShowUnit" android:layout_marginBottom="2dp"
+            android:layout_width="match_parent" android:background="@color/item_background"
+            android:layout_height="56dp" android:gravity="center_vertical">
+            <ImageView  android:layout_marginLeft="40dp"
+                android:layout_width="60dp" android:visibility="gone"
+                android:layout_height="60dp" android:src="@drawable/ic_launcher"/>
+            <TextView android:text="@string/device_show_unit"
+                android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+                android:layout_width="match_parent" android:gravity="center_vertical"
+                android:layout_height="match_parent" />
+            <TextView android:text="V0.1" android:textColor="#808080" android:id="@+id/tvShowUnit"
+                android:layout_weight="1" android:layout_marginRight="20dp"
+                android:layout_width="match_parent" android:gravity="center_vertical|right"
+                android:layout_height="match_parent" />
+            <com.xujun.widget.ToggleButton android:id="@+id/tbShowUnit"
+                android:layout_width="54dp" android:layout_marginRight="20dp"
+                android:layout_height="30dp"
+                toggle:onColor="#45c878"
+                toggle:offColor="#ddd"
+                toggle:spotColor="@color/chart_grid_color"
+                toggle:offBorderColor="#000"
+                />
+        </LinearLayout>
+
+
+    <LinearLayout android:id="@+id/llLedLevel" android:background="@color/item_background"
+        android:layout_width="match_parent" android:layout_marginBottom="2dp"
+        android:layout_height="56dp" android:gravity="center_vertical">
+        <TextView android:text="@string/device_led_level"
+            android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+            android:layout_width="match_parent" android:gravity="center_vertical"
+            android:layout_height="match_parent" />
+        <TextView android:text="V0.1" android:textColor="#808080" android:id="@+id/tvLedValue"
+            android:layout_weight="1" android:layout_marginRight="20dp"
+            android:layout_width="match_parent" android:gravity="center_vertical|right"
+            android:layout_height="match_parent" />
+        <ImageView android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:src="@drawable/enter"/>
+
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:background="@color/item_background" android:layout_marginBottom="2dp"></LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -126,7 +126,7 @@
     <TextView android:id="@+id/tvLogout" android:text="@string/setting_logoutAccount" android:background="@color/item_background"
         android:layout_weight="1" android:paddingLeft="20dp" style="@style/setting_item_label"
         android:layout_width="match_parent" android:gravity="center_vertical"
-        android:layout_height="60dp"
+        android:layout_height="60dp" android:visibility="gone"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

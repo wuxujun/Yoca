@@ -133,7 +133,18 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
             scanLine.clearAnimation();
         }
         isScan=false;
+    }
 
+    public void stopEffect(int type){
+        if (type==-1) {
+            mContentView.findViewById(R.id.ivMainFooter).setVisibility(VISIBLE);
+        }
+        scanLine.setVisibility(GONE);
+        if (mAnimation!=null){
+            mAnimation.cancel();
+            scanLine.clearAnimation();
+        }
+        isScan=false;
     }
 
     public void setStatus(String val){

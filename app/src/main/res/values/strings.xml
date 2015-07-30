@@ -27,6 +27,8 @@
     <string name="menu_setting">设置</string>
 
     <string name="main_title">检测</string>
+    <string name="main_target_edit">指标编辑</string>
+    <string name="main_avatar_edit">拍照留存</string>
     <string name="main_today">今日</string>
     <string name="main_Yesterday">昨天</string>
     <string name="main_total_target">总体目标</string>
@@ -44,6 +46,11 @@
     <string name="main_current_weight">当前体重</string>
     <string name="login_Other">第三方登录</string>
     <string name="data_loading">数据加载中...</string>
+
+
+    <string name="main_detail">当前数据</string>
+    <string name="main_unit">单位</string>
+    <string name="chart_history_data">显示所有数据</string>
 
 
     <string name="login">登录</string>
@@ -95,6 +102,11 @@
     <string name="chart_age_value">平均值</string>
     <string name="chart_max_value">最高值</string>
 
+    <string name="device_show_model">显示模式</string>
+    <string name="device_weight_model">称重模式</string>
+    <string name="device_show_unit">显示单位</string>
+    <string name="device_led_level">LED亮度等级</string>
+
     <string name="setting_warn">称重提醒</string>
     <string name="setting_device">设备管理</string>
     <string name="setting_PrivacyPassword">隐私密码</string>
@@ -138,9 +150,24 @@
     <string name="target_value8">骨量</string>
     <string name="char_target_title">趋势图</string>
 
+    <string name="avatar_Bust">胸围</string>
+    <string name="avatar_Bust_Hit">请输入胸围</string>
+    <string name="avatar_Waistline">腰围</string>
+    <string name="avatar_Waistline_Hit">请输入腰围</string>
+    <string name="avatar_Hips">臀围</string>
+    <string name="avatar_Hips_Hit">请输入臀围</string>
+    <string name="avatar_Avatar_Hit">请选择照片或拍照</string>
+
+    <string name="chart_day">日</string>
     <string name="chart_week">周</string>
     <string name="chart_month">月</string>
     <string name="chart_year">年</string>
+    <string name="chart_history">历史数据</string>
+
+    <string name="weight_model_memory">记忆</string>
+    <string name="weight_model_found">实测</string>
+    <string name="unit_kg">KG</string>
+    <string name="unit_lb">LB</string>
 
     <string name="about_feedback">用户反馈</string>
     <string name="about_version">版本更新</string>

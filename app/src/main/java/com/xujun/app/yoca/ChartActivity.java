@@ -274,6 +274,9 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
         xVals.add("0");
         yVals.add(new Entry(0,count));
         String title=AppConfig.getAppConfig(mContext).getTargetType(nTargetType)+"  单位:"+AppConfig.getAppConfig(mContext).getTargetTypeUnit(nTargetType);
+        if (nTargetType==0||nTargetType==4||nTargetType==7){
+            title=AppConfig.getAppConfig(mContext).getTargetType(nTargetType);
+        }
         LineDataSet set1 = new LineDataSet(yVals, title);
         set1.setColor(getResources().getColor(R.color.chart_line_color));
         set1.setCircleColor(getResources().getColor(R.color.chart_line_color));

@@ -2,8 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout android:background="@drawable/header_tab_bg_s"
+        android:layout_width="match_parent" android:orientation="vertical"
+        android:layout_height="wrap_content" android:layout_margin="5dp">
+        <LinearLayout android:layout_marginRight="10dp"
+            android:layout_width="match_parent" android:layout_marginLeft="10dp" android:layout_marginTop="5dp"
+            android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView android:id="@+id/tvChartTitle" android:textSize="14sp"
+            android:layout_width="match_parent" android:textColor="@color/white" android:textStyle="bold"
+            android:layout_height="wrap_content"  android:text="@string/about_version"/>
+        <TextView android:id="@+id/tvChartAverage" android:textSize="10sp"
+            android:layout_width="match_parent" android:textColor="@color/white" android:layout_marginBottom="2dp"
+            android:layout_height="wrap_content" android:text="@string/about_feedback"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp" android:background="@color/white"/>
+        </LinearLayout>
     <com.github.mikephil.charting.charts.LineChart
         android:layout_width="match_parent"
         android:id="@+id/lineChart"
         android:layout_height="200dp"/>
+    </LinearLayout>
 </LinearLayout>

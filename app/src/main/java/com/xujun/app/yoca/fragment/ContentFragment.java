@@ -17,6 +17,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,7 @@ import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.xujun.app.yoca.AppConfig;
 import com.xujun.app.yoca.AppContext;
+import com.xujun.app.yoca.AvatarEditAvtivity;
 import com.xujun.app.yoca.DefaultActivity;
 import com.xujun.app.yoca.DetailActivity;
 import com.xujun.app.yoca.R;
@@ -69,28 +71,19 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 @SuppressLint("ValidFragment")
-public class ContentFragment extends SherlockFragment implements View.OnClickListener,ContentController{
+public class ContentFragment extends BaseFragment implements View.OnClickListener,ContentController{
 
     public static final String TAG = "ContentFragment";
-
-    private View        mContentView;
-
 
     private LinearLayout            llContainer;
     private Animation anim_in,anim_out;
     private Handler                 mHandler;
     private int                     nIndex=0;
 
-    private ListView                mListView;
     private ItemAdapter             mAdapter;
 
     private ContentHeader           mContentHeader;
 
-
-    private Context                 mContext;
-    private AppContext appContext;
-
-    private DatabaseHelper          databaseHelper;
 
     private List<HomeTargetEntity> items=new ArrayList<HomeTargetEntity>();
 
@@ -98,6 +91,7 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
 
 
     private AccountEntity           localAccountEntity=null;
+    private int                     localWeightId=0;
 
     private boolean                 bVisitor=false;
 
@@ -115,33 +109,29 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
 
     private int             nTargetType=0;
 
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.e(TAG,"onCreateView()");
+        Log.e(TAG, "onCreateView()");
         mContentView=inflater.inflate(R.layout.list_frame,null);
         mContentHeader=new ContentHeader(mContext);
         mContentHeader.setContentController(this);
         mListView=(ListView)mContentView.findViewById(R.id.lvList);
         mListView.addHeaderView(mContentHeader);
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG,"onItemClick  "+i);
+                Log.e(TAG, "onItemClick  " + i);
 //                SherlockFragment sherlockFragment=new ChartFragment();
 //                ((ChartFragment)sherlockFragment).loadData(localAccountEngity);
 //                getFragmentManager().beginTransaction().replace(R.id.content_frame,sherlockFragment).commit();
-                HomeTargetEntity entity=items.get(i);
-                nTargetType=entity.getType();
-                openChartView();
+
+//                HomeTargetEntity entity=items.get(i);
+//                nTargetType=entity.getType();
+//                openChartView();
             }
         });
 
@@ -151,23 +141,6 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG,"onCreate()");
-        mContext=getActivity().getApplicationContext();
-        appContext=(AppContext)getActivity().getApplication();
-
-        // 返回箭头（默认不显示）
-//        getSherlockActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
-        // 左侧图标点击事件使能
-//        getSherlockActivity().getActionBar().setHomeButtonEnabled(true);
-        // 使左上角图标(系统)是否显示
-//        getSherlockActivity().getActionBar().setDisplayShowHomeEnabled(false);
-        // 显示标题
-//        getSherlockActivity().getActionBar().setDisplayShowTitleEnabled(false);
-        //显示自定义视图
-//        getSherlockActivity().getActionBar().setDisplayShowCustomEnabled(true);
-//        View actionbarLayout = LayoutInflater.from(getSherlockActivity()).inflate(R.layout.main_action_bar, null);
-//       getSherlockActivity().getActionBar().setCustomView(actionbarLayout);
-
         if (localAccountEntity!=null){
             initHomeTarget();
         }
@@ -234,14 +207,6 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
         }
     }
 
-    @Override
-    public void onDestroy() {
-        if (databaseHelper!=null){
-            databaseHelper.close();
-            databaseHelper=null;
-        }
-        super.onDestroy();
-    }
 
     @Override
     public void onPause()
@@ -252,11 +217,11 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
     private void loadWeightHis()
     {
         if (localAccountEntity!=null) {
-            getSherlockActivity().getActionBar().setTitle(localAccountEntity.getUserNick());
+//            mHeadTitle.setText(localAccountEntity.getUserNick());
             if (!StringUtil.isEmpty(localAccountEntity.getAvatar())){
-                Log.e(TAG,localAccountEntity.getAvatar());
-                getSherlockActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-                getSherlockActivity().getActionBar().setHomeAsUpIndicator(ImageUtils.bitmapToDrawable(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar())));
+                Log.e(TAG, localAccountEntity.getAvatar());
+//                getSherlockActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+//               mHeadIcon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
             }
             try {
                 Dao<WeightEntity, Integer> weightEntities = getDatabaseHelper().getWeightEntityDao();
@@ -333,6 +298,7 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
             WeightHisEntity weightHisEntity=weightHisQueryBuilder.queryForFirst();
             if (weightHisEntity!=null&&mContentView!=null){
                 mContentHeader.setWeightValue(StringUtil.doubleToStringOne(weightHisEntity.getWeight()));
+                localWeightId=weightHisEntity.getWid();
                 Log.e(TAG, weightHisEntity.getPickTime() + "weight:" + weightHisEntity.getWeight());
                 updateHomeTargetValue(0, StringUtil.doubleToStringOne(weightHisEntity.getBmi()), appConfig.getBMITitle(weightHisEntity.getBmi()), appConfig.getBMIStatus(weightHisEntity.getBmi()), appConfig.getBMIValue(weightHisEntity.getBmi()));
                 updateHomeTargetValue(1,StringUtil.doubleToStringOne(weightHisEntity.getWeight()),appConfig.getWeightTitle(height, sex, weightHisEntity.getWeight()),appConfig.getWeightStatus(height, sex, weightHisEntity.getWeight()),appConfig.getWeightValue(height, sex, weightHisEntity.getWeight()));
@@ -464,6 +430,16 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
                 mContentHeader.stopEffect(val);
                 break;
             }
+            case -1:{
+                mContentHeader.stopEffect(-1);
+                break;
+            }
+            case 3:{
+                mContentHeader.setStatus(val);
+                mContentHeader.stopEffect(3);
+                updateResult();
+                break;
+            }
             default:
             {
                mContentHeader.setStatus(val);
@@ -522,12 +498,12 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
             }
             case R.id.flDetail:{
                 if (isTodayData) {
-                    Intent intent = new Intent(getSherlockActivity(), DetailActivity.class);
+//                    Intent intent = new Intent(getSherlockActivity(), DetailActivity.class);
+                    Intent intent=new Intent(getSherlockActivity(), AvatarEditAvtivity.class);
                     Bundle bundle=new Bundle();
                     bundle.putSerializable("account",localAccountEntity);
                     intent.putExtras(bundle);
                     getSherlockActivity().startActivity(intent);
-
                 }
                 break;
             }
@@ -618,9 +594,11 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
     @Override
     public void onViewDetailClicked() {
         if (isTodayData) {
-            Intent intent = new Intent(getSherlockActivity(), DetailActivity.class);
+//            Intent intent = new Intent(getSherlockActivity(), DetailActivity.class);
+            Intent intent = new Intent(getSherlockActivity(), AvatarEditAvtivity.class);
             Bundle bundle=new Bundle();
             bundle.putSerializable("account",localAccountEntity);
+            bundle.putInt("weightId",localWeightId);
             intent.putExtras(bundle);
             getSherlockActivity().startActivity(intent);
         }
@@ -671,6 +649,7 @@ public class ContentFragment extends SherlockFragment implements View.OnClickLis
                 holder.unit=(TextView)convertView.findViewById(R.id.tvTargetUnit);
                 holder.seekBar=(MySeekBar)convertView.findViewById(R.id.mySeekBar);
                 holder.ibChart=(ImageButton)convertView.findViewById(R.id.ibTargetChart);
+                convertView.findViewById(R.id.llTargetChart0).setVisibility(View.INVISIBLE);
                 convertView.setTag(holder);
             }else {
                 holder = (ItemView) convertView.getTag();

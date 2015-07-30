@@ -14,11 +14,11 @@ import com.umeng.update.UmengUpdateAgent;
 import com.xujun.app.yoca.fragment.AccountFragment;
 import com.xujun.app.yoca.fragment.ContentFragment;
 import com.xujun.app.yoca.fragment.MemberMFragment;
+import com.xujun.app.yoca.fragment.MenuFragment;
 import com.xujun.app.yoca.fragment.SettingFragment;
 import com.xujun.app.yoca.fragment.WarnFragment;
 import com.xujun.app.yoca.fragment.WarnSetFragment;
 import com.xujun.model.BaseResp;
-import com.xujun.model.LoginResp;
 import com.xujun.model.WeightHisResp;
 import com.xujun.model.WeightResp;
 import com.xujun.slidingmenu.SlidingMenu;
@@ -52,8 +52,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.sqlite.HealthEntity;
-import com.xujun.sqlite.HomeTargetEntity;
-import com.xujun.sqlite.TargetEntity;
 import com.xujun.sqlite.WeightEntity;
 import com.xujun.sqlite.WeightHisEntity;
 import com.xujun.util.JsonUtil;
@@ -665,7 +663,7 @@ public class MainActivity extends SlidingFragmentActivity {
                     if (!StringUtil.isEmpty(bluetoothDevice.getName())){
                         Log.e(TAG,"===>"+Math.pow(10.0,2.0));
                         Log.e(TAG,""+bluetoothDevice.getName()+"  "+bluetoothDevice.getAddress());
-                        if (bluetoothDevice.getName().indexOf("7-11J/BT0721")>0){
+                        if (bluetoothDevice.getName().indexOf(AppConfig.APP_DEVICE_UUID)>0){
                             onConnect(bluetoothDevice);
                         }
                     }

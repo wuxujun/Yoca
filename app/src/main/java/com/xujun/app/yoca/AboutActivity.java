@@ -2,6 +2,7 @@ package com.xujun.app.yoca;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -10,30 +11,24 @@ import com.actionbarsherlock.view.MenuItem;
 /**
  * Created by xujunwu on 15/4/6.
  */
-public class AboutActivity extends SherlockActivity {
+public class AboutActivity extends BaseActivity {
 
-    private Context mContext;
-    private AppContext appContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_about);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
-        ((TextView)findViewById(R.id.tvAbountVersion)).setText("Version:"+appContext.getVersionName());
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("关于我们");
+
+        ((TextView)findViewById(R.id.tvAbountVersion)).setText("Version:" + appContext.getVersionName());
+        mHeadTitle.setText("关于我们");
+        mHeadButton.setVisibility(View.INVISIBLE);
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:{
-                finish();
-                return true;
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

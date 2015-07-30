@@ -43,14 +43,10 @@ import java.util.Date;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
-public class ContentEActivity extends SherlockActivity implements ContentController{
+public class ContentEActivity extends BaseActivity implements ContentController{
 
-    public static final String TAG = "ContentEFragment";
+    public static final String TAG = "ContentEActivity";
 
-    private Context                 mContext;
-    private AppContext appContext;
-
-    private DatabaseHelper          databaseHelper;
 
     private List<HomeTargetEntity> items=new ArrayList<HomeTargetEntity>();
     private ListView mListView;
@@ -73,19 +69,11 @@ public class ContentEActivity extends SherlockActivity implements ContentControl
 
     private int targetTotal=9;
 
-    public DatabaseHelper getDatabaseHelper(){
-        if (databaseHelper==null){
-            databaseHelper=DatabaseHelper.getDatabaseHelper(appContext);
-        }
-        return databaseHelper;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_frame);
-        mContext=getApplicationContext();
-        appContext=(AppContext)getApplication();
 
         localAccountEngity=(AccountEntity)getIntent().getSerializableExtra("account");
 
@@ -94,10 +82,10 @@ public class ContentEActivity extends SherlockActivity implements ContentControl
         mListView=(ListView)findViewById(R.id.lvList);
         mListView.addHeaderView(mContentHeader);
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG,"onItemClick  "+i);
+                Log.e(TAG, "onItemClick  " + i);
 //                SherlockFragment sherlockFragment=new ChartFragment();
 //                ((ChartFragment)sherlockFragment).loadData(localAccountEngity);
 //                getFragmentManager().beginTransaction().replace(R.id.content_frame,sherlockFragment).commit();
@@ -105,6 +93,21 @@ public class ContentEActivity extends SherlockActivity implements ContentControl
         });
         mContentHeader.sharedButton.setVisibility(View.INVISIBLE);
 
+        mHeadTitle.setText(getText(R.string.main_target_edit));
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        mHeadButton.setText(getText(R.string.btn_main_done));
+        mHeadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         loadHomeTarget();
     }
 
@@ -135,31 +138,6 @@ public class ContentEActivity extends SherlockActivity implements ContentControl
 //            Log.e(TAG,"List size "+items.size()+"  update.....");
 //        }
 //        initTargetData();
-    }
-
-    @Override
-    public void onDestroy() {
-        if (databaseHelper!=null){
-            databaseHelper.close();
-            databaseHelper=null;
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getSupportMenuInflater().inflate(R.menu.main_done, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_main_done:{
-                finish();
-                break;
-            }
-        }
-       return super.onOptionsItemSelected(item);
     }
 
     private void initTargetData()
