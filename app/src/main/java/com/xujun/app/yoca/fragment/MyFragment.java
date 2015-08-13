@@ -186,8 +186,14 @@ public class MyFragment  extends BaseFragment implements View.OnClickListener {
             if (msg!=null){
                 holder.title.setText(msg);
             }
-            if (i==2){
-                holder.icon.setImageResource(R.drawable.seting);
+            if (i==0){
+                holder.icon.setImageResource(R.drawable.ic_my_item_user);
+            }else if(i==1){
+                holder.icon.setImageResource(R.drawable.ic_my_item_chart);
+            }else if (i==2){
+                holder.icon.setImageResource(R.drawable.ic_my_item_set);
+            }else if (i==3){
+                holder.icon.setImageResource(R.drawable.ic_my_item_photo);
             }
             return convertView;
         }

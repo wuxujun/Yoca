@@ -13,6 +13,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.LineData;
 import com.xujun.app.yoca.R;
+import com.xujun.sqlite.TargetEntity;
 
 /**
  * Created by xujunwu on 15/6/15.
@@ -23,9 +24,11 @@ public class LineChartItem extends ChartData{
     public LineChartItem(ChartData<?> cd){
         this.mChartData=cd;
     }
+    private TargetEntity  targetEntity;
 
-    public LineChartItem(LineData cd,Context context){
+    public LineChartItem(TargetEntity target,LineData cd,Context context){
         this(cd);
+        targetEntity=target;
     }
     public int getItemType(){
         return 1;
@@ -42,6 +45,10 @@ public class LineChartItem extends ChartData{
             convertView.setTag(holder);
         }else {
             holder=(ViewHolder)convertView.getTag();
+        }
+        if (targetEntity!=null){
+            holder.title.setText(targetEntity.getTitle());
+            holder.average.setText("日平均值:"+targetEntity.getContent());
         }
         holder.chart.setDescription("");
         holder.chart.setDrawGridBackground(false);

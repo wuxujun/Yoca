@@ -1,5 +1,6 @@
 package com.xujun.app.yoca;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -22,6 +23,7 @@ public class BaseActivity extends SherlockActivity {
     protected Context mContext;
     protected AppContext appContext;
 
+    protected ProgressDialog progress;
 
     protected ListView      mListView;
 

@@ -52,7 +52,7 @@ public class ForgotPwdActivity extends SherlockActivity implements View.OnClickL
         setContentView(R.layout.layout_forgot_pwd);
         mContext=getApplicationContext();
         appContext=(AppContext)getApplication();
-        SMSSDK.initSDK(this,"12a614ceb40a","bc5c19f196ac4e9c52e96d3a4fbfda63");
+        SMSSDK.initSDK(this,AppConfig.SMS_APPKEY,AppConfig.SMS_APPKSECRET);
 
         accountET=(FormEditText)findViewById(R.id.etForgotAccount);
         accountET.addValidator(new OrValidator(getResources().getString(R.string.login_Mobileoremail_Hit), new PhoneValidator(null), new EmailValidator(null)));

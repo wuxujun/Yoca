@@ -5,4 +5,6 @@ package com.xujun.app.yoca.widget;
  */
 public interface ChartController {
     public void onViewHistoryClicked();
+
+    public void onTargetShow(boolean flag);
 }

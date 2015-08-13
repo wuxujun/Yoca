@@ -7,13 +7,22 @@ import java.util.List;
  */
 public class InfoResp extends BaseResp{
 
-    private List<ArticleInfo> root;
+    private String          groupName;
+    private List<ArticleInfo> infos;
 
-    public List<ArticleInfo> getRoot() {
-        return root;
+    public List<ArticleInfo> getInfos() {
+        return infos;
     }
 
-    public void setRoot(List<ArticleInfo> root) {
-        this.root = root;
+    public void setInfos(List<ArticleInfo> infos) {
+        this.infos = infos;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

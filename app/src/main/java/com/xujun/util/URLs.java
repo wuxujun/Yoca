@@ -15,7 +15,7 @@ import java.net.URLEncoder;
  */
 public class URLs implements Serializable {
 	
-	public final static String HOST = "y.mchome.cn";
+	public final static String HOST = "121.40.19.136";
 	public final static String HTTP = "http://";
 	public final static String HTTPS = "https://";
 	
@@ -25,7 +25,11 @@ public class URLs implements Serializable {
 	private final static String URL_API_HOST = HTTP + HOST + URL_SPLITTER;
 
     public final static String IMAGE_URL="http://app.woicar.cn:8089/nadmin/images/";
-	
+
+	public final static String LOGIN_THIRD_HTTP = HTTP + HOST + URL_SPLITTER + "index.php?/ums/thirdLogin";
+	public final static String THIRD_MOBILE_HTTP = HTTP + HOST + URL_SPLITTER + "index.php?/ums/thirdMobile";
+
+
 	public final static String LOGIN_VALIDATE_HTTP = HTTP + HOST + URL_SPLITTER + "index.php?/ums/login";
     public final static String REGISTER_USER=HTTP + HOST + URL_SPLITTER + "index.php?/ums/register";
     public final static String LOGIN_VALIDATE_HTTPS = HTTPS + HOST + URL_SPLITTER + "action/api/login_validate";

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,6 +34,7 @@ import com.xujun.app.yoca.R;
 import com.xujun.app.yoca.WebActivity;
 import com.xujun.model.ArticleInfo;
 import com.xujun.model.BaseResp;
+import com.xujun.model.InfoGResp;
 import com.xujun.model.InfoResp;
 import com.xujun.model.WeightHisResp;
 import com.xujun.model.WeightResp;
@@ -68,6 +70,8 @@ public class InfoFragment extends BaseFragment {
     private AppConfig appConfig;
 
     private List<ArticleInfo> items=new ArrayList<ArticleInfo>();
+    private List<String>   groups=new ArrayList<String>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,12 +84,12 @@ public class InfoFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.e(TAG,"onItemClick  "+i);
-                ArticleInfo info=items.get(i);
-                Intent intent=new Intent(getSherlockActivity(),WebActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putSerializable("info",info);
-                intent.putExtras(bundle);
-                getSherlockActivity().startActivity(intent);
+//                ArticleInfo info=items.get(i);
+//                Intent intent=new Intent(getSherlockActivity(),WebActivity.class);
+//                Bundle bundle=new Bundle();
+//                bundle.putSerializable("info",info);
+//                intent.putExtras(bundle);
+//                getSherlockActivity().startActivity(intent);
             }
         });
 
@@ -125,9 +129,19 @@ public class InfoFragment extends BaseFragment {
     private void parserResp(String resp){
         items.clear();
         try{
-            InfoResp baseResp=(InfoResp)JsonUtil.ObjFromJson(resp,InfoResp.class);
+            InfoGResp baseResp=(InfoGResp)JsonUtil.ObjFromJson(resp, InfoGResp.class);
             if (baseResp.getSuccess()==1){
-                items.addAll(baseResp.getRoot());
+                for (int i=0;i<baseResp.getRoot().size();i++){
+                    InfoResp info=baseResp.getRoot().get(i);
+                    if (info!=null){
+                        groups.add(info.getGroupName());
+                        ArticleInfo a=new ArticleInfo();
+                        a.setGroup(true);
+                        a.setTitle(info.getGroupName());
+                        items.add(a);
+                        items.addAll(info.getInfos());
+                    }
+                }
             }
             mAdapter.notifyDataSetChanged();
         }catch (Exception e){
@@ -172,13 +186,19 @@ public class InfoFragment extends BaseFragment {
     }
 
     static  class ItemView{
+        public FrameLayout head;
         public ImageView icon;
         public TextView title;
-        public TextView         content;
+        public LinearLayout     item;
+        public TextView         itemTitle;
+        public ImageView         itemIcon;
+
+        public TextView         groupName;
     }
 
     class ItemAdapter extends BaseAdapter {
 
+        private boolean isHead=false;
         @Override
         public int getCount() {
             return items.size();
@@ -186,12 +206,22 @@ public class InfoFragment extends BaseFragment {
 
         @Override
         public Object getItem(int i) {
+
             return null;
         }
 
         @Override
         public long getItemId(int i) {
+
             return 0;
+        }
+
+        public boolean isEnabled(int position){
+            ArticleInfo info=items.get(position);
+            if (info.isGroup()){
+                return false;
+            }
+            return super.isEnabled(position);
         }
 
         @Override
@@ -200,9 +230,14 @@ public class InfoFragment extends BaseFragment {
             if (convertView==null){
                 convertView= LayoutInflater.from(mContext).inflate(R.layout.info_item,null);
                 holder=new ItemView();
-                holder.content=(TextView)convertView.findViewById(R.id.tvContent);
+                holder.groupName=(TextView)convertView.findViewById(R.id.tvGroupName);
                 holder.title=(TextView)convertView.findViewById(R.id.tvTitle);
                 holder.icon=(ImageView)convertView.findViewById(R.id.ivIcon);
+
+                holder.head=(FrameLayout)convertView.findViewById(R.id.llHead);
+                holder.item=(LinearLayout)convertView.findViewById(R.id.llItem);
+                holder.itemTitle=(TextView)convertView.findViewById(R.id.tvItemTitle);
+                holder.itemIcon=(ImageView)convertView.findViewById(R.id.ivItemIcon);
 
                 convertView.setTag(holder);
             }else {
@@ -211,13 +246,35 @@ public class InfoFragment extends BaseFragment {
 
             ArticleInfo info=items.get(i);
             if (info!=null){
-                holder.title.setText(info.getTitle());
-                if (!StringUtil.isEmpty(info.getNote())){
-                    holder.content.setText(info.getNote());
+                if (info.isGroup()){
+                    holder.head.setVisibility(View.GONE);
+                    holder.item.setVisibility(View.GONE);
+                    holder.groupName.setText(info.getTitle());
+                    isHead=true;
+                }else{
+                    if (isHead){
+                        holder.groupName.setVisibility(View.GONE);
+                        holder.item.setVisibility(View.GONE);
+                        holder.title.setText(info.getTitle());
+                        if (!StringUtil.isEmpty(info.getImage())) {
+                            ImageLoader.getInstance().displayImage(info.getImage(), holder.icon);
+                        }
+                        isHead=false;
+                    }else {
+                        holder.groupName.setVisibility(View.GONE);
+                        holder.head.setVisibility(View.GONE);
+                        holder.itemTitle.setText(info.getTitle());
+                        if (!StringUtil.isEmpty(info.getImage())) {
+                            ImageLoader.getInstance().displayImage(info.getImage(), holder.itemIcon);
+                        }
+                    }
                 }
-                if (!StringUtil.isEmpty(info.getImage())){
-                    ImageLoader.getInstance().displayImage(info.getImage(),holder.icon);
-                }
+
+//                holder.title.setText(info.getTitle());
+//                if (!StringUtil.isEmpty(info.getNote())){
+//                    holder.content.setText(info.getNote());
+//                }
+//
             }
 
             return convertView;

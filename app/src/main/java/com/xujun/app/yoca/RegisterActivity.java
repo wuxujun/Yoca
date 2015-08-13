@@ -71,7 +71,7 @@ public class RegisterActivity extends SherlockActivity implements View.OnClickLi
         mContext=getApplicationContext();
         appContext=(AppContext)getApplication();
 
-        SMSSDK.initSDK(this,"12a614ceb40a","bc5c19f196ac4e9c52e96d3a4fbfda63");
+        SMSSDK.initSDK(this,AppConfig.SMS_APPKEY,AppConfig.SMS_APPKSECRET);
         getActionBar().setTitle(R.string.register);
         getActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
         getActionBar().setDisplayShowHomeEnabled(false);

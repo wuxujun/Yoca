@@ -193,8 +193,8 @@ public class LoginActivity extends SherlockActivity implements View.OnClickListe
 
         Map<String,String> sb=new HashMap<String, String>();
         sb.put("imei",appContext.getIMSI());
-        sb.put("umeng_token",UmengRegistrar.getRegistrationId(mContext));
-        sb.put("username",account);
+        sb.put("umeng_token", UmengRegistrar.getRegistrationId(mContext));
+        sb.put("username", account);
         sb.put("password",password);
         try {
             request(URLs.LOGIN_VALIDATE_HTTP, JsonUtil.toJson(sb));
@@ -209,6 +209,7 @@ public class LoginActivity extends SherlockActivity implements View.OnClickListe
             LoginResp loginResp=(LoginResp)JsonUtil.ObjFromJson(resp,LoginResp.class);
             if (loginResp.getData()!=null&&loginResp.getSuccess()==1){
                 appContext.setProperty("login_flag","1");
+                appContext.setProperty("userType","0");
                 appContext.setProperty("uid",""+loginResp.getData().getId());
                 if (loginResp.getMembers()!=null){
                     for (int i=0;i<loginResp.getMembers().size();i++){

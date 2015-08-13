@@ -17,6 +17,16 @@ public class ArticleInfo implements Serializable{
     private int     status;
     private String  addtime;
 
+    private boolean group=false;
+
+    public boolean isGroup() {
+        return group;
+    }
+
+    public void setGroup(boolean group) {
+        this.group = group;
+    }
+
     public int getId() {
         return id;
     }

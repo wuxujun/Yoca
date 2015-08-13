@@ -7,8 +7,8 @@ android {
         applicationId "com.xujun.app.yoca"
         minSdkVersion 18
         targetSdkVersion 19
-        versionCode 23
-        versionName "1.0.22"
+        versionCode 24
+        versionName "1.0.23"
     }
     signingConfigs{
         myConfig{

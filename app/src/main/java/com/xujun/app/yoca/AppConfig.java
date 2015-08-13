@@ -28,6 +28,15 @@ public class AppConfig {
     public final static String EXTRA_DATA_SEX="com.xujun.yoca.EXTRA_DATA_SEX";
     public final static String EXTRA_DATA_UNIT="com.xujun.yoca.EXTRA_DATA_UNIT";
 
+    public final static String SMS_APPKEY="6de96e7d9e78";
+    public final static String SMS_APPKSECRET="ee6510b139aa06a0a403dd4410646bef";
+
+    public final static String WEIXIN_APPID="wx7b3c49ed03390fb2";
+    public final static String WEIXIN_APPSECRET="232c9d206dbe83a905294ad00d0b8738";
+
+    public final static String QQ_APPID="100334902";
+    public final static String QQ_APPSECRET="c4b60d276b112c4aee8c30bbe62b1286";
+
     public final static int   SEX_FAMALE=0;
     public final static int   SEX_MALE=1;
     public final static int   UNIT_KG=1;
@@ -57,8 +66,8 @@ public class AppConfig {
     public final static String DEVICE_SET_SHOW_UNIT="pre_device_show_unit";
     public final static String DEVICE_SET_LED_LEVEL="pre_device_led_level";
 
-    public final static String WEIXIN_APPID="";
-    public final static String WEIBO_APPID="";
+    public final static String WEIBO_APPID="2846029855";
+    public final static String WEIBO_APPSECRET="6edd97b068547492519b8eefa084f344";
 
     public final static String CONF_LOGIN_ACCOUNT="conf_login_account";
     public final static String CONF_LOGIN_PASSWORD="conf_login_password";

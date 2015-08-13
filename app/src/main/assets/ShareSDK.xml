@@ -59,8 +59,8 @@
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="3547118772"
-        AppSecret="62669f1857a9af23eb7ce5980ceb107c"
+        AppKey="2846029855"
+        AppSecret="6edd97b068547492519b8eefa084f344"
         RedirectUrl="http://y.mchome.cn"
         ShareByAppClient="false"
         Enable="true" />

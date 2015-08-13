@@ -26,9 +26,11 @@ import com.xujun.app.yoca.Adapter.LineChartItem;
 import com.xujun.app.yoca.widget.ChartController;
 import com.xujun.app.yoca.widget.ChartFooter;
 import com.xujun.sqlite.AccountEntity;
+import com.xujun.sqlite.HomeTargetEntity;
 import com.xujun.sqlite.TargetEntity;
 import com.xujun.sqlite.WeightEntity;
 import com.xujun.util.DateUtil;
+import com.xujun.util.StringUtil;
 
 import org.w3c.dom.Text;
 
@@ -54,6 +56,8 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
     private List<WeightEntity>  datas=new ArrayList<WeightEntity>();
     private List<LineChartItem> items=new ArrayList<LineChartItem>();
 
+    private HomeTargetEntity    homeTargetEntity;
+    private float               targetTotla;
 
 
     private Button btnChartDay;
@@ -129,17 +133,27 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
             ComparatorWeight comparatorWeight=new ComparatorWeight();
             Collections.sort(datas, comparatorWeight);
 
+            List<HomeTargetEntity> homeTargetEntityList = getDatabaseHelper().getHomeTargetDao().queryBuilder().where().eq("aid", localAccountEntity.getId()).and().eq("type",targetType).query();
+            if (homeTargetEntityList!=null&&homeTargetEntityList.size()>0){
+                homeTargetEntity=homeTargetEntityList.get(0);
+                if (homeTargetEntity!=null){
+                    chartFooter.setIsShow(homeTargetEntity.getIsShow());
+                }
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         items.clear();
-        items.add(new LineChartItem(generateDataLine(targetType), appContext));
-
         TargetEntity targetEntity=getTargetContent(targetType);
         if (targetEntity!=null) {
             chartFooter.setUnit(targetEntity.getUnitTitle());
             chartFooter.setRemark(targetEntity.getContent());
         }
+        LineData lineData=generateDataLine(targetType);
+        targetEntity.setContent(StringUtil.doubleToStringOne(targetTotla/7.0));
+        items.add(new LineChartItem(targetEntity,lineData, appContext));
+
         if (mListView!=null) {
             adapter=new ChartDataAdapter(appContext,items);
             mListView.setAdapter(adapter);
@@ -180,36 +194,47 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
                 switch (type){
                     case 0:
                         value=Float.parseFloat(entity.getBmi());
+                        targetTotla+=Float.parseFloat(entity.getBmi());
                         break;
                     case 1:
                         value=Float.parseFloat(entity.getWeight());
+                        targetTotla+=Float.parseFloat(entity.getWeight());
                         break;
                     case 2:
                         value=Float.parseFloat(entity.getFat());
+                        targetTotla+=Float.parseFloat(entity.getFat());
                         break;
                     case 3:
                         value=Float.parseFloat(entity.getSubFat());
+                        targetTotla+=Float.parseFloat(entity.getBmi());
                         break;
                     case 4:
                         value=Float.parseFloat(entity.getVisFat());
+                        targetTotla+=Float.parseFloat(entity.getVisFat());
                         break;
                     case 5:
                         value=Float.parseFloat(entity.getWater());
+                        targetTotla+=Float.parseFloat(entity.getWater());
                         break;
                     case 6:
                         value=Float.parseFloat(entity.getBMR());
+                        targetTotla+=Float.parseFloat(entity.getBMR());
                         break;
                     case 7:
                         value=Float.parseFloat(entity.getBodyAge());
+                        targetTotla+=Float.parseFloat(entity.getBodyAge());
                         break;
                     case 8:
                         value=Float.parseFloat(entity.getMuscle());
+                        targetTotla+=Float.parseFloat(entity.getMuscle());
                         break;
                     case 9:
                         value=Float.parseFloat(entity.getBone());
+                        targetTotla+=Float.parseFloat(entity.getBone());
                         break;
                     default:
                         value=Float.parseFloat(entity.getProtein());
+                        targetTotla+=Float.parseFloat(entity.getProtein());
                         break;
                 }
                 yVals.add(new Entry(value,i));
@@ -240,6 +265,25 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
         intent.putExtras(bundle);
         startActivity(intent);
 //                    finish();
+    }
+
+    @Override
+    public void onTargetShow(boolean flag) {
+        if (homeTargetEntity!=null){
+            homeTargetEntity.setIsShow(flag?1:0);
+            addHomeTargetEntity(homeTargetEntity);
+        }
+    }
+
+    private void addHomeTargetEntity(HomeTargetEntity entity){
+        try{
+            Dao<HomeTargetEntity,Integer> dao=getDatabaseHelper().getHomeTargetDao();
+            dao.setAutoCommit(dao.startThreadConnection(),false);
+            dao.createOrUpdate(entity);
+            dao.commit(dao.startThreadConnection());
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

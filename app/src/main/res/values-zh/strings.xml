@@ -41,6 +41,8 @@
     <string name="login_Account">帐号</string>
     <string name="login_Account_Hit">请输入帐号</string>
     <string name="login_Mobileoremail">邮箱/手机</string>
+    <string name="login_Mobile">手机号</string>
+    <string name="login_Submit">绑定/登录</string>
     <string name="login_Password">密码</string>
     <string name="login_ConfirmPassword">确认密码</string>
     <string name="login_ConfirmPassword_Error">两次输入的密码不一致.</string>
@@ -49,6 +51,7 @@
     <string name="login_ForgotPassword">忘记密码</string>
     <string name="login_VerCode_Hit">请输入验证码</string>
     <string name="login_Mobileoremail_Hit">请输入邮箱或手机</string>
+    <string name="login_Mobile_Hit">请输入手机号码</string>
     <string name="login_Password_Hit">请输入密码</string>
     <string name="login_ConfirmPassword_Hit">请输入确认密码</string>
     <string name="forgot_password">找回密码</string>

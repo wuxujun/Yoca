@@ -10,10 +10,16 @@ public class Member implements Serializable{
     private int    id;
     private String  mobile;
     private String  password;
+    private int     userType=0;
+    private String  userNick;
+    private String  avatar;
+
     private String  imei;
     private int     status;
     private String  addtime;
     private String  lastlogintime;
+
+
 
     public int getId() {
         return id;
@@ -69,5 +75,29 @@ public class Member implements Serializable{
 
     public void setLastlogintime(String lastlogintime) {
         this.lastlogintime = lastlogintime;
+    }
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
+    public String getUserNick() {
+        return userNick;
+    }
+
+    public void setUserNick(String userNick) {
+        this.userNick = userNick;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

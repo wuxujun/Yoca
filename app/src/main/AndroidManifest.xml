@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca" android:versionCode="23"
-    android:versionName="1.0.22">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca" android:versionCode="24"
+    android:versionName="1.0.23">
 
     <application android:allowBackup="true" android:label="@string/app_name" android:name=".AppContext"
         android:icon="@drawable/ic_launcher" android:theme="@style/Theme.Yocatheme">
@@ -22,6 +22,7 @@
         <activity android:name=".AvatarEditAvtivity"/>
         <activity android:name=".AvatarMActivity"/>
         <activity android:name=".HomeActivity"/>
+        <activity android:name=".PhoneActivity"/>
         <activity android:name=".LoginActivity" android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
         <activity android:name=".ForgotPwdActivity"/>
         <activity android:name=".RegisterActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait"/>
@@ -103,7 +104,7 @@
         <!-- V1.3.0添加的service，负责下载通知的资源 -->
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
 
-        <activity android:name="com.xujun.app.wxapi.WXEntryActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        <activity android:name=".wxapi.WXEntryActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize" android:exported="true" android:screenOrientation="portrait"/>
 
         <activity android:name="cn.smssdk.SMSSDKUIShell" android:configChanges="keyboardHidden|orientation|screenSize"
@@ -160,6 +161,9 @@
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="ANDROID.PERMISSION.SET_DEBUG_APP"/>
+    <uses-permission android:name="ANDROID.PERMISSION.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="ANDROID.PERMISSION.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>

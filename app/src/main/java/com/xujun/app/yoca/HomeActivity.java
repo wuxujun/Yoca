@@ -1,8 +1,12 @@
 package com.xujun.app.yoca;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -13,6 +17,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.umeng.message.UmengRegistrar;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
@@ -22,13 +27,20 @@ import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
+import com.xujun.model.ThirdLoginResp;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.sqlite.WarnEntity;
 import com.xujun.sqlite.WeightHisEntity;
+import com.xujun.util.AppUtil;
+import com.xujun.util.JsonUtil;
 import com.xujun.util.StringUtil;
+import com.xujun.util.URLs;
+
+import org.json.JSONException;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +53,8 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
 
     private Context mContext;
     private AppContext      appContext;
+
+    private ProgressDialog progress;
 
     private DatabaseHelper databaseHelper;
 
@@ -86,12 +100,12 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
 
     private void initPlatforms()
     {
-        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(HomeActivity.this, "100424468",
-                "c7394704798a158208a74ab60104f0ba");
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(HomeActivity.this, "100334902",
+                "c4b60d276b112c4aee8c30bbe62b1286");
         qqSsoHandler.addToSocialSDK();
 
-//        UMWXHandler wxHandler = new UMWXHandler(HomeActivity.this,"","");
-//        wxHandler.addToSocialSDK();
+        UMWXHandler wxHandler = new UMWXHandler(HomeActivity.this,"wx967daebe835fbeac","5bb696d9ccd75a38c8a0bfe0675559b3");
+        wxHandler.addToSocialSDK();
 
         mController.getConfig().setSsoHandler(new SinaSsoHandler());
     }
@@ -152,7 +166,7 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                 mController.doOauthVerify(HomeActivity.this,SHARE_MEDIA.WEIXIN,new SocializeListeners.UMAuthListener() {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
-
+                        Log.e(TAG,"Weibo Login onStart");
                     }
 
                     @Override
@@ -166,7 +180,7 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                             @Override
                             public void onComplete(int status, Map<String, Object> info) {
                                 if (status==200&&info!=null){
-                                    Log.e(TAG,info.toString()+"");
+                                    Log.e(TAG,"weixin OnCompelte() "+info.toString()+"");
                                 }else{
                                     Toast.makeText(HomeActivity.this,"发生错误",Toast.LENGTH_SHORT).show();
                                 }
@@ -177,11 +191,12 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                     @Override
                     public void onError(SocializeException e, SHARE_MEDIA share_media) {
 
+                        Log.e(TAG,"Weibo Login onError "+e.getMessage());
                     }
 
                     @Override
                     public void onCancel(SHARE_MEDIA share_media) {
-
+                        Log.e(TAG,"Weibo Login onCancel "+share_media.toString());
                     }
                 });
 
@@ -192,7 +207,7 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                 mController.doOauthVerify(HomeActivity.this,SHARE_MEDIA.QQ,new SocializeListeners.UMAuthListener() {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
-
+                        Log.e(TAG,"QQ onStart().....");
                     }
                     @Override
                     public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
@@ -205,7 +220,12 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                             @Override
                             public void onComplete(int status, Map<String, Object> info) {
                                 if (status==200&&info!=null){
-                                    Log.e(TAG,""+info.toString());
+                                    Log.e(TAG, "onComplete() " + info.toString());
+//                                    Log.e(TAG,""+info.get("profile_image_url")+"  "+info.get("screen_name")+"  "+info.get("city")+"  "+info.get("gender"));
+                                    appContext.setProperty("third_login_gender", info.get("gender").toString());
+                                    appContext.setProperty("third_login_city", info.get("city").toString());
+                                    appContext.setProperty("third_login_user_type", "2");
+                                    requestLogin("2", info.get("screen_name").toString(), info.get("profile_image_url").toString());
                                 }else{
                                     Toast.makeText(HomeActivity.this,"发生错误",Toast.LENGTH_SHORT).show();
                                 }
@@ -265,6 +285,93 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                 break;
             }
         }
+    }
+
+    private void requestLogin(String userType,String nick,String avatar){
+
+
+        Map<String,String> sb=new HashMap<String, String>();
+        sb.put("imei",appContext.getIMSI());
+        sb.put("umengToken", UmengRegistrar.getRegistrationId(mContext));
+        sb.put("userNick",nick);
+        sb.put("avatar",avatar);
+        sb.put("userType", userType);
+        sb.put("mobile", "");
+        try{
+            sendLogin(JsonUtil.toJson(sb));
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private void parserResp(String resp){
+        try{
+            Log.e(TAG,resp);
+            ThirdLoginResp baseResp=(ThirdLoginResp)(JsonUtil.ObjFromJson(resp,ThirdLoginResp.class));
+            if (baseResp.getIsExist()>0||StringUtil.isEmpty(baseResp.getUser().getMobile())){
+                Intent intent = new Intent(HomeActivity.this, PhoneActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("uid", baseResp.getIsExist());
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+            }else{
+                appContext.setProperty("login_flag","1");
+                appContext.setProperty("userType",""+baseResp.getUser().getUserType());
+                appContext.setProperty("uid", "" + baseResp.getIsExist());
+                appContext.setProperty("userNick", baseResp.getUser().getUserNick());
+                appContext.setProperty("avatar",baseResp.getUser().getAvatar());
+                Intent intent=new Intent(HomeActivity.this,TabActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("FragmentType", 0);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void sendLogin(final String params){
+        Log.e(TAG,params);
+        progress= AppUtil.showProgress(this, getString(R.string.login_loading));
+        final Handler handler=new Handler(){
+            public void handleMessage(Message msg){
+                if (msg.what==1){
+                    parserResp(msg.obj.toString());
+                }else if(msg.what==0){
+                    Toast.makeText(mContext,"登录失败",Toast.LENGTH_LONG).show();
+                }else if(msg.what==-1){
+                    Toast.makeText(mContext,"请求失败",Toast.LENGTH_LONG).show();
+                }
+                if (progress!=null){
+                    progress.dismiss();
+                }
+            }
+        };
+
+        new Thread(){
+            public void run(){
+                Message msg=new Message();
+                try{
+                    String resp=appContext.sendRequestData(URLs.LOGIN_THIRD_HTTP, params,null);
+                    if (resp!=null){
+                        msg.what=1;
+                        msg.obj=resp;
+                    }else{
+                        msg.what=0;
+                        msg.obj="登录失败";
+                    }
+                }catch (AppException e){
+                    e.printStackTrace();
+                    msg.what=-1;
+                    msg.obj=e;
+                }
+                handler.sendMessage(msg);
+            }
+        }.start();
     }
 
     private void testData()

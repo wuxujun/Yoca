@@ -113,7 +113,7 @@ public class StartActivity extends SherlockActivity{
             databaseHelper=null;
         }
         super.onDestroy();
-        Log.e(TAG,"onDestroy()");
+        Log.e(TAG, "onDestroy()");
     }
 
 
@@ -240,7 +240,11 @@ public class StartActivity extends SherlockActivity{
                 Log.e(TAG,"login flag "+loginFlag);
                 if (loginFlag!=null&&loginFlag.equals("0")){
                     if (mAutoLogin!=null&&mAutoLogin.equals("1")){
-                        autoLogin();
+                        if (appContext.getProperty("userType").equals("0")) {
+                            autoLogin();
+                        }else{
+                            openMain();
+                        }
                     }else{
                         Intent intent=new Intent(StartActivity.this,HomeActivity.class);
                         startActivity(intent);

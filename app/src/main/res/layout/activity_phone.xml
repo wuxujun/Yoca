@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@color/main_bg_color">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout android:id="@+id/llForgotPwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/llForgotAccount"
+        android:layout_width="match_parent" android:layout_marginTop="40dp" android:background="@color/btn_color"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        <LinearLayout android:layout_margin="1dp"
+            android:layout_width="match_parent" android:background="#303030"
+            android:layout_height="match_parent">
+
+        <TextView  android:layout_marginRight="10dp" android:id="@+id/tvForgotAccount"
+            android:gravity="center_vertical|right" style="@style/input_item_title"
+            android:layout_width="100dp" android:text="@string/login_Mobile"
+            android:layout_height="match_parent" />
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/login_Mobile_Hit" android:id="@+id/etForgotAccount"
+            android:layout_width="match_parent" android:layout_weight="1" style="@style/input_item_edit"
+            android:layout_height="match_parent" android:imeOptions="actionNext"
+            android:inputType="phone|textPhonetic" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout android:id="@+id/llForgotCode"
+        android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
+        android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+        <LinearLayout android:layout_margin="1dp"
+            android:layout_width="match_parent" android:background="#303030"
+            android:layout_height="match_parent">
+
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:layout_marginLeft="40dp" android:hint="@string/login_VerCode_Hit"
+            android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/etForgotCode" style="@style/input_item_edit"
+            android:layout_height="match_parent" android:imeOptions="actionDone" />
+        <TextView android:layout_marginLeft="10dp" style="@style/input_item_title"
+            android:gravity="center_vertical|left" android:id="@+id/tvForgotCode"
+            android:layout_width="100dp" android:text="30"
+            android:layout_height="match_parent" android:visibility="gone"/>
+        <Button android:id="@+id/btnGetCode" style="@style/input_item_button_normal"
+                android:layout_width="160dp"  android:text="@string/login_GetVerifyCode"
+                android:layout_height="match_parent" android:textColor="@color/white"/>
+            </LinearLayout>
+    </LinearLayout>
+    <Button android:id="@+id/btnSubmit" style="@style/input_item_button"
+         android:text="@string/login_Submit" />
+    </LinearLayout>
+
+            </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -28,8 +28,10 @@ import com.xujun.app.yoca.ChartDActivity;
 import com.xujun.app.yoca.R;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
+import com.xujun.sqlite.TargetEntity;
 import com.xujun.sqlite.WeightEntity;
 import com.xujun.util.DateUtil;
+import com.xujun.util.StringUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -58,6 +60,8 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
 
     private List<WeightEntity>  datas=new ArrayList<WeightEntity>();
     private List<LineChartItem> items=new ArrayList<LineChartItem>();
+    private List<TargetEntity>  targets=new ArrayList<TargetEntity>();
+    private float               targetTotal;
 
     private ChartDataAdapter adapter;
 
@@ -124,9 +128,14 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
 
     private void load(){
         loadData();
+
         items.clear();
-        for (int i=0;i<8;i++){
-            items.add(new LineChartItem(generateDataLine(i),appContext));
+        for (int i=0;i<targets.size();i++){
+            TargetEntity entity=targets.get(i);
+            LineData lineData=generateDataLine(entity.getType());
+            entity.setContent(StringUtil.doubleToStringOne(targetTotal/7.0));
+            items.add(new LineChartItem(entity,lineData,appContext));
+            targetTotal=0f;
         }
         if (mListView!=null) {
             adapter=new ChartDataAdapter(appContext,items);
@@ -148,7 +157,11 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                 datas.add(entity);
             }
             ComparatorWeight comparatorWeight=new ComparatorWeight();
-            Collections.sort(datas,comparatorWeight);
+            Collections.sort(datas, comparatorWeight);
+            List<TargetEntity> targetEntityList = getDatabaseHelper().getTargetInfoDao().queryBuilder().query();
+            if (targetEntityList.size()>0) {
+                targets.addAll(targetEntityList);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -174,36 +187,47 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                 switch (type){
                     case 0:
                         value=Float.parseFloat(entity.getBmi());
+                        targetTotal+= Float.parseFloat(entity.getBmi());
                         break;
                     case 1:
                         value=Float.parseFloat(entity.getWeight());
+                        targetTotal+= Float.parseFloat(entity.getWeight());
                         break;
                     case 2:
                         value=Float.parseFloat(entity.getFat());
+                        targetTotal+= Float.parseFloat(entity.getFat());
                         break;
                     case 3:
                         value=Float.parseFloat(entity.getSubFat());
+                        targetTotal+= Float.parseFloat(entity.getSubFat());
                         break;
                     case 4:
                         value=Float.parseFloat(entity.getVisFat());
+                        targetTotal+= Float.parseFloat(entity.getVisFat());
                         break;
                     case 5:
                         value=Float.parseFloat(entity.getWater());
+                        targetTotal+= Float.parseFloat(entity.getWater());
                         break;
                     case 6:
                         value=Float.parseFloat(entity.getBMR());
+                        targetTotal+= Float.parseFloat(entity.getBMR());
                         break;
                     case 7:
                         value=Float.parseFloat(entity.getBodyAge());
+                        targetTotal+= Float.parseFloat(entity.getBodyAge());
                         break;
                     case 8:
                         value=Float.parseFloat(entity.getMuscle());
+                        targetTotal+= Float.parseFloat(entity.getMuscle());
                         break;
                     case 9:
                         value=Float.parseFloat(entity.getBone());
+                        targetTotal+= Float.parseFloat(entity.getBone());
                         break;
                     default:
                         value=Float.parseFloat(entity.getProtein());
+                        targetTotal+= Float.parseFloat(entity.getProtein());
                         break;
                 }
                 yVals.add(new Entry(value,i));

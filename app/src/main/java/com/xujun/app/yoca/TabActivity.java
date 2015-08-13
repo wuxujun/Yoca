@@ -303,7 +303,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         SherlockFragment sherlockFragment=(SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (sherlockFragment instanceof ContentFragment) {
 //            getSupportMenuInflater().inflate(R.menu.main, menu);
-            mHeadButton.setText(getText(R.string.btn_Edit));
+            mHeadButton.setText(getText(R.string.btn_shared));
             mHeadIcon.setVisibility(View.VISIBLE);
             localAccountEntity=((ContentFragment)sherlockFragment).getLocalAccountEntity();
             if (localAccountEntity!=null){
@@ -715,20 +715,20 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 int bone=Integer.parseInt(String.format("%02x",data[18]),16);
 
                 if (requestID.equals("00")){
-                    String weight=String.format("%.1f",(h*256+l)/100.0);
+                    String weight=String.format("%.1f",(((h*256+l)/5.0)+1)/2.0/10.0);
                     updateUIStatus(weight,1);
                 }else if (requestID.equals("01")){
                     //传参数
-                    String weight=String.format("%.1f",(h*256+l)/100.0);
+                    String weight=String.format("%.1f",(((h*256+l)/5.0)+1)/2.0/10.0);
                     updateUIStatus(weight,1);
                     sendStartWeight();
                 }else if(requestID.equals("02")){
                     //计算完成
                     respCmd(16);
-                    updateUIStatus(StringUtil.doubleToStringOne((h*256+l)/100.0),2);
-                    saveWeightData(StringUtil.doubleToStringOne((h*256+l)/100.0),StringUtil.doubleToStringOne((fatH*256+fatL)/100.0),
-                            StringUtil.doubleToStringOne((subFatH*256+subFatL)/100.0),StringUtil.doubleToStringOne(visFat/100.0),StringUtil.doubleToStringOne((waterH*256+waterL)/100.0),
-                            StringUtil.doubleToString(bmrH*256+bmrL),String.format("%d",bodyAge),StringUtil.doubleToStringOne((muscleH*256+muscleL)/100.0),StringUtil.doubleToStringOne(bone/100.0));
+                    updateUIStatus(StringUtil.doubleToStringOne((((h*256+l)/5.0)+1)/2.0/10.0),2);
+                    saveWeightData(StringUtil.doubleToStringOne((((h * 256 + l) / 5.0) + 1) / 20.0), StringUtil.doubleToStringOne((fatH * 256 + fatL) / 10.0),
+                            StringUtil.doubleToStringOne((subFatH * 256 + subFatL) / 10.0), StringUtil.doubleToStringOne(visFat), StringUtil.doubleToStringOne((waterH * 256 + waterL) / 10.0),
+                            StringUtil.doubleToString((bmrH * 256 + bmrL)), String.format("%d", bodyAge), StringUtil.doubleToStringOne((muscleH * 256 + muscleL) / 10.0), StringUtil.doubleToStringOne(bone));
                     updateUIResult();
                 }
             }
@@ -752,7 +752,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                         mBluetoothLeService.setCharacteristicNotification(mCurrentAddress, gattCharacteristic, true);
                     }
                     if (uuid.toString().equals(BluetoothLeService.SERVICE_UUID2)){
-                        byte[]  data={9,8,18,25,5,1,(byte)(5&0xFF),(byte)(36&0xFF)};
+                        byte[]  data={9,8,18,21,5,1,(byte)(0&0xFF),(byte)(27&0xFF)};
 //                        if (data != null && data.length > 0) {
 //                            final StringBuilder stringBuilder = new StringBuilder(data.length);
 //                            for (byte byteChar : data)
@@ -1435,11 +1435,13 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             case R.id.btnHeadEdit:{
                 SherlockFragment sherlockFragment=(SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.content_frame);
                 if (sherlockFragment instanceof ContentFragment) {
-                    Intent intent=new Intent(TabActivity.this,ContentEActivity.class);
-                    Bundle bundle=new Bundle();
-                    bundle.putSerializable("account",((ContentFragment)sherlockFragment).getLocalAccountEntity());
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+//                    Intent intent=new Intent(TabActivity.this,ContentEActivity.class);
+//                    Bundle bundle=new Bundle();
+//                    bundle.putSerializable("account",((ContentFragment)sherlockFragment).getLocalAccountEntity());
+//                    intent.putExtras(bundle);
+//                    startActivity(intent);
+                    ((ContentFragment)sherlockFragment).openShare();
+
                 }else if(sherlockFragment instanceof MyFragment){
                     Intent intent=new Intent(TabActivity.this,HomeActivity.class);
                     startActivity(intent);
