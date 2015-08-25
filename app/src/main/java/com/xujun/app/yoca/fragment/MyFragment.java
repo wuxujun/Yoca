@@ -84,13 +84,15 @@ public class MyFragment  extends BaseFragment implements View.OnClickListener {
                 if (i == 0) {
                     Intent intent = new Intent(getActivity(), AccountMActivity.class);
                     startActivity(intent);
-                } else if (i == 1) {
+                }
+//                else if (i == 1) {
 //                    Intent intent = new Intent(getActivity(), WarnActivity.class);
 //                    startActivity(intent);
-                } else if (i == 2) {
+//                }
+                else if (i == 1) {
                     Intent intent = new Intent(getActivity(), SettingActivity.class);
                     startActivity(intent);
-                }else if (i==3){
+                }else if (i==2){
                     Intent intent=new Intent(getActivity(),AvatarMActivity.class);
                     startActivity(intent);
                 }
@@ -109,7 +111,7 @@ public class MyFragment  extends BaseFragment implements View.OnClickListener {
     private void loadData() {
         items.clear();
         items.add("用户管理");
-        items.add("数据管理");
+//        items.add("数据管理");
         items.add("设置");
         items.add("减肥像册");
         adapter.notifyDataSetChanged();
@@ -188,11 +190,13 @@ public class MyFragment  extends BaseFragment implements View.OnClickListener {
             }
             if (i==0){
                 holder.icon.setImageResource(R.drawable.ic_my_item_user);
-            }else if(i==1){
-                holder.icon.setImageResource(R.drawable.ic_my_item_chart);
-            }else if (i==2){
+            }
+//            else if(i==1){
+//                holder.icon.setImageResource(R.drawable.ic_my_item_chart);
+//            }
+            else if (i==1){
                 holder.icon.setImageResource(R.drawable.ic_my_item_set);
-            }else if (i==3){
+            }else if (i==2){
                 holder.icon.setImageResource(R.drawable.ic_my_item_photo);
             }
             return convertView;

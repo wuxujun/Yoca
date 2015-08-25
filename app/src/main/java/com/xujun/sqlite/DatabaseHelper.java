@@ -16,7 +16,7 @@ import com.j256.ormlite.table.TableUtils;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME="yoca.db";
-    private static final int    DATABASE_VERSION=12;
+    private static final int    DATABASE_VERSION=13;
 
     private Dao<AccountEntity,Integer>   accountDao;
     private Dao<WarnEntity,Integer>      warnDao;
@@ -27,7 +27,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<TargetEntity,Integer>     targetInfoDao;
 
     private Dao<ConfigEntity,Integer>    configDao;
-
+    private Dao<InfoEntity,Integer>      infoDao;
 
     private static final AtomicInteger usageCounter=new AtomicInteger(0);
     private static DatabaseHelper          helper=null;
@@ -57,6 +57,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource,ConfigEntity.class);
             TableUtils.createTable(connectionSource,HomeTargetEntity.class);
             TableUtils.createTable(connectionSource,TargetEntity.class);
+            TableUtils.createTable(connectionSource,InfoEntity.class);
 
         }catch (SQLException e){
             Log.e(DatabaseHelper.class.getName(), " unable to create database", e);
@@ -84,7 +85,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource,HomeTargetEntity.class,true);
                 TableUtils.createTable(connectionSource,HomeTargetEntity.class);
             }
-            if (i<12){
+            if (i<13){
                 TableUtils.dropTable(connectionSource,AccountEntity.class,true);
                 TableUtils.dropTable(connectionSource, WarnEntity.class, true);
                 TableUtils.dropTable(connectionSource, WeightEntity.class, true);
@@ -160,6 +161,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return targetInfoDao;
     }
 
+    public Dao<InfoEntity,Integer> getInfoDao()throws  SQLException{
+        if (infoDao==null){
+            infoDao=getDao(InfoEntity.class);
+        }
+        return infoDao;
+    }
+
     public void close(){
         if (usageCounter.decrementAndGet()==0){
             super.close();
@@ -170,6 +178,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             healthDao=null;
             configDao=null;
             homeTargetDao=null;
+            infoDao=null;
             helper=null;
         }
     }

@@ -1,5 +1,7 @@
 package com.xujun.model;
 
+import com.xujun.sqlite.InfoEntity;
+
 import java.util.List;
 
 /**
@@ -8,13 +10,13 @@ import java.util.List;
 public class InfoResp extends BaseResp{
 
     private String          groupName;
-    private List<ArticleInfo> infos;
+    private List<InfoEntity> infos;
 
-    public List<ArticleInfo> getInfos() {
+    public List<InfoEntity> getInfos() {
         return infos;
     }
 
-    public void setInfos(List<ArticleInfo> infos) {
+    public void setInfos(List<InfoEntity> infos) {
         this.infos = infos;
     }
 

@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca" android:versionCode="24"
-    android:versionName="1.0.23">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca" android:versionCode="26"
+    android:versionName="1.0.25">
 
     <application android:allowBackup="true" android:label="@string/app_name" android:name=".AppContext"
         android:icon="@drawable/ic_launcher" android:theme="@style/Theme.Yocatheme">

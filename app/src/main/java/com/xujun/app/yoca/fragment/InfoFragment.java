@@ -3,6 +3,8 @@ package com.xujun.app.yoca.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,8 +23,11 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.UmengRegistrar;
@@ -40,9 +45,11 @@ import com.xujun.model.WeightHisResp;
 import com.xujun.model.WeightResp;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
+import com.xujun.sqlite.InfoEntity;
 import com.xujun.sqlite.WeightEntity;
 import com.xujun.sqlite.WeightHisEntity;
 import com.xujun.util.AppUtil;
+import com.xujun.util.BitmapManager;
 import com.xujun.util.DateUtil;
 import com.xujun.util.JsonUtil;
 import com.xujun.util.MHttpClient;
@@ -69,9 +76,14 @@ public class InfoFragment extends BaseFragment {
 
     private AppConfig appConfig;
 
-    private List<ArticleInfo> items=new ArrayList<ArticleInfo>();
+    private List<InfoEntity> items=new ArrayList<InfoEntity>();
     private List<String>   groups=new ArrayList<String>();
 
+    DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,16 +96,18 @@ public class InfoFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.e(TAG,"onItemClick  "+i);
-//                ArticleInfo info=items.get(i);
-//                Intent intent=new Intent(getSherlockActivity(),WebActivity.class);
-//                Bundle bundle=new Bundle();
-//                bundle.putSerializable("info",info);
-//                intent.putExtras(bundle);
-//                getSherlockActivity().startActivity(intent);
+                InfoEntity info=items.get(i);
+                if(!info.isGroup()) {
+                    Intent intent = new Intent(getSherlockActivity(), WebActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable("info",info);
+                    intent.putExtras(bundle);
+                    getSherlockActivity().startActivity(intent);
+                }
             }
         });
 
-
+        loadLocalData();
         return mContentView;
     }
 
@@ -112,12 +126,71 @@ public class InfoFragment extends BaseFragment {
         load();
     }
 
+    private void loadLocalData(){
+        try{
+            Dao<InfoEntity,Integer> dao=getDatabaseHelper().getInfoDao();
+            GenericRawResults<String[]> rawResults=dao.queryRaw("select groupName from t_info group by groupName ");
+            List<String[]> results=rawResults.getResults();
+            Log.d(TAG, " select result size:" + results.size());
+            if (results.size()>0) {
+                items.clear();
+                String[] resultArray=results.get(0);
+                for (int i=0;i<resultArray.length;i++){
+                    if (!StringUtil.isEmpty(resultArray[i])){
+                        InfoEntity a=new InfoEntity();
+                        a.setGroup(true);
+                        a.setTitle(resultArray[i]);
+                        groups.add(resultArray[i]);
+                        items.add(a);
+                        queryInfoForGroup(resultArray[i]);
+                    }
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void queryInfoForGroup(String gname){
+        try {
+            Dao<InfoEntity,Integer> dao=getDatabaseHelper().getInfoDao();
+            QueryBuilder<InfoEntity,Integer> queryBuilder=dao.queryBuilder();
+            queryBuilder.where().eq("groupName",gname);
+            queryBuilder.orderBy("id", true);
+            PreparedQuery<InfoEntity> preparedQuery1=queryBuilder.prepare();
+            List<InfoEntity> list=dao.query(preparedQuery1);
+            if (list.size()>0){
+                items.addAll(list);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private String getInfoMaxid(){
+        try{
+            Dao<InfoEntity,Integer> dao=getDatabaseHelper().getInfoDao();
+            GenericRawResults<String[]> rawResults=dao.queryRaw("select max(id) from t_info ");
+            List<String[]> results=rawResults.getResults();
+            Log.d(TAG, " getInfoMaxid select result size:" + results.size());
+            if (results.size()>0) {
+                String[] resultArray = results.get(0);
+                if (!StringUtil.isEmpty(resultArray[0])) {
+                    return  resultArray[0];
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return "0";
+    }
+
     private void load(){
         if (items.size()==0) {
-
             Map<String, String> sb = new HashMap<String, String>();
             sb.put("imei", appContext.getIMSI());
             sb.put("umeng_token", UmengRegistrar.getRegistrationId(mContext));
+            sb.put("id",getInfoMaxid());
             try {
                 request(URLs.INFO_GET_URL, JsonUtil.toJson(sb));
             } catch (Exception e) {
@@ -126,39 +199,49 @@ public class InfoFragment extends BaseFragment {
         }
     }
 
+    private void addArticeInfo(InfoEntity entity){
+        try{
+            if (entity!=null){
+                Log.d(TAG,"addArticeInfo "+entity.getId()+" "+entity.getTitle());
+            }
+            Dao<InfoEntity,Integer> dao=getDatabaseHelper().getInfoDao();
+            dao.setAutoCommit(dao.startThreadConnection(),false);
+            dao.createOrUpdate(entity);
+            dao.commit(dao.startThreadConnection());
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     private void parserResp(String resp){
-        items.clear();
         try{
             InfoGResp baseResp=(InfoGResp)JsonUtil.ObjFromJson(resp, InfoGResp.class);
             if (baseResp.getSuccess()==1){
                 for (int i=0;i<baseResp.getRoot().size();i++){
                     InfoResp info=baseResp.getRoot().get(i);
                     if (info!=null){
-                        groups.add(info.getGroupName());
-                        ArticleInfo a=new ArticleInfo();
-                        a.setGroup(true);
-                        a.setTitle(info.getGroupName());
-                        items.add(a);
-                        items.addAll(info.getInfos());
+                        for (int j=0;j<info.getInfos().size();j++){
+                            addArticeInfo(info.getInfos().get(j));
+                        }
                     }
                 }
+                loadLocalData();
             }
-            mAdapter.notifyDataSetChanged();
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     public void request(final String url,final String params){
-        progress= AppUtil.showProgress(getSherlockActivity(), mContext.getResources().getString(R.string.data_loading));
+        //progress= AppUtil.showProgress(getSherlockActivity(), mContext.getResources().getString(R.string.data_loading));
         final Handler handler=new Handler(){
             public void handleMessage(Message msg){
                 if (msg.what==1){
                     parserResp(msg.obj.toString());
                 }
-                if (progress!=null) {
-                    progress.dismiss();
-                }
+//                if (progress!=null) {
+//                    progress.dismiss();
+//                }
             }
         };
 
@@ -217,7 +300,7 @@ public class InfoFragment extends BaseFragment {
         }
 
         public boolean isEnabled(int position){
-            ArticleInfo info=items.get(position);
+            InfoEntity info=items.get(position);
             if (info.isGroup()){
                 return false;
             }
@@ -244,7 +327,7 @@ public class InfoFragment extends BaseFragment {
                 holder = (ItemView) convertView.getTag();
             }
 
-            ArticleInfo info=items.get(i);
+            InfoEntity info=items.get(i);
             if (info!=null){
                 if (info.isGroup()){
                     holder.head.setVisibility(View.GONE);
@@ -257,7 +340,8 @@ public class InfoFragment extends BaseFragment {
                         holder.item.setVisibility(View.GONE);
                         holder.title.setText(info.getTitle());
                         if (!StringUtil.isEmpty(info.getImage())) {
-                            ImageLoader.getInstance().displayImage(info.getImage(), holder.icon);
+                            ImageLoader.getInstance().displayImage(info.getImage(), holder.icon,options);
+
                         }
                         isHead=false;
                     }else {
@@ -265,16 +349,10 @@ public class InfoFragment extends BaseFragment {
                         holder.head.setVisibility(View.GONE);
                         holder.itemTitle.setText(info.getTitle());
                         if (!StringUtil.isEmpty(info.getImage())) {
-                            ImageLoader.getInstance().displayImage(info.getImage(), holder.itemIcon);
+                            ImageLoader.getInstance().displayImage(info.getImage(), holder.itemIcon,options);
                         }
                     }
                 }
-
-//                holder.title.setText(info.getTitle());
-//                if (!StringUtil.isEmpty(info.getNote())){
-//                    holder.content.setText(info.getNote());
-//                }
-//
             }
 
             return convertView;

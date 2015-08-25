@@ -762,12 +762,12 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 //                        }
                         gattCharacteristic.setValue(data);
                         sendDataToBLE(gattCharacteristic);
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mBluetoothLeService.readCharacteristic(mCurrentAddress,gattCharacteristic);
-                            }
-                        },500);
+//                        mHandler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mBluetoothLeService.readCharacteristic(mCurrentAddress,gattCharacteristic);
+//                            }
+//                        },500);
                     }
                 }
             }
@@ -775,20 +775,20 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
     }
 
     private void sendDataToBLE(BluetoothGattCharacteristic gattCharacteristic){
-        boolean sendSuccess=false;
-        int count=0;
-        while (!sendSuccess&&count<4){
-            try{
-                Thread.sleep(500);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
+//        boolean sendSuccess=false;
+//        int count=0;
+//        while (!sendSuccess&&count<4){
+//            try{
+//                Thread.sleep(500);
+//            }catch (InterruptedException e){
+//                e.printStackTrace();
+//            }
             if (mBluetoothLeService.writeCharacteristic(mCurrentAddress,gattCharacteristic)){
-                sendSuccess=true;
+//                sendSuccess=true;
             }
-            count++;
-            Log.e(TAG,"send count "+count);
-        }
+//            count++;
+//            Log.e(TAG,"send count "+count);
+//        }
     }
 
 

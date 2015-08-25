@@ -25,6 +25,7 @@ import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.xujun.app.yoca.fragment.ContentFragment;
 import com.xujun.app.yoca.fragment.MyFragment;
 import com.xujun.model.ArticleInfo;
+import com.xujun.sqlite.InfoEntity;
 import com.xujun.util.StringUtil;
 
 /**
@@ -32,7 +33,7 @@ import com.xujun.util.StringUtil;
  */
 public class WebActivity extends BaseActivity {
 
-    private ArticleInfo     localArticelInfo;
+    private InfoEntity localArticelInfo;
 
     private WebView         mWebView;
 
@@ -43,7 +44,7 @@ public class WebActivity extends BaseActivity {
         mContext = getApplicationContext();
         appContext = (AppContext) getApplication();
 
-        localArticelInfo=(ArticleInfo)getIntent().getSerializableExtra("info");
+        localArticelInfo=(InfoEntity)getIntent().getSerializableExtra("info");
 
 
         mWebView=(WebView)findViewById(R.id.webView);
@@ -65,8 +66,7 @@ public class WebActivity extends BaseActivity {
             }
         });
         if (localArticelInfo!=null){
-            mHeadButton.setText(localArticelInfo.getTitle());
-
+            mHeadTitle.setText(localArticelInfo.getTitle());
             if (!StringUtil.isEmpty(localArticelInfo.getContent())){
                 mWebView.loadDataWithBaseURL(null,localArticelInfo.getContent(),"text/html","utf-8",null);
             }
@@ -121,8 +121,8 @@ public class WebActivity extends BaseActivity {
         EmailHandler emailHandler=new EmailHandler();
         emailHandler.addToSocialSDK();
 
-        String appId="wx967daebe835fbeac";
-        String appSecret="5bb696d9ccd75a38c8a9bfe0675559b3";
+        String appId=AppConfig.WEIXIN_APPID;
+        String appSecret=AppConfig.WEIXIN_APPSECRET;
         UMWXHandler umwxHandler=new UMWXHandler(this,appId,appSecret);
         umwxHandler.addToSocialSDK();
 
@@ -130,8 +130,8 @@ public class WebActivity extends BaseActivity {
         umwxHandler1.setToCircle(true);
         umwxHandler1.addToSocialSDK();
 
-        appId="100424468";
-        appSecret="c739f704798a158208a74ab60104f0ba";
+        appId=AppConfig.QQ_APPID;
+        appSecret=AppConfig.QQ_APPSECRET;
         UMQQSsoHandler umqqSsoHandler=new UMQQSsoHandler(this,appId,appSecret);
 //        umqqSsoHandler.setTargetUrl("http://www.umeng.com/social");
         umqqSsoHandler.addToSocialSDK();
