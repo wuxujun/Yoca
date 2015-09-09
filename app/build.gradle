@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "21.1.1"
+    buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId "com.xujun.app.yoca"
         minSdkVersion 18
@@ -10,15 +10,24 @@ android {
         versionCode 26
         versionName "1.0.25"
     }
-    signingConfigs{
-        myConfig{
-            storeFile file("yoca.keystore.jks")
+    signingConfigs {
+        myConfig {
+            storeFile file('/Users/xujunwu/Documents/AndroidProject/Yoca/yoca.keystore.jks')
             storePassword "wu9531427"
-            keyAlias    "yoca"
-            keyAlias    "wu9531427"
+            keyAlias "yoca"
+            keyAlias "wu9531427"
+            keyPassword 'wu9531427'
         }
     }
     buildTypes {
+        /*
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            versionNameSuffix "-debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            signingConfig signingConfigs.myConfig
+        }*/
         release {
             debuggable false
             zipAlignEnabled true
@@ -115,7 +124,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.j256.ormlite:ormlite-android:4.48'
     compile files('libs/umeng-update-v2.6.0.1.jar')
     compile files('libs/commons-httpclient-3.1.jar')
     compile files('libs/gson-2.0.jar')
@@ -137,9 +145,11 @@ dependencies {
     compile project(':rebound-android')
     compile project(':ViewPagerIndicator')
     compile project(':Crouton')
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile project(':MPChart')
-    compile 'com.jiechic.library:xUtils:2.6.14'
+    compile project(':xUtils')
+    compile files('libs/ormlite-android-4.48.jar')
+    compile project(':UniversalImageLoader')
+    compile files('libs/ormlite-core-4.48.jar')
 }
 
 android {
@@ -156,6 +166,6 @@ android {
         abortOnError false
     }
     dexOptions{
-        jumboMode=true
+        jumboMode true
     }
 }

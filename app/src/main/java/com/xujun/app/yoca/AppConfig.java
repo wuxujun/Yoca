@@ -37,6 +37,13 @@ public class AppConfig {
     public final static String QQ_APPID="100334902";
     public final static String QQ_APPSECRET="c4b60d276b112c4aee8c30bbe62b1286";
 
+
+    public final static String  SHARE_TITLE="YOCA";
+    public final static String  SHARE_CONTENT="分享内容";
+    public final static String  SHARE_WEBSITE="http://121.40.19.136";
+    public final static String  SHARE_IMAGE="YOCA";
+
+
     public final static int   SEX_FAMALE=0;
     public final static int   SEX_MALE=1;
     public final static int   UNIT_KG=1;

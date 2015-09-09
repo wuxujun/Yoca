@@ -450,6 +450,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             default:
             {
                mContentHeader.setStatus(val);
+                mContentHeader.startEffect();
                 break;
             }
         }
@@ -732,24 +733,29 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
 
     private void configPlatforms()
     {
+        String title=AppConfig.SHARE_TITLE;
+        String content=AppConfig.SHARE_CONTENT;
+        String website=AppConfig.SHARE_WEBSITE;
+
+
         mController.getConfig().setSsoHandler(new SinaSsoHandler());
         SinaShareContent  sinaShareContent=new SinaShareContent();
-        sinaShareContent.setShareContent("YOCA");
-        sinaShareContent.setTargetUrl("http://121.40.19.136/");
+        sinaShareContent.setShareContent(content);
+        sinaShareContent.setTargetUrl(website);
         mController.setShareMedia(sinaShareContent);
 
 
         SmsHandler smsHandler=new SmsHandler();
         smsHandler.addToSocialSDK();
         SmsShareContent sms=new SmsShareContent();
-        sms.setShareContent("YOCA http://121.40.19.136/");
+        sms.setShareContent(content+website);
         mController.setShareMedia(sms);
 
         EmailHandler emailHandler=new EmailHandler();
         emailHandler.addToSocialSDK();
         MailShareContent mail=new MailShareContent();
-        mail.setTitle("YOCA");
-        mail.setShareContent("http://121.40.19.136/");
+        mail.setTitle(title);
+        mail.setShareContent(content);
         mController.setShareMedia(mail);
 
         String appId=AppConfig.WEIXIN_APPID;
@@ -762,14 +768,14 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         umwxHandler1.addToSocialSDK();
 
         WeiXinShareContent weiXinShareContent=new WeiXinShareContent();
-        weiXinShareContent.setShareContent("YOCA");
-        weiXinShareContent.setTitle("YOCA");
-        weiXinShareContent.setTargetUrl("http://121.40.19.136/");
+        weiXinShareContent.setShareContent(content);
+        weiXinShareContent.setTitle(title);
+        weiXinShareContent.setTargetUrl(website);
         mController.setShareMedia(weiXinShareContent);
 
         CircleShareContent circleShareContent=new CircleShareContent();
-        circleShareContent.setShareContent("YOCA");
-        circleShareContent.setTargetUrl("http://121.40.19.136/");
+        circleShareContent.setShareContent(content);
+        circleShareContent.setTargetUrl(website);
         mController.setShareMedia(circleShareContent);
 
 
@@ -779,17 +785,17 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
 //        umqqSsoHandler.setTargetUrl("http://www.umeng.com/social");
         umqqSsoHandler.addToSocialSDK();
         QQShareContent qqShareContent=new QQShareContent();
-        qqShareContent.setShareContent("YOCA");
-        qqShareContent.setTitle("YOCA");
-        qqShareContent.setTargetUrl("http://121.40.19.136/");
+        qqShareContent.setShareContent(content);
+        qqShareContent.setTitle(title);
+        qqShareContent.setTargetUrl(website);
         mController.setShareMedia(qqShareContent);
 
         QZoneSsoHandler qZoneSsoHandler=new QZoneSsoHandler(getSherlockActivity(),appId,appSecret);
         qZoneSsoHandler.addToSocialSDK();
         QZoneShareContent qzone=new QZoneShareContent();
-        qzone.setShareContent("YOCA");
-        qzone.setTargetUrl("http://121.40.19.136/");
-        qzone.setTitle("YOCA");
+        qzone.setShareContent(content);
+        qzone.setTargetUrl(website);
+        qzone.setTitle(title);
         mController.setShareMedia(qzone);
     }
 

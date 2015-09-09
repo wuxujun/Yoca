@@ -1,4 +1,4 @@
-include ':app', ':actionbarsherlock', ':edittextvalidator', ':rebound-core', ':rebound-android', ':Crouton', ':MPChart'
+include ':app', ':actionbarsherlock', ':edittextvalidator', ':rebound-core', ':rebound-android', ':Crouton', ':MPChart', ':xUtils', ':UniversalImageLoader'
 include ':sMSSDK'
 include ':ViewPagerIndicator'
 project(':MPChart').projectDir = new File('MPChartLib')

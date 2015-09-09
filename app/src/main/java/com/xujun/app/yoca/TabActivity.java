@@ -42,6 +42,7 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
+import com.nostra13.universalimageloader.utils.L;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengRegistrar;
@@ -501,11 +502,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         }
     }
 
-    /**
-     * 连接成功，写入设置信息
-     */
-    private void writeSettingInfo(){
-        byte[]  data={9,8,18,25,5,1,0,31};
+    private void writeSetting(byte[]  data){
         if (data != null && data.length > 0) {
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for (byte byteChar : data)
@@ -523,7 +520,49 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 UUID uuid=gattCharacteristic.getUuid();
                 if (uuid.toString().equals(BluetoothLeService.SERVICE_UUID2)){
                     gattCharacteristic.setValue(data);
-                    mBluetoothLeService.writeCharacteristic(mCurrentAddress,gattCharacteristic);
+                    sendDataToBLE(gattCharacteristic);
+                }
+            }
+        }
+    }
+
+    /**
+     * 连接成功，写入设置信息
+     */
+    private void writeSettingInfo(){
+//        byte[] d1={9,8,18,23,5,1,0,29};
+//        writeSetting(d1);
+//        byte[]  data={9,8,18,25,5,1,0,31};
+
+        byte[]  data={9,8,18,21,5,1,(byte)(0&0xFF),(byte)(27&0xFF)};  //跑马模式
+//        byte[]  data={9,8,18,21,5,1,(byte)(1&0xFF),(byte)(28&0xFF)};  //普通模式
+//        byte[]  data={9,8,18,21,5,1,(byte)(2&0xFF),(byte)(29&0xFF)};  //目标值
+//        byte[]  data={9,8,18,21,5,1,(byte)(3&0xFF),(byte)(30&0xFF)};  //
+//        byte[]  data={9,8,18,21,5,1,(byte)(4&0xFF),(byte)(31&0xFF)};  // 跑马，目标
+//        byte[]  data={9,8,18,21,5,1,(byte)(5&0xFF),(byte)(32&0xFF)};  //
+//        byte[]  data={9,8,18,21,5,1,(byte)(6&0xFF),(byte)(33&0xFF)};  //
+//        byte[]  data={9,8,18,21,5,1,(byte)(7&0xFF),(byte)(34&0xFF)};  //
+//        byte[]  data={9,8,18,21,5,1,(byte)(7&0xFF),(byte)(35&0xFF)};  //
+
+
+        if (data != null && data.length > 0) {
+            final StringBuilder stringBuilder = new StringBuilder(data.length);
+            for (byte byteChar : data)
+                stringBuilder.append(String.format("%02X ", byteChar));
+            String text = new String(data) + "\n" + stringBuilder.toString();
+            Log.e(TAG,"- write:--->"+text);
+        }
+
+        for (BluetoothGattService gattService : gattServices) {
+            if (!gattService.getUuid().toString().equals(BluetoothLeService.SERVICE_UUID)){
+                continue;
+            }
+            List<BluetoothGattCharacteristic> gattCharacteristics=gattService.getCharacteristics();
+            for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
+                UUID uuid=gattCharacteristic.getUuid();
+                if (uuid.toString().equals(BluetoothLeService.SERVICE_UUID2)){
+                    gattCharacteristic.setValue(data);
+                    sendDataToBLE(gattCharacteristic);
                 }
             }
         }
@@ -669,9 +708,9 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 @Override
                 public void run() {
                     if (!StringUtil.isEmpty(bluetoothDevice.getName())){
-                        Log.e(TAG,"===>"+Math.pow(10.0,2.0));
+//                        Log.e(TAG,"===>"+Math.pow(10.0,2.0));
                         String strName=bluetoothDevice.getName();
-                        Log.e(TAG,"|"+strName+"|"+bluetoothDevice.getAddress());
+//                        Log.e(TAG,"|"+strName+"|"+bluetoothDevice.getAddress());
                         if (strName.equals(AppConfig.APP_DEVICE_UUID)){
                             onConnect(bluetoothDevice);
                         }
@@ -713,7 +752,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 int muscleH=Integer.parseInt(String.format("%02x",data[16]),16);
                 int muscleL=Integer.parseInt(String.format("%02x",data[17]),16);
                 int bone=Integer.parseInt(String.format("%02x",data[18]),16);
-
+                L.e("   ============> "+(((h*256+l)/5.0)+1)/20.0+"    "+StringUtil.doubleToStringTwo((((h*256+l)/5.0)+1)/20.0));
                 if (requestID.equals("00")){
                     String weight=String.format("%.1f",(((h*256+l)/5.0)+1)/2.0/10.0);
                     updateUIStatus(weight,1);
@@ -731,6 +770,8 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                             StringUtil.doubleToString((bmrH * 256 + bmrL)), String.format("%d", bodyAge), StringUtil.doubleToStringOne((muscleH * 256 + muscleL) / 10.0), StringUtil.doubleToStringOne(bone));
                     updateUIResult();
                 }
+            }else if(cmd.equals("00")){
+                writeSettingInfo();
             }
         }
     }
@@ -752,7 +793,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                         mBluetoothLeService.setCharacteristicNotification(mCurrentAddress, gattCharacteristic, true);
                     }
                     if (uuid.toString().equals(BluetoothLeService.SERVICE_UUID2)){
-                        byte[]  data={9,8,18,21,5,1,(byte)(0&0xFF),(byte)(27&0xFF)};
+//                        byte[]  data={9,8,18,21,5,1,(byte)(2&0xFF),(byte)(29&0xFF)};
 //                        if (data != null && data.length > 0) {
 //                            final StringBuilder stringBuilder = new StringBuilder(data.length);
 //                            for (byte byteChar : data)
@@ -760,8 +801,8 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 //                            String text = new String(data) + "\n" + stringBuilder.toString();
 //                            Log.e(TAG,"- write:--->"+text);
 //                        }
-                        gattCharacteristic.setValue(data);
-                        sendDataToBLE(gattCharacteristic);
+//                        gattCharacteristic.setValue(data);
+//                        sendDataToBLE(gattCharacteristic);
 //                        mHandler.postDelayed(new Runnable() {
 //                            @Override
 //                            public void run() {
@@ -785,6 +826,9 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 //            }
             if (mBluetoothLeService.writeCharacteristic(mCurrentAddress,gattCharacteristic)){
 //                sendSuccess=true;
+                Log.e(TAG,"write data Success...");
+            }else{
+                Log.e(TAG, "write data Failed...");
             }
 //            count++;
 //            Log.e(TAG,"send count "+count);
@@ -801,6 +845,16 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             String text = new String(data) + "\n" + stringBuilder.toString();
             Log.e(TAG,"- write:--->"+text);
         }
+
+        byte total=0;
+        for (int i=3;i<7;i++){
+            total+=data[i];
+        }
+        if (total!=data[7]){
+            L.e("checknumber is not ...");
+        }
+        Log.e(TAG,"checknumber ====="+total+"  ===== "+data[7]);
+
 
         for (BluetoothGattService gattService : gattServices) {
             if (!gattService.getUuid().toString().equals(BluetoothLeService.SERVICE_UUID)){
@@ -825,9 +879,23 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         int h=localAccountEntity.getHeight();
         int age=localAccountEntity.getAge();
         int sex=localAccountEntity.getSex();
-        int checkNum=17+13+1+h+age+sex+1+0+0+0+0+0;
-        Log.e(TAG, "" + h + "  " + age + "  " + sex);
-        byte[]  data={9,11,18,17,13,1,(byte)(h & 0xFF),(byte)(age & 0xFF),(byte)(sex & 0xFF),1,0,0,0,0,0,(byte)(checkNum & 0xFF)};
+        int target=Integer.parseInt(localAccountEntity.getTargetWeight())*100;
+        int  fat=200;
+        int fH=200/256;
+        int fL=200-fH*256;
+        int  wH=target/256;
+        int  wL=target-wH*256;
+//        target=0;
+//        wH=0;
+//        wL=0;
+//        fH=0;
+//        fL=0;
+        int checkNum=17+13+1+h+age+sex+1+0+wH+wL+fH+fL;
+        Log.e(TAG, "" + h + "  " + age + "  " + sex+  "  "+target+"  "+wH+"  "+wL+ ""+fat+"  "+fH+"  "+fL);
+        byte[]  data={9,11,18,17,13,1,(byte)(h & 0xFF),(byte)(age & 0xFF),(byte)(sex & 0xFF),1,0,(byte)(wH&0xFF),(byte)(wL&0xFF),(byte)(fH&0xff),(byte)(fL&0xff),(byte)(checkNum & 0xFF)};
+//        byte[]  data={9,16,18,17,13,1,(byte)(h & 0xFF),(byte)(age & 0xFF),(byte)(sex & 0xFF),1,0,(byte)(wH&0xFF),(byte)(wL&0xFF),(byte)(fH&0xff),(byte)(fL&0xff),(byte)(checkNum & 0xFF)};
+
+        //09 10 12
         //09 0B 12 11 08 1 height age sex 1 0 0 0 0 0
 
         if (data != null && data.length > 0) {
@@ -837,6 +905,16 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             String text = new String(data) + "   ====> " + stringBuilder.toString();
             Log.e(TAG,"Write :--->"+text);
         }
+
+        byte total=0;
+        for (int i=3;i<15;i++){
+            total+=data[i];
+        }
+        if (total!=data[15]){
+            L.e("checknumber is not ...");
+        }
+        Log.e(TAG,"checknumber ====="+total+"  ===== "+data[15]);
+
 
         for (BluetoothGattService gattService : gattServices) {
             if (!gattService.getUuid().toString().equals(BluetoothLeService.SERVICE_UUID)){
