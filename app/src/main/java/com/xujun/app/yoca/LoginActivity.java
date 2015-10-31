@@ -208,9 +208,9 @@ public class LoginActivity extends SherlockActivity implements View.OnClickListe
             Log.e(TAG,resp);
             LoginResp loginResp=(LoginResp)JsonUtil.ObjFromJson(resp,LoginResp.class);
             if (loginResp.getData()!=null&&loginResp.getSuccess()==1){
-                appContext.setProperty("login_flag","1");
-                appContext.setProperty("userType","0");
-                appContext.setProperty("uid",""+loginResp.getData().getId());
+                appContext.setProperty(AppConfig.CONF_LOGIN_FLAG,"1");
+                appContext.setProperty(AppConfig.CONF_USER_TYPE,"0");
+                appContext.setProperty(AppConfig.CONF_USER_UID,""+loginResp.getData().getId());
                 if (loginResp.getMembers()!=null){
                     for (int i=0;i<loginResp.getMembers().size();i++){
                         addAccountEntity(loginResp.getMembers().get(i));

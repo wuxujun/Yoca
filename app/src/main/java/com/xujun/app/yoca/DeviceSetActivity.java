@@ -34,9 +34,6 @@ public class DeviceSetActivity extends BaseActivity{
     public void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
         setContentView(R.layout.dialog_account);
-
-
-
         initListView();
         loadData();
     }

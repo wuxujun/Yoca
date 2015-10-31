@@ -2,19 +2,37 @@ package com.xujun.app.yoca;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.umeng.update.UmengUpdateAgent;
+import com.xujun.model.InfoGResp;
+import com.xujun.model.InfoResp;
+import com.xujun.model.ParamInfo;
+import com.xujun.model.ParamList;
+import com.xujun.sqlite.ConfigEntity;
+import com.xujun.util.JsonUtil;
 import com.xujun.util.StringUtil;
+import com.xujun.widget.SelectPopupWindow;
 import com.xujun.widget.ToggleButton;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by xujunwu on 7/17/15.
  */
 public class DeviceActivity extends BaseActivity implements View.OnClickListener{
 
-    public static final String TAG = "SettingActivity";
+    public static final String TAG = "DeviceActivity";
 
     private ToggleButton mWeightModelTB;
     private ToggleButton            mShowUnitTB;
@@ -22,10 +40,39 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
     private String      mWeightModel;
     private String      mShowUnit;
 
+    private List<ParamInfo>         items=new ArrayList<ParamInfo>();
+
+    private SelectPopupWindow       mSelectPopupWindow;
+
+    private ItemAdapter             mAdapter;
+
+    private int                     selectDataType;
+
+    private AdapterView.OnItemClickListener  onItemClickListener=new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            ParamInfo paramInfo=items.get(i);
+            if (paramInfo!=null){
+                if (selectDataType==AppConfig.REQUEST_SHOW_MODE){
+                    appContext.setProperty(AppConfig.DEVICE_SET_SHOW_MODEL,paramInfo.getValue());
+                    appContext.setProperty(AppConfig.DEVICE_SET_SHOW_MODEL_TITLE,paramInfo.getTitle());
+                    ((TextView)findViewById(R.id.tvShowModel)).setText(paramInfo.getTitle());
+                }else{
+                    appContext.setProperty(AppConfig.DEVICE_SET_LED_LEVEL,paramInfo.getValue());
+                    appContext.setProperty(AppConfig.DEVICE_SET_LED_LEVEL_TITLE,paramInfo.getTitle());
+                    ((TextView)findViewById(R.id.tvLedValue)).setText(paramInfo.getTitle());
+                }
+            }
+            mSelectPopupWindow.dismiss();
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device);
+
+        mAdapter=new ItemAdapter();
 
         mWeightModel=AppConfig.getAppConfig(mContext).get(AppConfig.DEVICE_SET_WEIGHT_MODEL);
         mWeightModelTB=(ToggleButton)findViewById(R.id.tbWeightModel);
@@ -67,11 +114,17 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
             ((TextView)findViewById(R.id.tvShowUnit)).setText(getText(R.string.unit_lb));
         }
 
+        if (StringUtil.isEmpty(appContext.getProperty(AppConfig.DEVICE_SET_SHOW_MODEL_TITLE))){
+            ((TextView)findViewById(R.id.tvShowModel)).setText("普通模式");
+        }else{
+            ((TextView)findViewById(R.id.tvShowModel)).setText(appContext.getProperty(AppConfig.DEVICE_SET_SHOW_MODEL_TITLE));
+        }
 
-        ((TextView)findViewById(R.id.tvShowModel)).setText("普通模式");
-
-        ((TextView)findViewById(R.id.tvLedValue)).setText("1级");
-
+        if (StringUtil.isEmpty(appContext.getProperty(AppConfig.DEVICE_SET_LED_LEVEL_TITLE))) {
+            ((TextView) findViewById(R.id.tvLedValue)).setText("1级");
+        }else{
+            ((TextView) findViewById(R.id.tvLedValue)).setText(appContext.getProperty(AppConfig.DEVICE_SET_LED_LEVEL_TITLE));
+        }
 
         findViewById(R.id.llShowModel).setOnClickListener(this);
         findViewById(R.id.llLedLevel).setOnClickListener(this);
@@ -91,15 +144,94 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
                 break;
             }
             case R.id.llShowModel:{
-//                Intent intent=new Intent(SettingActivity.this,WarnActivity.class);
-//                startActivity(intent);
+                showModeSelectPopupWindow(AppConfig.REQUEST_SHOW_MODE,view);
                 break;
             }
-            case R.id.llAbout: {
-//                Intent intent=new Intent(SettingActivity.this,AboutActivity.class);
-//                startActivity(intent);
+            case R.id.llLedLevel: {
+                showModeSelectPopupWindow(AppConfig.REQUEST_LED_LEVEL,view);
                 break;
             }
+        }
+    }
+
+
+    private void showModeSelectPopupWindow(int type,View view){
+        selectDataType=type;
+        mSelectPopupWindow=new SelectPopupWindow(mContext);
+        mSelectPopupWindow.showAsDropDown(view);
+        mSelectPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+            }
+        });
+
+        mSelectPopupWindow.getListView().setAdapter(mAdapter);
+        mSelectPopupWindow.getListView().setOnItemClickListener(onItemClickListener);
+        if (type==AppConfig.REQUEST_SHOW_MODE) {
+            mSelectPopupWindow.getTitleTextView().setText("请选择显示模式");
+            readData(R.raw.show_mode);
+        }else if(type==AppConfig.REQUEST_LED_LEVEL){
+            mSelectPopupWindow.getTitleTextView().setText("请选择LED亮度");
+            readData(R.raw.led_light);
+        }
+    }
+
+    private void readData(int  res){
+        try{
+            InputStream  is=getResources().openRawResource(res);
+            byte[]  buffer=new byte[is.available()];
+            is.read(buffer);
+            String json=new String(buffer,"utf-8");
+            ParamList list=(ParamList) JsonUtil.ObjFromJson(json, ParamList.class);
+            if (list.getRoot()!=null){
+                items.clear();
+                items.addAll(list.getRoot());
+                mAdapter.notifyDataSetChanged();
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private class ItemView{
+        public TextView     title;
+    }
+
+    class ItemAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return items.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+            ItemView    holder;
+            if (convertView==null){
+                convertView= LayoutInflater.from(mContext).inflate(R.layout.select_dialog_item,null);
+
+                holder=new ItemView();
+                holder.title=(TextView)convertView.findViewById(R.id.tvTitle);
+                convertView.setTag(holder);
+            }else {
+                holder=(ItemView)convertView.getTag();
+            }
+            ParamInfo entity=items.get(position);
+            if (entity!=null){
+                holder.title.setText(entity.getTitle());
+            }
+            return convertView;
         }
     }
 

@@ -2,6 +2,7 @@ package com.xujun.app.yoca.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xujun.app.yoca.AccountMActivity;
 import com.xujun.app.yoca.AppConfig;
 import com.xujun.app.yoca.AppContext;
@@ -61,6 +64,13 @@ public class MyFragment  extends BaseFragment implements View.OnClickListener {
     private TextView                userNick;
     private ImageView               userAvatar;
     private TextView                userAccount;
+
+    DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +140,9 @@ public class MyFragment  extends BaseFragment implements View.OnClickListener {
                 if (!StringUtil.isEmpty(localAccountEntity.getAvatar())){
                     Log.e(TAG, localAccountEntity.getAvatar());
                     userAvatar.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                }
+                if (!appContext.getProperty(AppConfig.CONF_USER_TYPE).equals("0")){
+                    ImageLoader.getInstance().displayImage(appContext.getProperty(AppConfig.CONF_USER_AVATAR), userAvatar,options);
                 }
                 userAccount.setText(AppConfig.getAppConfig(mContext).get(AppConfig.CONF_LOGIN_ACCOUNT));
             }

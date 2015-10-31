@@ -151,7 +151,9 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
             chartFooter.setRemark(targetEntity.getContent());
         }
         LineData lineData=generateDataLine(targetType);
-        targetEntity.setContent(StringUtil.doubleToStringOne(targetTotla/7.0));
+        if (targetEntity!=null&&!StringUtil.isEmpty(StringUtil.doubleToStringOne(targetTotla/7.0))) {
+            targetEntity.setContent(StringUtil.doubleToStringOne(targetTotla / 7.0));
+        }
         items.add(new LineChartItem(targetEntity,lineData, appContext));
 
         if (mListView!=null) {

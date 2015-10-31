@@ -26,6 +26,8 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
     private Context         mContext;
     private View            mContentView;
 
+    private LinearLayout    mTargetView;
+
     public TextView         targetValue;
     public TextView         targetDay;
     public TextView         currentDate;
@@ -59,6 +61,7 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
         weightTextView=(TextView)mContentView.findViewById(R.id.tvWeightValue);
         scanLine=(ImageView)mContentView.findViewById(R.id.ivScan);
         scanLine.setVisibility(GONE);
+        mTargetView=(LinearLayout)mContentView.findViewById(R.id.llTarget);
 
         targetValue=(TextView)mContentView.findViewById(R.id.tvTargetValueTotal);
         targetDay=(TextView)mContentView.findViewById(R.id.tvTargetDayNum);
@@ -90,7 +93,8 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
                 break;
             }
             case R.id.ibMainShared:{
-                getContentController().onViewSharedClicked();
+//                getContentController().onViewSharedClicked();
+                getContentController().onViewDetailClicked();
                 break;
             }
         }
@@ -172,5 +176,9 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
         scanLine.setVisibility(View.GONE);
         isShowContent(true);
        stopEffect(value);
+    }
+
+    public LinearLayout getTargetView(){
+        return mTargetView;
     }
 }

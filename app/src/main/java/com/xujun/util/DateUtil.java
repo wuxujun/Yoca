@@ -65,7 +65,6 @@ public class DateUtil {
             java.text.SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd");
             java.util.Date endDate = format.parse(endDay);
             long day = (endDate.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000);
-            System.out.println("相隔的天数=" + day);
             return day;
         }catch (Exception e){
             e.printStackTrace();
@@ -79,7 +78,6 @@ public class DateUtil {
             java.util.Date startDate=format.parse(startDay);
             java.util.Date endDate = format.parse(endDay);
             long day = (endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000);
-            System.out.println("相隔的天数=" + day);
             return day;
         }catch (Exception e){
             e.printStackTrace();
@@ -109,6 +107,11 @@ public class DateUtil {
         return sf.format(new Date());
     }
 
+    public static String getCurrentTimeString(){
+        SimpleDateFormat sf=new SimpleDateFormat("MM-dd HH:mm:ss");
+        java.util.Date dt=new Date();
+        return sf.format(dt);
+    }
     public static String getDateString(long time){
         SimpleDateFormat sf=new SimpleDateFormat("MM-dd HH:mm");
         java.util.Date dt=new Date(time);
@@ -228,4 +231,14 @@ public class DateUtil {
         }
     }
 
+
+    public String getWeekFirst(){
+        Date startDt=new Date();
+        Calendar calendar=new GregorianCalendar();
+        calendar.setTime(startDt);
+        calendar.add(calendar.DATE, -7);
+        startDt=calendar.getTime();
+        SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+        return sf.format(startDt);
+    }
 }

@@ -313,13 +313,14 @@ public class RegisterActivity extends SherlockActivity implements View.OnClickLi
         final Handler handler=new Handler(){
             public void handleMessage(Message msg){
                 if (msg.what==1){
+                    appContext.setProperty(AppConfig.CONF_USER_TYPE,"0");
 
-                    Intent intent=new Intent(RegisterActivity.this,MainActivity.class);
+                    Intent intent=new Intent(RegisterActivity.this,TabActivity.class);
                     Bundle bundle=new Bundle();
                     bundle.putInt("FragmentType",1);
                     intent.putExtras(bundle);
                     startActivity(intent);
-
+                    finish();
                 }else if(msg.what==0){
                     registerBtn.setErrorText(msg.obj.toString());
                 }else if(msg.what==-1){

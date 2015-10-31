@@ -37,6 +37,25 @@
             android:layout_height="wrap_content" android:src="@drawable/enter"/>
 
     </LinearLayout>
+        <LinearLayout android:id="@+id/llShowTarget" android:layout_marginBottom="2dp"
+            android:layout_width="match_parent" android:background="@color/item_background"
+            android:layout_height="56dp" android:gravity="center_vertical">
+            <ImageView  android:layout_marginLeft="40dp"
+                android:layout_width="60dp" android:visibility="gone"
+                android:layout_height="60dp" android:src="@drawable/ic_launcher"/>
+            <TextView android:text="@string/setting_showTarget"
+                android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+                android:layout_width="match_parent" android:gravity="center_vertical"
+                android:layout_height="match_parent" />
+            <com.xujun.widget.ToggleButton android:id="@+id/tbShowTarget"
+                android:layout_width="54dp" android:layout_marginRight="20dp"
+                android:layout_height="30dp"
+                toggle:onColor="#45c878"
+                toggle:offColor="#ddd"
+                toggle:spotColor="@color/chart_grid_color"
+                toggle:offBorderColor="#000"
+                />
+        </LinearLayout>
 
     <LinearLayout android:id="@+id/llPrvPassword" android:layout_marginBottom="2dp"
         android:layout_width="match_parent" android:background="@color/item_background"
@@ -118,6 +137,18 @@
             android:layout_height="wrap_content" android:src="@drawable/enter"/>
 
     </LinearLayout>
+        <LinearLayout android:id="@+id/llRecord" android:background="@color/item_background"
+            android:layout_width="match_parent" android:layout_marginBottom="2dp"
+            android:layout_height="56dp" android:gravity="center_vertical">
+            <TextView android:text="发包记录"
+                android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+                android:layout_width="match_parent" android:gravity="center_vertical"
+                android:layout_height="match_parent" />
+            <ImageView android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:src="@drawable/enter"/>
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:background="@color/item_background" android:layout_marginBottom="2dp"></LinearLayout>

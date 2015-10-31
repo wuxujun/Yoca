@@ -71,7 +71,7 @@
                 android:layout_height="match_parent" android:gravity="bottom"/>
                 <ImageButton android:layout_marginLeft="20dp" android:id="@+id/ibMainShared"
                     android:layout_width="wrap_content" android:layout_gravity="bottom" android:layout_marginBottom="20dp"
-                    android:layout_height="wrap_content" android:background="@drawable/share"/>
+                    android:layout_height="wrap_content" android:background="@drawable/write_g"/>
             </LinearLayout>
         <LinearLayout android:id="@+id/llTarget"
             android:layout_width="match_parent" android:orientation="vertical"

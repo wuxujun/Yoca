@@ -24,7 +24,7 @@ public class URLs implements Serializable {
 	
 	private final static String URL_API_HOST = HTTP + HOST + URL_SPLITTER;
 
-    public final static String IMAGE_URL="http://app.woicar.cn:8089/nadmin/images/";
+    public final static String IMAGE_URL=HTTP + HOST + URL_SPLITTER + "images/";
 
 	public final static String LOGIN_THIRD_HTTP = HTTP + HOST + URL_SPLITTER + "index.php?/ums/thirdLogin";
 	public final static String THIRD_MOBILE_HTTP = HTTP + HOST + URL_SPLITTER + "index.php?/ums/thirdMobile";
@@ -46,7 +46,7 @@ public class URLs implements Serializable {
 
     public final static String SYNC_WEIGHT_URL=HTTP+HOST+URL_SPLITTER+"index.php?/ums/getWeights";
 
-    public final static String CATEGORY_LIST_URL=URL_API_HOST+"index.php/ums/index";
+    public final static String IMAGE_UPLOAD=URL_API_HOST+"index.php?/ums/uploadImage";
 
     public final static String CATEGORY_CONTENT_URL=URL_API_HOST+"index.php/ums/getInfo/";
 
@@ -76,7 +76,6 @@ public class URLs implements Serializable {
     public final static String PDFS_LIST = URL_API_HOST+"index.php/ums/pdfs";
 
     public final static String EDAIJIA_URL = "http://open.d.api.edaijia.cn";
-
 
     public final static String VERSION = URL_API_HOST+"index.php/ums/version";
 

@@ -11,8 +11,8 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "t_account")
 public class AccountEntity implements Serializable{
 
-    @DatabaseField(generatedId =true, canBeNull = false)
-    Integer             id;
+    @DatabaseField(id=true,canBeNull = false)
+    long             id;
 
     // 0家庭成员  1 主帐号  2 增加
     @DatabaseField(defaultValue="0",canBeNull = true)
@@ -20,64 +20,70 @@ public class AccountEntity implements Serializable{
     @DatabaseField
     String              userNick;
 
+    @DatabaseField(defaultValue ="0",canBeNull = true)
+    Integer             accountType;
+
     @DatabaseField(defaultValue="0",canBeNull = true)
     Integer             sex;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              birthday;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     Integer             height;
 
-    @DatabaseField
+    @DatabaseField(defaultValue ="0",canBeNull = true)
     Integer             age;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              avatar;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     Integer             targetType;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              targetWeight;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
+    String              targetFat;
+
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              doneTime;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              weight;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              fat;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              subFat;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              visFat;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              water;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              bmr;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              bodyAge;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              muscle;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              bone;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              bmi;
 
-    @DatabaseField(defaultValue="0")
+    @DatabaseField(defaultValue="0",canBeNull = true)
     String              protein;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     String              remark;
 
     @DatabaseField(defaultValue = "0",canBeNull = true)
@@ -86,17 +92,17 @@ public class AccountEntity implements Serializable{
     @DatabaseField(defaultValue="0",canBeNull = true)
     int                 isSync;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     long             createtime;
 
-    @DatabaseField
+    @DatabaseField(defaultValue = "0",canBeNull = true)
     long             changetime;
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -310,5 +316,21 @@ public class AccountEntity implements Serializable{
 
     public void setIsSync(int isSync) {
         this.isSync = isSync;
+    }
+
+    public Integer getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(Integer accountType) {
+        this.accountType = accountType;
+    }
+
+    public String getTargetFat() {
+        return targetFat;
+    }
+
+    public void setTargetFat(String targetFat) {
+        this.targetFat = targetFat;
     }
 }

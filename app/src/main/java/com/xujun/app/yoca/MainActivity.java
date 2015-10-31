@@ -329,7 +329,7 @@ public class MainActivity extends SlidingFragmentActivity {
             int connState=mBluetoothManager.getConnectionState(device,BluetoothGatt.GATT);
             switch (connState){
                 case BluetoothGatt.STATE_CONNECTED:{
-                    mBluetoothLeService.disconnect(mCurrentAddress);
+                    mBluetoothLeService.disconnect();
                     break;
                 }
                 case BluetoothGatt.STATE_DISCONNECTED:{
@@ -348,7 +348,7 @@ public class MainActivity extends SlidingFragmentActivity {
         }else{
             updateUIStatus("断开连接",-1);
             if (mConnIndex!=NO_DEVICE){
-                mBluetoothLeService.disconnect(device.getAddress());
+                mBluetoothLeService.disconnect();
             }
         }
     }
@@ -632,19 +632,7 @@ public class MainActivity extends SlidingFragmentActivity {
                 Log.e(TAG,"Unable to initialize BluetoothLeService");
                 return;
             }
-
-            final int n=mBluetoothLeService.numConnectedDevices();
-            if (n>0){
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
-            }else {
-
-                Log.i(TAG,"BluetoothLeService connected");
-            }
+            mBluetoothLeService.connect(mCurrentAddress);
         }
 
         @Override
@@ -810,7 +798,7 @@ public class MainActivity extends SlidingFragmentActivity {
     {
         SherlockFragment fragment = (SherlockFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
         WeightHisEntity entity=new WeightHisEntity();
-        int aid=1;
+        long aid=1;
         AccountEntity accountEntity=null;
         if (fragment instanceof ContentFragment){
             accountEntity=((ContentFragment)fragment).getLocalAccountEntity();
@@ -888,7 +876,7 @@ public class MainActivity extends SlidingFragmentActivity {
         synchWeightData();
     }
 
-    private void AddHealthForDay(int accountId,String pickTime,int targetType,String targetValue){
+    private void AddHealthForDay(long accountId,String pickTime,int targetType,String targetValue){
         try{
             HealthEntity entity=searchForHealth(accountId,pickTime,targetType);
             if (entity==null){
@@ -909,7 +897,7 @@ public class MainActivity extends SlidingFragmentActivity {
         }
     }
 
-    private HealthEntity searchForHealth(int accountId,String pickTime,int targetType){
+    private HealthEntity searchForHealth(long accountId,String pickTime,int targetType){
         try{
             List<HealthEntity> healths=getDatabaseHelper().getHealthDao().queryBuilder().where().eq("accountId",accountId).and().eq("pickTime",pickTime).and().eq("targetType",targetType).query();
             if (healths.size()>0){
@@ -932,12 +920,13 @@ public class MainActivity extends SlidingFragmentActivity {
         return 0;
     }
 
-    private void AddWeightForDay(int aId,String pickTime,String weight,String fat,String subFat,String visFat,String water
+    private void AddWeightForDay(long aId,String pickTime,String weight,String fat,String subFat,String visFat,String water
             ,String bmr,String bodyAge,String muscle,String bone,String bmi){
         try{
             WeightEntity entity=searchForWeight(aId, pickTime);
             if (entity==null){
                 entity=new WeightEntity();
+                entity.setWid(System.currentTimeMillis());
                 entity.setAid(aId);
                 entity.setPickTime(pickTime);
                 entity.setAddtime(System.currentTimeMillis());
@@ -962,7 +951,7 @@ public class MainActivity extends SlidingFragmentActivity {
         }
     }
 
-    private WeightEntity searchForWeight(int accountId,String pickTime){
+    private WeightEntity searchForWeight(long accountId,String pickTime){
         try{
             List<WeightEntity> weights=getDatabaseHelper().getWeightEntityDao().queryBuilder().where().eq("aid",accountId).and().eq("pickTime",pickTime).query();
             if (weights.size()>0){

@@ -20,6 +20,7 @@ import com.xujun.sqlite.TargetEntity;
 import com.xujun.util.AppUtil;
 import com.xujun.util.JsonUtil;
 import com.xujun.util.StringUtil;
+import com.xujun.util.UIHelper;
 import com.xujun.util.URLs;
 
 import java.sql.SQLException;
@@ -44,7 +45,7 @@ public class StartActivity extends SherlockActivity{
 
     private String mAutoLogin="0";
 
-
+    private String         mLoginFlag="0";
     private DatabaseHelper databaseHelper;
 
     public DatabaseHelper getDatabaseHelper(){
@@ -62,15 +63,23 @@ public class StartActivity extends SherlockActivity{
         mContext=getApplicationContext();
         appContext=(AppContext)getApplication();
         mAutoLogin=AppConfig.getAppConfig(mContext).get(AppConfig.USER_AUTO_LOGIN);
+
+        String flag=appContext.getProperty(AppConfig.CONF_LOGIN_FLAG);
+        if (StringUtil.isEmpty(flag)){
+            mLoginFlag="0";
+        }else {
+            mLoginFlag=flag;
+        }
     }
     @Override
     public void onResume() {
         super.onResume();
 //        testRandom3();
-        Log.e(TAG,"onResume()");
+
+        Log.e(TAG,"onResume()"+mLoginFlag+"  "+appContext.getProperty("uid"));
         if (appContext.getNetworkType()>0){
             initConfig();
-        }else if(appContext.getProperty("login_flag").equals("1")&& !StringUtil.isEmpty(appContext.getProperty("uid"))){
+        }else if(mLoginFlag.equals("1")&& !StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_USER_UID))){
             Intent intent=new Intent(StartActivity.this,TabActivity.class);
 //            Intent intent=new Intent(StartActivity.this,MainActivity.class);
             Bundle bundle=new Bundle();
@@ -82,6 +91,8 @@ public class StartActivity extends SherlockActivity{
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
+
                     final Intent intent = new Intent(StartActivity.this, HomeActivity.class);
                     startActivity(intent);
                     finish();
@@ -173,11 +184,11 @@ public class StartActivity extends SherlockActivity{
         try{
             LoginResp loginResp=(LoginResp)JsonUtil.ObjFromJson(resp,LoginResp.class);
             if (loginResp.getData()!=null&&loginResp.getSuccess()==1){
-                appContext.setProperty("uid",""+loginResp.getData().getId());
-                appContext.setProperty("login_flag","1");
+                appContext.setProperty(AppConfig.CONF_USER_UID,""+loginResp.getData().getId());
+                appContext.setProperty(AppConfig.CONF_LOGIN_FLAG,"1");
                 openMain();
             }else{
-                appContext.setProperty("login_flag","0");
+                appContext.setProperty(AppConfig.CONF_LOGIN_FLAG,"0");
                 openMain();
             }
         }catch (Exception e){
@@ -222,6 +233,8 @@ public class StartActivity extends SherlockActivity{
 
     private void parserConfigResp(String resp){
         Log.e(TAG,resp);
+        String first=appContext.getProperty(AppConfig.CONF_FIRST_START);
+
         try{
             TargetInfoResp targetInfoResp=(TargetInfoResp)JsonUtil.ObjFromJson(resp,TargetInfoResp.class);
             if (targetInfoResp.getTargetList()!=null&&targetInfoResp.getSuccess()==1){
@@ -236,31 +249,38 @@ public class StartActivity extends SherlockActivity{
                         addConfigEntity(targetInfoResp.getConfigs().get(i));
                     }
                 }
-                String loginFlag=appContext.getProperty("login_flag");
-                Log.e(TAG,"login flag "+loginFlag);
-                if (loginFlag!=null&&loginFlag.equals("0")){
-                    if (mAutoLogin!=null&&mAutoLogin.equals("1")){
-                        if (appContext.getProperty("userType").equals("0")) {
-                            autoLogin();
-                        }else{
-                            openMain();
-                        }
-                    }else{
-                        Intent intent=new Intent(StartActivity.this,HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                }else if(loginFlag==null){
-                    Intent intent=new Intent(StartActivity.this,HomeActivity.class);
-                    startActivity(intent);
+                if (StringUtil.isEmpty(first)){
+                    UIHelper.openIntroduction(this);
                     finish();
-                } else{
-                    openMain();
+                }else {
+                    String loginFlag = appContext.getProperty(AppConfig.CONF_LOGIN_FLAG);
+                    Log.e(TAG, "login flag " + loginFlag);
+                    if (!StringUtil.isEmpty(loginFlag) && loginFlag.equals("0")) {
+                        if (mAutoLogin != null && mAutoLogin.equals("1")) {
+                            if (appContext.getProperty(AppConfig.CONF_USER_TYPE).equals("0")) {
+                                autoLogin();
+                            } else {
+                                openMain();
+                            }
+                        } else {
+                            UIHelper.openHome(this);
+                            finish();
+                        }
+                    } else if (loginFlag == null) {
+
+                        UIHelper.openHome(this);
+                        finish();
+                    } else {
+                        openMain();
+                    }
                 }
 
             }else{
-                Intent intent=new Intent(StartActivity.this,HomeActivity.class);
-                startActivity(intent);
+                if (StringUtil.isEmpty(first)){
+                    UIHelper.openIntroduction(this);
+                }else{
+                    UIHelper.openHome(this);
+                }
                 finish();
             }
         }catch (Exception e){

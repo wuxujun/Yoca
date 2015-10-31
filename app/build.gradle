@@ -1,33 +1,31 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 22
     buildToolsVersion '22.0.1'
     defaultConfig {
         applicationId "com.xujun.app.yoca"
         minSdkVersion 18
-        targetSdkVersion 19
-        versionCode 26
-        versionName "1.0.25"
+        targetSdkVersion 22
+        versionCode 31
+        versionName "1.0.31"
     }
     signingConfigs {
         myConfig {
-            storeFile file('/Users/xujunwu/Documents/AndroidProject/Yoca/yoca.keystore.jks')
+            storeFile file('yoca.keystore.jks')
             storePassword "wu9531427"
             keyAlias "yoca"
-            keyAlias "wu9531427"
             keyPassword 'wu9531427'
         }
     }
     buildTypes {
-        /*
         debug {
             buildConfigField "boolean", "LOG_DEBUG", "true"
             versionNameSuffix "-debug"
             minifyEnabled false
             zipAlignEnabled false
             signingConfig signingConfigs.myConfig
-        }*/
+        }
         release {
             debuggable false
             zipAlignEnabled true
@@ -36,50 +34,48 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    /*
+
     productFlavors {
         development{
-            versionCode 1
-            versionName  '1.0.0'
+            versionCode 31
+            versionName  '1.0.31'
         }
-
-        wandoujia{
-            versionCode 2
-            versionName '1.0.2'
-        }
-        m360 {
-            versionCode 1
-            versionName  '1.0.0'
-        }
-        xiaomi {
-            versionCode 1
-            versionName  '1.0.0'
-        }
-        baidu {
-            versionCode 1
-            versionName  '1.0.0'
-        }
-        m91zhushou {
-            versionCode 1
-            versionName  '1.0.0'
-        }
+//        wandoujia{
+//            versionCode 2
+//            versionName '1.0.2'
+//        }
+//        m360 {
+//            versionCode 1
+//            versionName  '1.0.0'
+//        }
+//        xiaomi {
+//            versionCode 1
+//            versionName  '1.0.0'
+//        }
+//        baidu {
+//            versionCode 1
+//            versionName  '1.0.0'
+//        }
+//        m91zhushou {
+//            versionCode 1
+//            versionName  '1.0.0'
+//        }
         hiapk {
-            versionCode 1
-            versionName  '1.0.0'
+            versionCode 31
+            versionName  '1.0.31'
         }
-        anzhi {
-            versionCode 1
-            versionName  '1.0.0'
-        }
-        jifeng {
-            versionCode 1
-            versionName  '1.0.0'
-        }
-        googleplay {
-            versionCode 1
-            versionName  '1.0.0'
-        }
-
+//        anzhi {
+//            versionCode 1
+//            versionName  '1.0.0'
+//        }
+//        jifeng {
+//            versionCode 1
+//            versionName  '1.0.0'
+//        }
+//        googleplay {
+//            versionCode 1
+//            versionName  '1.0.0'
+//        }
     }
 
     productFlavors.all {flavor->
@@ -119,7 +115,6 @@ android {
             }
         }
     }
-    */
 }
 
 dependencies {

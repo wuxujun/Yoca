@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -35,6 +37,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 public class ImageUtils {
 
@@ -694,4 +700,75 @@ public class ImageUtils {
         return null;  
      
     }
+
+	public static int imgH=0;
+
+
+	public static Bitmap getListBitmap(ListView listView,String filePath) {
+		int titleHeight,width, height, rootHeight=0;
+		Bitmap bitmap;
+		Canvas canvas;
+		int yPos=0;
+		int listItemNum;
+		List<View> childViews = new ArrayList<View>();
+
+		width = listView.getMeasuredWidth();
+
+		ListAdapter listAdapter = (ListAdapter)listView.getAdapter();
+		listItemNum = listAdapter.getCount();
+		View itemView;
+		//计算整体高度:
+		for(int pos=0; pos < listItemNum; ++pos){
+			itemView = listAdapter.getView(pos, null, listView);
+			//measure过程
+			itemView.measure(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+			childViews.add(itemView);
+			rootHeight += itemView.getMeasuredHeight();
+		}
+
+		height = rootHeight;
+		bitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		canvas = new Canvas(bitmap);
+
+		Bitmap itemBitmap;
+		int childHeight;
+		//把每个ItemView生成图片，并画到背景画布上
+		for(int pos=0; pos < childViews.size(); ++pos){
+			itemView = childViews.get(pos);
+			childHeight = itemView.getMeasuredHeight();
+			itemBitmap = viewToBitmap(itemView,width,childHeight);
+			if(itemBitmap!=null){
+				canvas.drawBitmap(itemBitmap, 0, yPos, null);
+			}
+			yPos = childHeight +yPos;
+		}
+
+		canvas.save(Canvas.ALL_SAVE_FLAG);
+		canvas.restore();
+		// 测试输出
+		FileOutputStream out = null;
+		try {
+			out = new FileOutputStream(filePath);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			if (null != out) {
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+				out.flush();
+				out.close();
+			}
+		} catch (IOException e) {
+			// TODO: handle exception
+		}
+		return bitmap;
+	}
+
+	private static Bitmap viewToBitmap(View view,int viewWidth, int viewHeight){
+		view.layout(0, 0, viewWidth, viewHeight);
+		view.buildDrawingCache();
+		Bitmap bitmap = view.getDrawingCache();
+		return bitmap;
+	}
+
 }

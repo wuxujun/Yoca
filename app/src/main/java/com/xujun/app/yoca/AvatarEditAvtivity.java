@@ -29,12 +29,15 @@ import com.andreabaccega.formedittextvalidator.EmptyValidator;
 import com.andreabaccega.widget.FormEditText;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.HomeTargetEntity;
 import com.xujun.sqlite.WeightHisEntity;
 import com.xujun.util.DateUtil;
 import com.xujun.util.ImageUtils;
 import com.xujun.util.StringUtil;
+import com.xujun.util.URLs;
 import com.xujun.widget.MySeekBar;
 
 import org.w3c.dom.Text;
@@ -60,8 +63,8 @@ public class AvatarEditAvtivity extends BaseActivity{
     private ListView mListView;
     private ItemAdapter             mAdapter;
 
-    private AccountEntity localAccountEngity=null;
-    private int           localWeightId=0;
+    private AccountEntity localAccountEntity=null;
+    private long           localWeightId=0;
     private WeightHisEntity localWeightEntity=null;
 
     private int                     currentDay=0;
@@ -90,13 +93,18 @@ public class AvatarEditAvtivity extends BaseActivity{
     private FormEditText hipsET;
     private ImageButton  cameraIB;
 
+    DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.avatar_list_frame);
-
-        localAccountEngity=(AccountEntity)getIntent().getSerializableExtra("account");
-        localWeightId=getIntent().getIntExtra("weightId",0);
+        localAccountEntity=(AccountEntity)getIntent().getSerializableExtra("account");
+        localWeightId=getIntent().getLongExtra("weightId",0);
         imm=(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 
         mListView=(ListView)findViewById(R.id.lvList);
@@ -148,6 +156,9 @@ public class AvatarEditAvtivity extends BaseActivity{
             Toast.makeText(mContext,getText(R.string.avatar_Avatar_Hit), Toast.LENGTH_SHORT).show();
             return;
         }
+        appContext.setProperty(bustET.getText().toString(), AppConfig.CONF_BUST);
+        appContext.setProperty(waistlineET.getText().toString(), AppConfig.CONF_WAISTLINE);
+        appContext.setProperty(hipsET.getText().toString(), AppConfig.CONF_HIPS);
         if (localWeightId>0&&localWeightEntity!=null){
             localWeightEntity.setBust(bustET.getText().toString());
             localWeightEntity.setWaistline(waistlineET.getText().toString());
@@ -157,6 +168,7 @@ public class AvatarEditAvtivity extends BaseActivity{
             }
             localWeightEntity.setIsSync(0);
             updateWeightEntity(localWeightEntity);
+            Log.e(TAG,""+localWeightId+"  "+localWeightEntity.getAvatar());
         }
         finish();
     }
@@ -176,12 +188,22 @@ public class AvatarEditAvtivity extends BaseActivity{
         bustET.addValidator(new EmptyValidator(getResources().getString(R.string.avatar_Waistline_Hit)));
         hipsET=(FormEditText)findViewById(R.id.etHips);
         hipsET.addValidator(new EmptyValidator(getResources().getString(R.string.avatar_Hips_Hit)));
+
+        if (!StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_BUST))){
+            bustET.setText(appContext.getProperty(AppConfig.CONF_BUST));
+        }
+        if (!StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_WAISTLINE))){
+            waistlineET.setText(appContext.getProperty(AppConfig.CONF_WAISTLINE));
+        }
+        if (!StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_HIPS))){
+            hipsET.setText(appContext.getProperty(AppConfig.CONF_HIPS));
+        }
     }
 
     private void loadHomeTarget(){
         try {
             items.clear();
-            List<HomeTargetEntity> homeTargetEntityList = getDatabaseHelper().getHomeTargetDao().queryBuilder().where().eq("aid", localAccountEngity.getId()).query();
+            List<HomeTargetEntity> homeTargetEntityList = getDatabaseHelper().getHomeTargetDao().queryBuilder().where().eq("aid", localAccountEntity.getId()).query();
             if (homeTargetEntityList.size()>0) {
                 items.addAll(homeTargetEntityList);
             }
@@ -206,28 +228,43 @@ public class AvatarEditAvtivity extends BaseActivity{
 
 
     private void queryHealthData(){
-        if (localAccountEngity==null){
+        if (localAccountEntity==null){
             return;
         }
         AppConfig appConfig=AppConfig.getAppConfig(mContext);
-
         try{
             Dao<WeightHisEntity,Integer> weightHisEntityDao=getDatabaseHelper().getWeightHisEntityDao();
             QueryBuilder<WeightHisEntity, Integer> weightHisQueryBuilder = weightHisEntityDao.queryBuilder();
-            weightHisQueryBuilder.where().eq("aid",localAccountEngity.getId()).and().eq("wid",localWeightId);
+            weightHisQueryBuilder.where().eq("aid",localAccountEntity.getId()).and().eq("wid",localWeightId);
             localWeightEntity=weightHisQueryBuilder.queryForFirst();
             if (localWeightEntity!=null){
                 if (!StringUtil.isEmpty(localWeightEntity.getBust())){
                     bustET.setText(localWeightEntity.getBust());
+                }else{
+                    if (!StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_BUST))){
+                        bustET.setText(appContext.getProperty(AppConfig.CONF_BUST));
+                    }
                 }
                 if (!StringUtil.isEmpty(localWeightEntity.getWaistline())){
                     waistlineET.setText(localWeightEntity.getWaistline());
+                }else{
+                    if (!StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_WAISTLINE))){
+                        waistlineET.setText(appContext.getProperty(AppConfig.CONF_WAISTLINE));
+                    }
                 }
                 if (!StringUtil.isEmpty(localWeightEntity.getHips())){
                     hipsET.setText(localWeightEntity.getHips());
+                }else{
+                    if (!StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_HIPS))){
+                        hipsET.setText(appContext.getProperty(AppConfig.CONF_HIPS));
+                    }
                 }
                 if (!StringUtil.isEmpty(localWeightEntity.getAvatar())){
-                    cameraIB.setImageBitmap(ImageUtils.getBitmapByPath(localWeightEntity.getAvatar()));
+                    if (localWeightEntity.getAvatar().indexOf("crop_")>=0) {
+                        cameraIB.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/" + localWeightEntity.getAvatar()));
+                    }else {
+                        ImageLoader.getInstance().displayImage(URLs.IMAGE_URL + localWeightEntity.getAvatar(), cameraIB, options);
+                    }
                 }
                 ((TextView)findViewById(R.id.tvTime)).setText(DateUtil.getTimeString(localWeightEntity.getAddtime()));
                 Log.e(TAG,"---------->"+localWeightEntity.getAddtime());
@@ -237,12 +274,12 @@ public class AvatarEditAvtivity extends BaseActivity{
         }
     }
 
-    public AccountEntity getLocalAccountEngity() {
-        return localAccountEngity;
+    public AccountEntity getLocalAccountEntity() {
+        return localAccountEntity;
     }
 
-    public void setLocalAccountEngity(AccountEntity localAccountEngity) {
-        this.localAccountEngity = localAccountEngity;
+    public void setLocalAccountEntity(AccountEntity localAccountEntity) {
+        this.localAccountEntity = localAccountEntity;
     }
 
     static  class ItemView{
@@ -345,12 +382,10 @@ public class AvatarEditAvtivity extends BaseActivity{
         }
     }
 
-
-
     private void addHomeTargetEntity(HomeTargetEntity entity){
         try{
             Dao<HomeTargetEntity,Integer> dao=getDatabaseHelper().getHomeTargetDao();
-            dao.setAutoCommit(dao.startThreadConnection(),false);
+            dao.setAutoCommit(dao.startThreadConnection(), false);
             dao.createOrUpdate(entity);
             dao.commit(dao.startThreadConnection());
         }catch (SQLException e){
@@ -388,26 +423,28 @@ public class AvatarEditAvtivity extends BaseActivity{
                 break;
             }
             case AppConfig.REQUEST_CROP_PHOTO:{
-                ContentResolver resolver=getContentResolver();
-                Uri uri=data.getData();
-                if (resultCode==RESULT_OK){
-                    Bitmap img=null;
-                    try{
-                      Bitmap bitmap= BitmapFactory.decodeStream(resolver.openInputStream(uri));
-                        img=ImageUtils.zoomBitmap(bitmap,640,640);
-                    }catch (FileNotFoundException e){
-                        e.printStackTrace();
-                    }
-                    if (img!=null) {
+                if (data!=null) {
+                    ContentResolver resolver = getContentResolver();
+                    Uri uri = data.getData();
+                    if (resultCode == RESULT_OK) {
+                        Bitmap img = null;
                         try {
-                            ImageUtils.saveImageToSD(appContext.getCameraPath() + "/crop_" + imageName, img, 100);
-                        }catch (IOException e){
+                            Bitmap bitmap = BitmapFactory.decodeStream(resolver.openInputStream(uri));
+                            img = ImageUtils.zoomBitmap(bitmap, 640, 640);
+                        } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
-                        isAvatar=true;
-                        cameraIB.setImageBitmap(img);
-                    }
+                        if (img != null) {
+                            try {
+                                ImageUtils.saveImageToSD(appContext.getCameraPath() + "/crop_" + imageName, img, 100);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            isAvatar = true;
+                            cameraIB.setImageBitmap(img);
+                        }
 //                    cameraIB.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath()+"/crop_"+imageName));
+                    }
                 }
                 break;
             }

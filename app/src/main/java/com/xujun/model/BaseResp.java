@@ -10,8 +10,27 @@ public class BaseResp implements Serializable{
     private int     errorCode;
     private int     success;
     private String  dataType;
+    private int     dataId;
+
+    private String  filename;
 
     private int     status;
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public int getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(int dataId) {
+        this.dataId = dataId;
+    }
 
     public String getErrorMsg() {
         return errorMsg;

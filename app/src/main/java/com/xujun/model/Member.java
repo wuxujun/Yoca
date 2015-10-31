@@ -19,8 +19,6 @@ public class Member implements Serializable{
     private String  addtime;
     private String  lastlogintime;
 
-
-
     public int getId() {
         return id;
     }

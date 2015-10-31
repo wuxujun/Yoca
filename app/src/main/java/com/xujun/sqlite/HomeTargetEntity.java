@@ -16,7 +16,7 @@ public class HomeTargetEntity implements Serializable {
     private Integer id;
 
     @DatabaseField(index = true)
-    private Integer aid;
+    private long aid;
 
     @DatabaseField(index = true)
     private Integer type;
@@ -62,11 +62,11 @@ public class HomeTargetEntity implements Serializable {
         this.id = id;
     }
 
-    public Integer getAid() {
+    public long getAid() {
         return aid;
     }
 
-    public void setAid(Integer aid) {
+    public void setAid(long aid) {
         this.aid = aid;
     }
 

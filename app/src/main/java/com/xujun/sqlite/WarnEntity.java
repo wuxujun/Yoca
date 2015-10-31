@@ -12,8 +12,8 @@ import java.io.Serializable;
 public class WarnEntity implements Serializable{
 
 
-    @DatabaseField(generatedId =true, canBeNull = false)
-    Integer             wid;
+    @DatabaseField(id=true,canBeNull = false)
+    long             wid;
 
     @DatabaseField
     Integer             type;
@@ -67,11 +67,11 @@ public class WarnEntity implements Serializable{
     long             changetime;
 
 
-    public Integer getWId() {
+    public long getWId() {
         return wid;
     }
 
-    public void setWId(Integer wid) {
+    public void setWId(long wid) {
         this.wid = wid;
     }
 

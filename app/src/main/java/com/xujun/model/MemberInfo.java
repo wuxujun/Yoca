@@ -1,5 +1,7 @@
 package com.xujun.model;
 
+import com.xujun.util.StringUtil;
+
 import java.io.Serializable;
 
 /**
@@ -8,17 +10,19 @@ import java.io.Serializable;
 public class MemberInfo implements Serializable{
 
     private int     id;
-    private int     aid;
-    private int     mId;
+    private long    aid;
+    private int     uid;
     private int     type;
+    private int         accountType;
     private String      userNick;
     private int         sex;
     private String      birthday;
     private int         height;
     private int         age;
-    private int         avatar;
+    private String         avatar;
     private int         targetType;
-    private double      weight;
+    private String      targetWeight;
+    private String      targetFat;
     private String      doneTime;
     private String      remark;
     private int         status;
@@ -33,20 +37,20 @@ public class MemberInfo implements Serializable{
         this.id = id;
     }
 
-    public int getAid() {
+    public long getAid() {
         return aid;
     }
 
-    public void setAid(int aid) {
+    public void setAid(long aid) {
         this.aid = aid;
     }
 
-    public int getmId() {
-        return mId;
+    public int getUid() {
+        return uid;
     }
 
-    public void setmId(int mId) {
-        this.mId = mId;
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
     public int getType() {
@@ -55,6 +59,14 @@ public class MemberInfo implements Serializable{
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
     }
 
     public String getUserNick() {
@@ -97,11 +109,11 @@ public class MemberInfo implements Serializable{
         this.age = age;
     }
 
-    public int getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(int avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
@@ -113,12 +125,20 @@ public class MemberInfo implements Serializable{
         this.targetType = targetType;
     }
 
-    public double getWeight() {
-        return weight;
+    public String getTargetWeight() {
+        return targetWeight;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setTargetWeight(String targetWeight) {
+        this.targetWeight = targetWeight;
+    }
+
+    public String getTargetFat() {
+        return targetFat;
+    }
+
+    public void setTargetFat(String targetFat) {
+        this.targetFat = targetFat;
     }
 
     public String getDoneTime() {

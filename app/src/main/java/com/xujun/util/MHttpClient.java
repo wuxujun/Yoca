@@ -305,6 +305,7 @@ public class MHttpClient {
                     }
                 }
                 int statusCode = httpClient.executeMethod(httpPost);
+                System.out.println("########## status====>"+statusCode);
                 if (statusCode != HttpStatus.SC_OK) {
                     throw AppException.http(statusCode);
                 } else if (statusCode == HttpStatus.SC_OK) {
@@ -451,7 +452,7 @@ public class MHttpClient {
     public static String sendRequestData(AppContext appContext,String requestUrl,String para,Map<String,File> files)throws AppException{
         Map<String,Object> params=new HashMap<String, Object>();
         params.put("content",para);
-        Log.i("MHttpClient",""+params.toString());
+        Log.e("MHttpClient",""+params.toString());
         try {
             return _post(appContext,requestUrl,params,files);
         }catch (Exception e) {

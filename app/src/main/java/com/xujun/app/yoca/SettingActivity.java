@@ -11,6 +11,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.umeng.update.UmengUpdateAgent;
+import com.xujun.util.StringUtil;
 import com.xujun.widget.ToggleButton;
 
 /**
@@ -22,9 +23,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private ToggleButton mPrePassTB;
     private ToggleButton            mAutoLoginTB;
+    private ToggleButton            mShowTargetTB;
 
     private String mAutoLogin="0";
     private String mUserLock="0";
+    private String mShowTarget="0";
 
 
     @Override
@@ -32,6 +35,22 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_setting);
 
+        mShowTargetTB=(ToggleButton)findViewById(R.id.tbShowTarget);
+        mShowTargetTB.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                if (on) {
+                    AppConfig.getAppConfig(mContext).set(AppConfig.USER_SHOW_TARGET, "1");
+                } else {
+                    AppConfig.getAppConfig(mContext).set(AppConfig.USER_SHOW_TARGET, "0");
+                }
+            }
+        });
+
+        mShowTarget=appContext.getProperty(AppConfig.USER_SHOW_TARGET);
+        if (!StringUtil.isEmpty(mShowTarget) &&mShowTarget.equals("1")){
+            mShowTargetTB.setToggleOn();
+        }
         mAutoLogin=AppConfig.getAppConfig(mContext).get(AppConfig.USER_AUTO_LOGIN);
 
         mPrePassTB=(ToggleButton)findViewById(R.id.tbPrePwd);
@@ -49,8 +68,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
-        mAutoLoginTB=(ToggleButton)findViewById(R.id.tbAutoLogin);
+        mUserLock=appContext.getProperty(AppConfig.USER_LOCK_TYPE);
 
+
+        mAutoLoginTB=(ToggleButton)findViewById(R.id.tbAutoLogin);
         mAutoLoginTB.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {
@@ -61,8 +82,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }
             }
         });
+        mAutoLogin=appContext.getProperty(AppConfig.USER_AUTO_LOGIN);
 
-        if (mAutoLogin!=null&&mAutoLogin.equals("1")){
+        if (!StringUtil.isEmpty(mAutoLogin)&&mAutoLogin.equals("1")){
             mAutoLoginTB.setToggleOn();
         }
 
@@ -75,6 +97,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.llVersion).setOnClickListener(this);
         findViewById(R.id.llAbout).setOnClickListener(this);
         findViewById(R.id.tvLogout).setOnClickListener(this);
+        findViewById(R.id.llRecord).setOnClickListener(this);
 
 
         mHeadTitle.setText(getResources().getString(R.string.btn_setting));
@@ -118,8 +141,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
             }
+            case R.id.llRecord:{
+                Intent intent=new Intent(SettingActivity.this,RecordActivity.class);
+                startActivity(intent);
+                break;
+            }
             case R.id.tvLogout:{
-                appContext.setProperty("login_flag","0");
+                appContext.setProperty(AppConfig.CONF_LOGIN_FLAG,"0");
                 Intent intent=new Intent(SettingActivity.this,HomeActivity.class);
                 startActivity(intent);
                 finish();

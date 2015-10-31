@@ -73,7 +73,7 @@ public class PhoneActivity extends BaseActivity implements View.OnClickListener{
         mHeadTitle.setText(getText(R.string.login_Mobile_Code));
         mHeadIcon.setVisibility(View.INVISIBLE);
 
-        mHeadButton.setText(getText(R.string.btn_Cancel));
+        mHeadButton.setText(getText(R.string.btn_skip));
         mHeadButton.setOnClickListener(this);
 
         verfiyBtn=(Button)findViewById(R.id.btnGetCode);

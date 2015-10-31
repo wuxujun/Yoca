@@ -67,6 +67,8 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
 
     private AccountEntity localAccountEntity=null;
 
+    private int           dataType=1;
+
     public void setLocalAccountEntity(AccountEntity accountEntity){
         Log.e(TAG,"setLocalAccountEntity()...");
         localAccountEntity=accountEntity;
@@ -253,22 +255,27 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
         resetButtonNormal();
         switch (view.getId()){
             case R.id.btnChartDay:{
+                dataType=0;
                 btnChartDay.setBackground(getSherlockActivity().getResources().getDrawable(R.drawable.header_tab_left));
                 break;
             }
             case R.id.btnChartWeek:{
+                dataType=1;
                 btnChartWeek.setBackgroundColor(getSherlockActivity().getResources().getColor(R.color.btn_color_selected));
                 break;
             }
             case R.id.btnChartMonth:{
+                dataType=2;
                 btnChartMonth.setBackgroundColor(getSherlockActivity().getResources().getColor(R.color.btn_color_selected));
                 break;
             }
             case R.id.btnChartYear:{
+                dataType=3;
                 btnChartYear.setBackground(getSherlockActivity().getResources().getDrawable(R.drawable.header_tab_right));
                 break;
             }
         }
+        load();
     }
 
     private void resetButtonNormal(){

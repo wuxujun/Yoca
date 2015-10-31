@@ -20,6 +20,12 @@ public class AppConfig {
 
     public final static String APP_DEVICE_UUID="WSD01";
 
+    public final static int    ACTION_WEIGH_DATA_UPLOAD=1;
+    public final static int    ACTION_WEIGH_DATA_DOWNLOAD=2;
+    public final static int    ACTION_ACCOUNT_SYNC=3;
+    public final static int    ACTION_WARNDATA_SYNC=4;
+    public final static int    ACTION_WEIGH_DATA_AVATAR=5;
+
     public final static String ACTION_START_WEIGH="com.xujun.yoca.ACTION_START_WEIGH";
 
 
@@ -30,6 +36,7 @@ public class AppConfig {
 
     public final static String SMS_APPKEY="6de96e7d9e78";
     public final static String SMS_APPKSECRET="ee6510b139aa06a0a403dd4410646bef";
+
 
     public final static String WEIXIN_APPID="wx7b3c49ed03390fb2";
     public final static String WEIXIN_APPSECRET="232c9d206dbe83a905294ad00d0b8738";
@@ -49,29 +56,58 @@ public class AppConfig {
     public final static int   UNIT_KG=1;
     public final static int   UNIT_LB=2;
 
+    public final static String  PARAM_SOURCE_TYPE="param_source_type";
+    public final static String  PARAM_ACCOUNT_DATA_TYPE="param_account_data_type";
+
+    public final static String  PARAM_ACCOUNT="param_account_info";
+    public final static String  PARAM_SELECT_DATA_TYPE="param_select_data_type";
+
+    public final static int     SELECT_DATA_TYPE_MODE=1;
+    public final static int     SELECT_DATA_TYUE_LED=2;
+
+    public final static String  CONF_BUST="conf_bust";
+    public final static String  CONF_HIPS="conf_hips";
+    public final static String  CONF_WAISTLINE="conf_waistline";
+
+    public final static int    SUCCESS=100;
+
     public final static int    REQUEST_ENABLE_BT=1;
     public final static int    REQUEST_TAKE_PHOTO=3;
     public final static int    REQUEST_CHOOSE_PIC=4;
     public final static int    REQUEST_CROP_PHOTO=5;
     public final static int    REQUEST_SWITCH_ACCOUNT=6;
+    public final static int    REQUEST_SHOW_MODE=7;
+    public final static int    REQUEST_LED_LEVEL=8;
 
 
     public final static int   REQUEST_ACCOUNT_FRAGMENT_TYPE_NORMAL=100;
     public final static int   REQUEST_ACCOUNT_FRAGMENT_TYPE_MANAGER=200;
     public final static int   REQUEST_ACCOUNT_FRAGMENT_TYPE_OTHER=300;
+    public final static int   REQUEST_ACCOUNT_ADD=400;
+
+    public final static int   WRITE_DEVICE_SET_MODE=1;
+    public final static int   WRITE_DEVICE_SET_LEDLIGHT=2;
+
+    public final static String CONF_FIRST_START="conf_first_start";
 
     public final static String DATA_VERSION= "data_version";
     public final static String CONF_APP_UNIQUEID="APP_UNIQUEID";
     public final static String CONF_COOKIE="cookie";
 
+
+    public final static String USER_SHOW_TARGET="pre_show_target";
     public final static String USER_AUTO_LOGIN="pre_auto_login";
     public final static String USER_LOCK_PASS="pre_user_lock";
     public final static String USER_LOCK_TYPE="pre_user_lock_type";
 
     public final static String DEVICE_SET_SHOW_MODEL="pre_device_show_model";
+    public final static String DEVICE_SET_SHOW_MODEL_TITLE="pre_device_show_model_title";
     public final static String DEVICE_SET_WEIGHT_MODEL="pre_device_weight_model";
     public final static String DEVICE_SET_SHOW_UNIT="pre_device_show_unit";
     public final static String DEVICE_SET_LED_LEVEL="pre_device_led_level";
+    public final static String DEVICE_SET_LED_LEVEL_TITLE="pre_device_led_level_title";
+
+
 
     public final static String WEIBO_APPID="2846029855";
     public final static String WEIBO_APPSECRET="6edd97b068547492519b8eefa084f344";
@@ -80,6 +116,12 @@ public class AppConfig {
     public final static String CONF_LOGIN_PASSWORD="conf_login_password";
 
     public final static String CONF_LOGIN_FIRST="conf_login_first";
+    public final static String CONF_LOGIN_FLAG="conf_login_flag";
+
+    public final static String CONF_USER_TYPE="conf_login_user_type";
+    public final static String CONF_USER_UID="conf_login_uid";
+    public final static String CONF_USER_AVATAR="conf_user_avatar";
+    public final static String CONF_USER_NICK="conf_user_nick";
 
     public final static String LOCK="lock";
     public final static String LOCK_KEY="lock_key";

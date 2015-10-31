@@ -140,7 +140,7 @@ public class SettingFragment extends SherlockFragment implements View.OnClickLis
                 break;
             }
             case R.id.tvLogout:{
-                appContext.setProperty("login_flag","0");
+                appContext.setProperty(AppConfig.CONF_LOGIN_FLAG,"0");
                 Intent intent=new Intent(getSherlockActivity(),HomeActivity.class);
                 startActivity(intent);
                 getSherlockActivity().finish();

@@ -1,5 +1,6 @@
 package com.xujun.app.yoca;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,12 +22,15 @@ import com.andreabaccega.formedittextvalidator.EmptyValidator;
 import com.andreabaccega.widget.FormEditText;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.HomeTargetEntity;
 import com.xujun.sqlite.WeightHisEntity;
 import com.xujun.util.DateUtil;
 import com.xujun.util.ImageUtils;
 import com.xujun.util.StringUtil;
+import com.xujun.util.URLs;
 import com.xujun.widget.MySeekBar;
 
 import java.io.File;
@@ -44,6 +48,12 @@ public class AvatarMActivity extends BaseActivity{
 
     private List<WeightHisEntity> items=new ArrayList<WeightHisEntity>();
     private ItemAdapter             mAdapter;
+
+    DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,13 +80,13 @@ public class AvatarMActivity extends BaseActivity{
             }
         });
         mHeadButton.setText(getText(R.string.btn_Edit));
+        mHeadButton.setVisibility(View.GONE);
         mHeadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-
     }
 
 
@@ -166,7 +176,11 @@ public class AvatarMActivity extends BaseActivity{
                 }
                 holder.weight.setText(StringUtil.doubleToStringOne(entity.getWeight()));
                 if (!StringUtil.isEmpty(entity.getAvatar())){
-                    holder.icon.setImageBitmap(ImageUtils.getBitmapByPath(entity.getAvatar()));
+                    if (entity.getAvatar().indexOf("crop_")>=0) {
+                        holder.icon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/" + entity.getAvatar()));
+                    }else {
+                        ImageLoader.getInstance().displayImage(URLs.IMAGE_URL+entity.getAvatar(), holder.icon,options);
+                    }
                 }
             }
 //            holder.cbEdit.setOnCheckedChangeListener(new editClickListener(i));

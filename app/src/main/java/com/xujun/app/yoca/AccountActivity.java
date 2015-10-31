@@ -43,6 +43,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.util.ImageUtils;
+import com.xujun.util.StringUtil;
+import com.xujun.widget.ToggleButton;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -68,6 +70,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
     private FormEditText nickET;
     private FormEditText birthdayET;
     private FormEditText hasHanET;
+    private ToggleButton    typeTB;
     private Button       sexWoram;
     private Button      sexMale;
 
@@ -75,6 +78,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
     private Calendar c = null;
 
     private boolean      bSex=false;
+    private boolean      bType=false;
 
     private Uri          origUri;
     private Uri          cropUri;
@@ -82,7 +86,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
     private boolean         isKeyboardVisible;
     private int             dataType= AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_NORMAL;
 
-
+    private int             sourceType=0;
     private AccountEntity       localAccountEntity;
 
     public AccountEntity getAccountEntity(){
@@ -100,17 +104,15 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_account);
-
-
         imm=(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-
         mHeadTitle.setText(getResources().getString(R.string.account_Edit));
         mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
         mHeadIcon.setOnClickListener(this);
         mHeadButton.setOnClickListener(this);
         mHeadButton.setText(getText(R.string.btn_Target));
         localAccountEntity=(AccountEntity)getIntent().getSerializableExtra("account");
-        dataType=AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_OTHER;
+        sourceType=getIntent().getIntExtra(AppConfig.PARAM_SOURCE_TYPE,0);
+        dataType=getIntent().getIntExtra(AppConfig.PARAM_ACCOUNT_DATA_TYPE,AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_OTHER);
         initView();
     }
 
@@ -138,7 +140,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
             }
         });
         birthdayET=(FormEditText)findViewById(R.id.etAccountBirthday);
-        birthdayET.addValidator(new DateValidator(getResources().getString(R.string.account_Birthday_Hit),"yyyyMMdd"));
+        birthdayET.addValidator(new DateValidator(getResources().getString(R.string.account_Birthday_Hit), "yyyyMMdd"));
         birthdayET.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -152,9 +154,9 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         birthdayET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                ((TextView)findViewById(R.id.tvAccountBirthday)).setTextColor(getResources().getColor(R.color.btn_color_selected));
-                ((TextView)findViewById(R.id.tvAccountNick)).setTextColor(getResources().getColor(R.color.btn_color));
-                ((TextView)findViewById(R.id.tvAccountHasHan)).setTextColor(getResources().getColor(R.color.btn_color));
+                ((TextView) findViewById(R.id.tvAccountBirthday)).setTextColor(getResources().getColor(R.color.btn_color_selected));
+                ((TextView) findViewById(R.id.tvAccountNick)).setTextColor(getResources().getColor(R.color.btn_color));
+                ((TextView) findViewById(R.id.tvAccountHasHan)).setTextColor(getResources().getColor(R.color.btn_color));
                 findViewById(R.id.llAccountNick).setBackgroundColor(getResources().getColor(R.color.btn_color));
                 findViewById(R.id.llAccountBirthday).setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
                 findViewById(R.id.llAccountHashan).setBackgroundColor(getResources().getColor(R.color.btn_color));
@@ -163,7 +165,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
 //                    String val=birthdayET.getText().toString();
 //                    if (val!=null&&val.length()==8){
 //                        resetTextViewColor();
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 //                    }else {
 //                        ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(birthdayET, InputMethodManager.SHOW_FORCED);
 //                    }
@@ -176,19 +178,19 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         birthdayET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                Log.e(TAG,charSequence.toString());
+                Log.e(TAG, charSequence.toString());
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                Log.d(TAG,charSequence.toString()+"  "+i+"  "+i2+"  "+i3);
+                Log.d(TAG, charSequence.toString() + "  " + i + "  " + i2 + "  " + i3);
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.i(TAG,editable.toString());
-                String val=editable.toString();
-                if (val!=null&&val.length()==8){
+                Log.i(TAG, editable.toString());
+                String val = editable.toString();
+                if (val != null && val.length() == 8) {
                     resetTextViewColor();
                     imm.hideSoftInputFromWindow(birthdayET.getWindowToken(), 0);
                 }
@@ -235,10 +237,10 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String val=editable.toString();
-                if (val!=null&&val.length()==3){
+                String val = editable.toString();
+                if (val != null && val.length() == 3) {
                     resetTextViewColor();
-                    ((InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(hasHanET.getWindowToken(), 0);
+                    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(hasHanET.getWindowToken(), 0);
                 }
             }
         });
@@ -276,12 +278,29 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
             ((Button)findViewById(R.id.btnStart)).setText(getResources().getString(R.string.btn_Save));
         }
 
+        typeTB=(ToggleButton)findViewById(R.id.tbAccountType);
+        typeTB.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                if (on) {
+                    bType=true;
+                } else {
+                    bType=false;
+                }
+            }
+        });
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
+        if (sourceType==1){
+            if (!appContext.getProperty(AppConfig.CONF_USER_TYPE).equals("0")){
+                nickET.setText(appContext.getProperty(AppConfig.CONF_USER_NICK));
+                dataType=AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_MANAGER;
+            }
+        }
     }
 
     public void loadData(AccountEntity accountEntity){
@@ -293,7 +312,11 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                 nickET.setText(accountEntity.getUserNick());
                 birthdayET.setText(accountEntity.getBirthday());
                 hasHanET.setText(accountEntity.getHeight());
-
+                if(accountEntity.getAccountType()==1){
+                    typeTB.setToggleOn();
+                }else{
+                    typeTB.setToggleOff();
+                }
                 ((Button)findViewById(R.id.btnStart)).setText(getResources().getString(R.string.btn_Save));
         }else{
             dataType=AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_MANAGER;
@@ -345,43 +368,61 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                     localAccountEntity.setBirthday(birthdayET.getText().toString());
                     localAccountEntity.setHeshan(Integer.parseInt(hasHanET.getText().toString()));
                     localAccountEntity.setSex(bSex?1:0);
+                    localAccountEntity.setAccountType(bType?1:0);
                     if (imageName!=null){
                         localAccountEntity.setAvatar(imageName);
                     }
                     if (getDataType()==AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_MANAGER) {
+                        localAccountEntity.setIsSync(0);
                         InsertAccountEntity(localAccountEntity);
-
                     }else {
                         AccountEntity entity = new AccountEntity();
+                        entity.setId(System.currentTimeMillis());
                         entity.setUserNick(nickET.getText().toString());
                         entity.setType(queryAccountType());
                         entity.setBirthday(birthdayET.getText().toString());
                         entity.setHeshan(Integer.parseInt(hasHanET.getText().toString()));
                         entity.setSex(bSex ? 1 : 0);
+                        entity.setAccountType(bType?1:0);
                         if (imageName!=null) {
                             entity.setAvatar(imageName);
                         }
+                        entity.setIsSync(0);
                         entity.setStatus(0);
                         entity.setAge(getAge(birthdayET.getText().toString()));
                         InsertAccountEntity(entity);
                     }
                     finish();
                 }else {
+                    // add member info
                     AccountEntity entity = new AccountEntity();
+                    entity.setId(System.currentTimeMillis());
                     entity.setUserNick(nickET.getText().toString());
                     entity.setType(queryAccountType());
                     entity.setBirthday(birthdayET.getText().toString());
                     entity.setHeshan(Integer.parseInt(hasHanET.getText().toString()));
                     entity.setSex(bSex ? 1 : 0);
+                    entity.setAccountType(bType?1:0);
                     if (imageName!=null) {
                         entity.setAvatar(imageName);
                     }
                     entity.setStatus(0);
+                    entity.setIsSync(0);
                     entity.setAge(getAge(birthdayET.getText().toString()));
                     if (getDataType()!=AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_OTHER) {
+                        Log.e(TAG,".......insert into accountEntity...");
                         InsertAccountEntity(entity);
                     }
-                    finish();
+                    if (sourceType==1){
+                        Intent intent=new Intent();
+                        Bundle bundle=new Bundle();
+                        bundle.putSerializable(AppConfig.PARAM_ACCOUNT,entity);
+                        intent.putExtras(bundle);
+                        AccountActivity.this.setResult(AppConfig.SUCCESS, intent);
+                        AccountActivity.this.finish();
+                    }else {
+                        finish();
+                    }
                 }
                 break;
             }

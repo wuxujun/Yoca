@@ -36,6 +36,7 @@ import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.media.QZoneShareContent;
 import com.umeng.socialize.media.SinaShareContent;
 import com.umeng.socialize.media.SmsShareContent;
+import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.sso.EmailHandler;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.sso.SinaSsoHandler;
@@ -98,7 +99,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
 
 
     private AccountEntity           localAccountEntity=null;
-    private int                     localWeightId=0;
+    private long                     localWeightId=0;
 
     private boolean                 bVisitor=false;
 
@@ -151,7 +152,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         if (localAccountEntity!=null){
             initHomeTarget();
         }
-        configPlatforms();
+//        configPlatforms();
     }
 
     private void initHomeTarget(){
@@ -173,9 +174,9 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                             entity.setHeight(localAccountEntity.getHeight());
                             entity.setSex(localAccountEntity.getSex());
                             entity.setAge(localAccountEntity.getAge());
-                            if (list.get(i).getType()<3){
+//                            if (list.get(i).getType()<3){
                                 entity.setIsShow(1);
-                            }
+//                            }
                             addHomeTargetEntity(entity);
                         }
                     }
@@ -278,19 +279,30 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
            mContentHeader.targetValue.setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetWeight())));
        }
 
-       if (localAccountEntity!=null&&localAccountEntity.getDoneTime()!=null) {
+       if (localAccountEntity!=null&& !StringUtil.isEmpty(localAccountEntity.getDoneTime())&&!localAccountEntity.getDoneTime().equals("0")) {
           mContentHeader.targetDay.setText("" + DateUtil.getDayDiff(localAccountEntity.getDoneTime()));
        }
+
+        String showTarget=appContext.getProperty(AppConfig.USER_SHOW_TARGET);
+        if (StringUtil.isEmpty(showTarget)){
+            mContentHeader.getTargetView().setVisibility(View.GONE);
+        }else{
+            mContentHeader.getTargetView().setVisibility(View.GONE);
+            if (showTarget.equals("1")){
+                mContentHeader.getTargetView().setVisibility(View.VISIBLE);
+            }
+        }
+
     }
     private void queryHealthData(String pickTime){
-        Log.e(TAG,"queryHealthData "+pickTime);
+        Log.i(TAG,"queryHealthData "+pickTime);
         if (localAccountEntity==null){
             isTodayData=false;
             return;
         }
-        Log.e(TAG,"queryHealthData "+pickTime+" accountId="+localAccountEntity.getId());
-        if (localAccountEntity!=null&&localAccountEntity.getId()==null){
-            Log.e(TAG,"游客称重....");
+        Log.i(TAG,"queryHealthData "+pickTime+" accountId="+localAccountEntity.getId());
+        if (localAccountEntity!=null&&localAccountEntity.getId()==0){
+            Log.i(TAG,"游客称重....");
             return;
         }
         AppConfig appConfig=AppConfig.getAppConfig(mContext);
@@ -398,7 +410,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
      */
     public void loadData(AccountEntity account){
         if (account!=null) {
-            Log.e(TAG,"loadData()... account is not null "+account.getUserNick()+" "+account.getHeight()+"  "+account.getAge()+" "+account.getSex()
+            Log.i(TAG,"loadData()... account is not null "+account.getUserNick()+" "+account.getHeight()+"  "+account.getAge()+" "+account.getSex()
                     +""+account.getWeight()+" "+account.getFat()+"  "+account.getSubFat()+"  "+account.getVisFat());
             bVisitor=false;
             localAccountEntity=account;
@@ -427,7 +439,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
     }
 
     public void updateWeightValue(String val,int type) {
-        Log.e(TAG,"updateWeightValue  val="+val+  "type＝"+type);
+        Log.i(TAG,"updateWeightValue  val="+val+  "type＝"+type);
         switch (type){
             case 1:{
                 startEffect();
@@ -461,7 +473,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
      */
     public void updateResult()
     {
-        Log.e(TAG,"updateResult "+strTodayDay);
+        Log.i(TAG,"updateResult "+strTodayDay);
         queryHealthData(strTodayDay);
         refreshView();
     }
@@ -526,7 +538,9 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
     }
 
     public void openShare(){
-        mController.getConfig().setPlatforms(SHARE_MEDIA.SINA,SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.WEIXIN,SHARE_MEDIA.QQ,SHARE_MEDIA.QZONE,SHARE_MEDIA.SMS,SHARE_MEDIA.EMAIL);
+        ImageUtils.getListBitmap(mListView,appContext.getCameraPath()+"/share.png");
+        configPlatforms();
+        mController.getConfig().setPlatforms(SHARE_MEDIA.SINA, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE, SHARE_MEDIA.SMS, SHARE_MEDIA.EMAIL);
         mController.openShare(getSherlockActivity(),false);
     }
 
@@ -560,7 +574,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             } else {
 
                 String str =dayDatas.get(currentDay);
-                Log.e(TAG,"=============>"+currentDay+"   "+str);
+                Log.i(TAG,"=============>"+currentDay+"   "+str);
                 java.util.Date endDate = DateUtil.dayToDate(str);
                 String day=DateUtil.getDayString(endDate);
                 mContentHeader.currentDate.setText(df.format(endDate));
@@ -609,7 +623,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             Intent intent = new Intent(getSherlockActivity(), AvatarEditAvtivity.class);
             Bundle bundle=new Bundle();
             bundle.putSerializable("account",localAccountEntity);
-            bundle.putInt("weightId",localWeightId);
+            bundle.putLong("weightId",localWeightId);
             intent.putExtras(bundle);
             getSherlockActivity().startActivity(intent);
         }
@@ -740,8 +754,9 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
 
         mController.getConfig().setSsoHandler(new SinaSsoHandler());
         SinaShareContent  sinaShareContent=new SinaShareContent();
-        sinaShareContent.setShareContent(content);
-        sinaShareContent.setTargetUrl(website);
+//        sinaShareContent.setShareContent(content);
+        sinaShareContent.setShareImage(new UMImage(mContext, appContext.getCameraPath() + "/share.png"));
+//        sinaShareContent.setTargetUrl(website);
         mController.setShareMedia(sinaShareContent);
 
 
@@ -756,6 +771,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         MailShareContent mail=new MailShareContent();
         mail.setTitle(title);
         mail.setShareContent(content);
+        mail.setShareImage(new UMImage(mContext,appContext.getCameraPath()+"/share.png"));
         mController.setShareMedia(mail);
 
         String appId=AppConfig.WEIXIN_APPID;
@@ -768,33 +784,37 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         umwxHandler1.addToSocialSDK();
 
         WeiXinShareContent weiXinShareContent=new WeiXinShareContent();
-        weiXinShareContent.setShareContent(content);
-        weiXinShareContent.setTitle(title);
-        weiXinShareContent.setTargetUrl(website);
+//        weiXinShareContent.setShareContent(content);
+//        weiXinShareContent.setTitle(title);
+        weiXinShareContent.setTargetUrl("");
+        weiXinShareContent.setShareImage(new UMImage(mContext, appContext.getCameraPath() + "/share.png"));
         mController.setShareMedia(weiXinShareContent);
 
         CircleShareContent circleShareContent=new CircleShareContent();
-        circleShareContent.setShareContent(content);
-        circleShareContent.setTargetUrl(website);
+//        circleShareContent.setShareContent(content);
+//        circleShareContent.setTargetUrl(website);
+        circleShareContent.setShareImage(new UMImage(mContext, appContext.getCameraPath() + "/share.png"));
         mController.setShareMedia(circleShareContent);
 
 
         appId=AppConfig.QQ_APPID;
         appSecret=AppConfig.QQ_APPSECRET;
         UMQQSsoHandler umqqSsoHandler=new UMQQSsoHandler(getSherlockActivity(),appId,appSecret);
-//        umqqSsoHandler.setTargetUrl("http://www.umeng.com/social");
         umqqSsoHandler.addToSocialSDK();
         QQShareContent qqShareContent=new QQShareContent();
-        qqShareContent.setShareContent(content);
-        qqShareContent.setTitle(title);
-        qqShareContent.setTargetUrl(website);
+//        qqShareContent.setShareContent(content);
+//        qqShareContent.setTitle(title);
+//        qqShareContent.setTargetUrl(website);
+        qqShareContent.setShareImage(new UMImage(mContext, appContext.getCameraPath() + "/share.png"));
+
         mController.setShareMedia(qqShareContent);
 
         QZoneSsoHandler qZoneSsoHandler=new QZoneSsoHandler(getSherlockActivity(),appId,appSecret);
         qZoneSsoHandler.addToSocialSDK();
         QZoneShareContent qzone=new QZoneShareContent();
-        qzone.setShareContent(content);
-        qzone.setTargetUrl(website);
+//        qzone.setShareContent(content);
+//        qzone.setTargetUrl(website);
+        qzone.setShareImage(new UMImage(mContext, appContext.getCameraPath() + "/share.png"));
         qzone.setTitle(title);
         mController.setShareMedia(qzone);
     }

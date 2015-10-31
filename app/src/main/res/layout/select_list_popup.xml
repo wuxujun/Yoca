@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="#2A2A2A">
+    <TextView  android:id="@+id/tv_select_dialog_title" android:layout_width="match_parent" android:layout_height="44dip" android:textStyle="bold" android:textSize="18sp" android:text="选择类型" android:textColor="@color/white"
+        android:gravity="center|center_vertical"
+        android:background="@color/action_bar_bg_color" android:layout_alignParentTop="true"/>
+    <ListView android:layout_below="@+id/tv_select_dialog_title"
+        android:layout_width="match_parent" android:divider="@null" android:cacheColorHint="@android:color/transparent"
+        android:layout_height="200dp" android:id="@+id/list"></ListView>
+
+</RelativeLayout>

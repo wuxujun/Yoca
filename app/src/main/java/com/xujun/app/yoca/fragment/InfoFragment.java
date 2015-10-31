@@ -341,7 +341,6 @@ public class InfoFragment extends BaseFragment {
                         holder.title.setText(info.getTitle());
                         if (!StringUtil.isEmpty(info.getImage())) {
                             ImageLoader.getInstance().displayImage(info.getImage(), holder.icon,options);
-
                         }
                         isHead=false;
                     }else {

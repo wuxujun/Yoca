@@ -16,7 +16,7 @@ import com.j256.ormlite.table.TableUtils;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME="yoca.db";
-    private static final int    DATABASE_VERSION=13;
+    private static final int    DATABASE_VERSION=16;
 
     private Dao<AccountEntity,Integer>   accountDao;
     private Dao<WarnEntity,Integer>      warnDao;
@@ -25,6 +25,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<HealthEntity,Integer>    healthDao;
     private Dao<HomeTargetEntity,Integer> homeTargetDao;
     private Dao<TargetEntity,Integer>     targetInfoDao;
+    private Dao<SendRecord,Integer>       sendRecordDao;
 
     private Dao<ConfigEntity,Integer>    configDao;
     private Dao<InfoEntity,Integer>      infoDao;
@@ -58,6 +59,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource,HomeTargetEntity.class);
             TableUtils.createTable(connectionSource,TargetEntity.class);
             TableUtils.createTable(connectionSource,InfoEntity.class);
+            TableUtils.createTable(connectionSource,SendRecord.class);
 
         }catch (SQLException e){
             Log.e(DatabaseHelper.class.getName(), " unable to create database", e);
@@ -78,7 +80,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             if (i==6){
                 TableUtils.dropTable(connectionSource,ConfigEntity.class,true);
-                TableUtils.createTable(connectionSource,ConfigEntity.class);
+                TableUtils.createTable(connectionSource, ConfigEntity.class);
 
             }
             if (i==7){
@@ -94,7 +96,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource, ConfigEntity.class,true);
                 TableUtils.dropTable(connectionSource, HomeTargetEntity.class,true);
                 TableUtils.dropTable(connectionSource, TargetEntity.class,true);
-                onCreate(sqLiteDatabase,connectionSource);
+                onCreate(sqLiteDatabase, connectionSource);
+            }
+            if (i==13){
+                TableUtils.dropTable(connectionSource,AccountEntity.class,true);
+                TableUtils.createTable(connectionSource,AccountEntity.class);
+            }
+            if (i==14){
+                TableUtils.createTable(connectionSource,SendRecord.class);
+            }
+            if (i==15){
+                TableUtils.dropTable(connectionSource,AccountEntity.class,true);
+                TableUtils.createTable(connectionSource,AccountEntity.class);
             }
 
         }catch (SQLException e){
@@ -168,6 +181,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return infoDao;
     }
 
+    public Dao<SendRecord,Integer> getSendRecordDao() throws  SQLException{
+        if (sendRecordDao==null){
+            sendRecordDao=getDao(SendRecord.class);
+        }
+        return sendRecordDao;
+    }
+
     public void close(){
         if (usageCounter.decrementAndGet()==0){
             super.close();
@@ -179,6 +199,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             configDao=null;
             homeTargetDao=null;
             infoDao=null;
+            sendRecordDao=null;
             helper=null;
         }
     }

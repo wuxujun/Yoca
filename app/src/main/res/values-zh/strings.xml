@@ -225,5 +225,14 @@
     <string name="main_current_weight">当前体重</string>
 
     <string name="btn_Logout">注销</string>
+    <string name="weight_model_found">实测</string>
+    <string name="weight_model_memory">记忆</string>
+    <string name="unit_lb">英镑</string>
+    <string name="unit_kg">公斤</string>
+    <string name="main_detail">当前数据</string>
+    <string name="main_show_target">测量页显示</string>
+    <string name="main_target_edit">指标编辑</string>
+    <string name="main_unit">单位</string>
+    <string name="login_Mobile_Code">绑定手机号</string>
 
 </resources>

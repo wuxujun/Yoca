@@ -15,7 +15,7 @@ public class HealthEntity implements Serializable{
     Integer             id;
 
     @DatabaseField(index = true)
-    Integer             accountId;
+    long             accountId;
 
     @DatabaseField(index = true)
     String              pickTime;
@@ -41,11 +41,11 @@ public class HealthEntity implements Serializable{
         this.id = id;
     }
 
-    public Integer getAccountId() {
+    public long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Integer accountId) {
+    public void setAccountId(long accountId) {
         this.accountId = accountId;
     }
 

@@ -27,6 +27,7 @@ import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
+import com.xujun.model.MemberInfo;
 import com.xujun.model.ThirdLoginResp;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
@@ -95,16 +96,17 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
     public void onResume() {
         super.onResume();
         initData();
+        Log.e(TAG, "" + appContext.getProperty(AppConfig.CONF_LOGIN_FLAG));
 //        testData();
     }
 
     private void initPlatforms()
     {
-        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(HomeActivity.this, "100334902",
-                "c4b60d276b112c4aee8c30bbe62b1286");
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(HomeActivity.this, AppConfig.QQ_APPID,
+                AppConfig.QQ_APPSECRET);
         qqSsoHandler.addToSocialSDK();
 
-        UMWXHandler wxHandler = new UMWXHandler(HomeActivity.this,"wx967daebe835fbeac","5bb696d9ccd75a38c8a0bfe0675559b3");
+        UMWXHandler wxHandler = new UMWXHandler(HomeActivity.this,AppConfig.WEIXIN_APPID,AppConfig.WEIXIN_APPSECRET);
         wxHandler.addToSocialSDK();
 
         mController.getConfig().setSsoHandler(new SinaSsoHandler());
@@ -127,7 +129,6 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                 dao.createOrUpdate(entity);
             }
 
-
             Dao<AccountEntity,Integer> dao1=getDatabaseHelper().getAccountEntityDao();
             QueryBuilder<AccountEntity,Integer> queryBuilder1=dao1.queryBuilder();
             queryBuilder1.where().eq("type",2);
@@ -148,6 +149,10 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        if (appContext.getNetworkType()<1){
+            Toast.makeText(this,getText(R.string.network_error),Toast.LENGTH_LONG).show();
+            return;
+        }
         switch (view.getId()){
             case R.id.btnLogin:{
                 Intent intent=new Intent(HomeActivity.this,LoginActivity.class);
@@ -166,7 +171,7 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                 mController.doOauthVerify(HomeActivity.this,SHARE_MEDIA.WEIXIN,new SocializeListeners.UMAuthListener() {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
-                        Log.e(TAG,"Weibo Login onStart");
+                        Toast.makeText(HomeActivity.this,"微信登录请求中...",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -181,6 +186,13 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                             public void onComplete(int status, Map<String, Object> info) {
                                 if (status==200&&info!=null){
                                     Log.e(TAG,"weixin OnCompelte() "+info.toString()+"");
+                                    appContext.setProperty("third_login_gender", info.get("sex").toString());
+                                    appContext.setProperty("third_login_city", info.get("city").toString());
+                                    appContext.setProperty("third_login_user_type", "1");
+                                    appContext.setProperty("third_login_unionid",info.get("unionid").toString());
+                                    appContext.setProperty("third_login_openid", info.get("openid").toString());
+                                    requestLogin("1",info.get("openid").toString(), info.get("nickname").toString(), info.get("headimgurl").toString());
+
                                 }else{
                                     Toast.makeText(HomeActivity.this,"发生错误",Toast.LENGTH_SHORT).show();
                                 }
@@ -190,13 +202,14 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
 
                     @Override
                     public void onError(SocializeException e, SHARE_MEDIA share_media) {
-
                         Log.e(TAG,"Weibo Login onError "+e.getMessage());
+                        Toast.makeText(HomeActivity.this,"微信登录发生错误..."+e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onCancel(SHARE_MEDIA share_media) {
                         Log.e(TAG,"Weibo Login onCancel "+share_media.toString());
+                        Toast.makeText(HomeActivity.this,"微信登录已取消",Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -208,6 +221,7 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
                         Log.e(TAG,"QQ onStart().....");
+                        Toast.makeText(HomeActivity.this,"QQ登录请求中...",Toast.LENGTH_SHORT).show();
                     }
                     @Override
                     public void onComplete(Bundle bundle, SHARE_MEDIA share_media) {
@@ -225,7 +239,7 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                                     appContext.setProperty("third_login_gender", info.get("gender").toString());
                                     appContext.setProperty("third_login_city", info.get("city").toString());
                                     appContext.setProperty("third_login_user_type", "2");
-                                    requestLogin("2", info.get("screen_name").toString(), info.get("profile_image_url").toString());
+                                    requestLogin("2","qq123456", info.get("screen_name").toString(), info.get("profile_image_url").toString());
                                 }else{
                                     Toast.makeText(HomeActivity.this,"发生错误",Toast.LENGTH_SHORT).show();
                                 }
@@ -240,7 +254,7 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
 
                     @Override
                     public void onCancel(SHARE_MEDIA share_media) {
-                        Toast.makeText(HomeActivity.this,"授权取消息",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this,"QQ登录已取消",Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -250,7 +264,8 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                 mController.doOauthVerify(HomeActivity.this, SHARE_MEDIA.SINA,new SocializeListeners.UMAuthListener() {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
-
+                        Log.e(TAG,"Weibo login start...");
+                        Toast.makeText(HomeActivity.this,"微博登录请求中...",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -260,11 +275,15 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                             public void onStart() {
                                 Toast.makeText(HomeActivity.this,"获取平台数据开始...",Toast.LENGTH_SHORT).show();
                             }
-
                             @Override
-                            public void onComplete(int status, Map<String, Object> stringObjectMap) {
-                                if (status==200&&stringObjectMap!=null){
-                                    Log.e(TAG,"..."+stringObjectMap.toString());
+                            public void onComplete(int status, Map<String, Object> info) {
+                                if (status==200&&info!=null){
+                                    Log.e(TAG,"..."+info.toString());
+                                    appContext.setProperty("third_login_gender", info.get("gender").toString());
+                                    appContext.setProperty("third_login_city", info.get("location").toString());
+                                    appContext.setProperty("third_login_user_type", "3");
+                                    requestLogin("3",info.get("uid").toString(), info.get("screen_name").toString(), info.get("profile_image_url").toString());
+
                                 }else{
                                     Log.e(TAG,"发生错误."+status);
                                 }
@@ -274,12 +293,12 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
 
                     @Override
                     public void onError(SocializeException e, SHARE_MEDIA share_media) {
-
+                        Toast.makeText(HomeActivity.this,"微博登录发生错误..."+e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onCancel(SHARE_MEDIA share_media) {
-
+                        Toast.makeText(HomeActivity.this,"微博登录已取消",Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
@@ -287,14 +306,14 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
         }
     }
 
-    private void requestLogin(String userType,String nick,String avatar){
-
+    private void requestLogin(String userType,String openid,String nick,String avatar){
 
         Map<String,String> sb=new HashMap<String, String>();
-        sb.put("imei",appContext.getIMSI());
+        sb.put("imei", appContext.getIMSI());
         sb.put("umengToken", UmengRegistrar.getRegistrationId(mContext));
-        sb.put("userNick",nick);
-        sb.put("avatar",avatar);
+        sb.put("userNick", nick);
+        sb.put("openid", openid);
+        sb.put("avatar", avatar);
         sb.put("userType", userType);
         sb.put("mobile", "");
         try{
@@ -305,10 +324,54 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
 
     }
 
+    private void addMemberInfo(MemberInfo info){
+        AccountEntity entity = new AccountEntity();
+        entity.setId(info.getAid());
+        entity.setUserNick(info.getUserNick());
+        entity.setType(info.getType());
+        entity.setBirthday(info.getBirthday());
+        entity.setHeshan(info.getHeight());
+        entity.setSex(info.getSex());
+        entity.setAccountType(info.getAccountType());
+        if (!StringUtil.isEmpty(info.getAvatar())) {
+            entity.setAvatar(info.getAvatar());
+        }
+        entity.setStatus(info.getStatus());
+        entity.setAge(info.getAge());
+        entity.setTargetType(info.getTargetType());
+        if (!StringUtil.isEmpty(info.getTargetWeight())) {
+            entity.setTargetWeight(info.getTargetWeight());
+        }
+        if (!StringUtil.isEmpty(info.getTargetFat())) {
+            entity.setTargetFat(info.getTargetFat());
+        }
+        if (!StringUtil.isEmpty(info.getDoneTime())) {
+            entity.setDoneTime(info.getDoneTime());
+        }
+        try{
+            Dao<AccountEntity,Integer> dao=getDatabaseHelper().getAccountEntityDao();
+            dao.setAutoCommit(dao.startThreadConnection(),false);
+            dao.createOrUpdate(entity);
+            dao.commit(dao.startThreadConnection());
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     private void parserResp(String resp){
         try{
-            Log.e(TAG,resp);
+            Log.e(TAG, resp);
             ThirdLoginResp baseResp=(ThirdLoginResp)(JsonUtil.ObjFromJson(resp,ThirdLoginResp.class));
+            if (baseResp.getMemberInfos()!=null&&baseResp.getMemberInfos().size()>0){
+                for (MemberInfo info:baseResp.getMemberInfos()){
+                    addMemberInfo(info);
+                }
+            }
+            appContext.setProperty(AppConfig.CONF_LOGIN_FLAG,"1");
+            appContext.setProperty(AppConfig.CONF_USER_TYPE,""+baseResp.getUser().getUserType());
+            appContext.setProperty(AppConfig.CONF_USER_UID, "" + baseResp.getIsExist());
+            appContext.setProperty(AppConfig.CONF_USER_NICK, baseResp.getUser().getUserNick());
+            appContext.setProperty(AppConfig.CONF_USER_AVATAR, baseResp.getUser().getAvatar());
             if (baseResp.getIsExist()>0||StringUtil.isEmpty(baseResp.getUser().getMobile())){
                 Intent intent = new Intent(HomeActivity.this, PhoneActivity.class);
                 Bundle bundle=new Bundle();
@@ -317,11 +380,6 @@ public class HomeActivity extends SherlockActivity implements View.OnClickListen
                 startActivity(intent);
                 finish();
             }else{
-                appContext.setProperty("login_flag","1");
-                appContext.setProperty("userType",""+baseResp.getUser().getUserType());
-                appContext.setProperty("uid", "" + baseResp.getIsExist());
-                appContext.setProperty("userNick", baseResp.getUser().getUserNick());
-                appContext.setProperty("avatar",baseResp.getUser().getAvatar());
                 Intent intent=new Intent(HomeActivity.this,TabActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putInt("FragmentType", 0);

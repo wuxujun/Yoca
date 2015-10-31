@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca" android:versionCode="26"
-    android:versionName="1.0.25">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca">
 
     <application android:allowBackup="true" android:label="@string/app_name" android:name=".AppContext"
         android:icon="@drawable/ic_launcher" android:theme="@style/Theme.Yocatheme">
@@ -9,6 +8,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".IntroductionActivity" android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
         <activity android:name=".DefaultActivity"/>
         <activity android:name=".HistoryActivity"/>
         <activity android:name=".TabActivity"/>
@@ -38,6 +38,7 @@
         <activity android:name=".LockSetupActivity"/>
         <activity android:name=".LockActivity"/>
         <activity android:name=".AboutActivity"/>
+        <activity android:name=".RecordActivity"/>
         <activity android:name=".SelectDialog" android:theme="@style/dialog" android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
         <service android:name=".NotifyService"/>
         <service android:name=".BluetoothLeService" android:enabled="true"/>

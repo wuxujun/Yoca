@@ -11,11 +11,11 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "t_weight")
 public class WeightEntity implements Serializable{
 
-    @DatabaseField(generatedId =true, canBeNull = false)
-    Integer             wid;
+    @DatabaseField(id=true,canBeNull = false)
+    long             wid;
 
     @DatabaseField(index = true)
-    Integer             aid;
+    long             aid;
 
     @DatabaseField(index = true)
     String              pickTime;
@@ -65,19 +65,19 @@ public class WeightEntity implements Serializable{
     @DatabaseField
     long             changetime;
 
-    public Integer getWid() {
+    public long getWid() {
         return wid;
     }
 
-    public void setWid(Integer wid) {
+    public void setWid(long wid) {
         this.wid = wid;
     }
 
-    public Integer getAid() {
+    public long getAid() {
         return aid;
     }
 
-    public void setAid(Integer aid) {
+    public void setAid(long aid) {
         this.aid = aid;
     }
 

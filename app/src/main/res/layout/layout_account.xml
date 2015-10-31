@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:background="@color/main_bg_color">
     <ScrollView
@@ -16,8 +17,8 @@
             android:layout_height="128dp"
             android:background="@drawable/userbig" />
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent" android:layout_margin="20dp"
+    <LinearLayout android:layout_marginTop="20dp"
+        android:layout_width="match_parent" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
         android:layout_height="@dimen/input_item_height" android:gravity="center_vertical|center_horizontal">
         <LinearLayout
             android:layout_width="match_parent" android:id="@+id/llSexWoram" android:background="@color/btn_color_selected"
@@ -35,7 +36,7 @@
             android:layout_height="match_parent" android:text="@string/account_Male" />
             </LinearLayout>
     </LinearLayout>
-    <LinearLayout android:id="@+id/llAccountNick"
+    <LinearLayout android:id="@+id/llAccountNick" android:layout_marginTop="10dp"
         android:layout_width="match_parent"  android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
         <LinearLayout
@@ -52,7 +53,7 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout android:id="@+id/llAccountBirthday"
-        android:layout_width="match_parent" android:layout_marginTop="20dp" android:background="@color/btn_color"
+        android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp"  android:layout_marginRight="20dp">
         <LinearLayout
             android:layout_width="match_parent"  android:layout_margin="1dp"
@@ -68,7 +69,7 @@
     </LinearLayout>
         </LinearLayout>
     <LinearLayout android:id="@+id/llAccountHashan"
-        android:layout_width="match_parent" android:layout_marginTop="20dp" android:background="@color/btn_color"
+        android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
         <LinearLayout
             android:layout_width="match_parent"  android:layout_margin="1dp"
@@ -85,6 +86,27 @@
             android:layout_width="80dp" android:gravity="center_vertical" style="@style/input_item_title"
             android:layout_height="match_parent" android:text="@string/account_Heshan_Unit" />
     </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/llAccountType"
+            android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
+            android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
+
+        <LinearLayout android:background="#303030"
+                android:layout_width="match_parent" android:layout_margin="1dp"
+                android:layout_height="match_parent" android:gravity="center_vertical">
+                <TextView android:text="@string/account_type"
+                    android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
+                    android:layout_width="match_parent" android:gravity="center_vertical"
+                    android:layout_height="match_parent" />
+                <com.xujun.widget.ToggleButton android:id="@+id/tbAccountType"
+                    android:layout_width="54dp" android:layout_marginRight="20dp"
+                    android:layout_height="30dp"
+                    toggle:onColor="#45c878"
+                    toggle:offColor="#ddd"
+                    toggle:spotColor="@color/chart_grid_color"
+                    toggle:offBorderColor="#000"
+                    />
+            </LinearLayout>
         </LinearLayout>
     <Button  style="@style/input_item_button" android:id="@+id/btnStart" android:layout_marginTop="40dp" android:text="@string/btn_StartWeigh" />
 </LinearLayout>

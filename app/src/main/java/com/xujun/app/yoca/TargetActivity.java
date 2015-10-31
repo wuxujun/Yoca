@@ -114,12 +114,12 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
             }
         });
         timeET=(FormEditText)findViewById(R.id.etTargetTime);
-        timeET.addValidator(new DateValidator(getResources().getString(R.string.account_Birthday_Hit),"yyyyMMdd"));
+        timeET.addValidator(new DateValidator(getResources().getString(R.string.account_Birthday_Hit), "yyyyMMdd"));
         timeET.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                imm.hideSoftInputFromWindow(view.getWindowToken(),0);
-                if (motionEvent.getAction()==MotionEvent.ACTION_UP){
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     onCreateDateDialog(timeET).show();
 //                    setDateTime();
 //                    Message msg=new Message();
@@ -133,7 +133,7 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
         timeET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                ((TextView)findViewById(R.id.tvTargetTime)).setTextColor(getResources().getColor(R.color.btn_color_selected));
+                ((TextView) findViewById(R.id.tvTargetTime)).setTextColor(getResources().getColor(R.color.btn_color_selected));
                 findViewById(R.id.llTargetTime).setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
                 if (hasFocus) {
                     // Open keyboard
@@ -141,13 +141,13 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
 //                    String val=timeET.getText().toString();
 //                    if (val!=null&&val.length()==8){
 //                        resetTextView();
-                       imm.hideSoftInputFromWindow(timeET.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(timeET.getWindowToken(), 0);
 //                    }else {
 //                        ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(timeET, InputMethodManager.SHOW_FORCED);
 //                    }
                 } else {
                     // Close keyboard
-                   imm.hideSoftInputFromWindow(timeET.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(timeET.getWindowToken(), 0);
                 }
             }
         });
@@ -155,18 +155,18 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
         timeET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                Log.e(TAG,charSequence.toString());
+                Log.e(TAG, charSequence.toString());
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                Log.d(TAG,charSequence.toString()+"  "+i+"  "+i2+"  "+i3);
+                Log.d(TAG, charSequence.toString() + "  " + i + "  " + i2 + "  " + i3);
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String val=editable.toString();
-                if (val!=null&&val.length()==8){
+                String val = editable.toString();
+                if (val != null && val.length() == 8) {
                     resetTextView();
                     imm.hideSoftInputFromWindow(timeET.getWindowToken(), 0);
                 }
@@ -188,24 +188,29 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
 
 
     public void initTargetData(){
-        if (!StringUtil.isEmpty(localAccountEntity.getTargetWeight())) {
-            ((TextView)findViewById(R.id.tvTargetValue)).setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetWeight())));
-            ((SeekBar)findViewById(R.id.seekBar)).setProgress(Integer.parseInt(StringUtil.doubleToString(Double.parseDouble(localAccountEntity.getTargetWeight()))));
-        }
         if (localAccountEntity.getTargetType()!=null) {
             if (localAccountEntity.getTargetType() == 1) {
                 setTargetType(1);
+                if (!StringUtil.isEmpty(localAccountEntity.getTargetWeight())) {
+                    ((TextView)findViewById(R.id.tvTargetValue)).setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetWeight())));
+                    ((SeekBar)findViewById(R.id.seekBar)).setProgress(Integer.parseInt(StringUtil.doubleToString(Double.parseDouble(localAccountEntity.getTargetWeight()))));
+                }
             } else if (localAccountEntity.getTargetType() ==2) {
                 setTargetType(2);
+                if (!StringUtil.isEmpty(localAccountEntity.getTargetFat())) {
+                    ((TextView)findViewById(R.id.tvTargetValue)).setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetFat())));
+                    ((SeekBar)findViewById(R.id.seekBar)).setProgress(Integer.parseInt(StringUtil.doubleToString(Double.parseDouble(localAccountEntity.getTargetFat()))));
+                }
             } else {
                 setTargetType(3);
+                if (!StringUtil.isEmpty(localAccountEntity.getTargetWeight())) {
+                    ((TextView)findViewById(R.id.tvTargetValue)).setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetWeight())));
+                    ((SeekBar)findViewById(R.id.seekBar)).setProgress(Integer.parseInt(StringUtil.doubleToString(Double.parseDouble(localAccountEntity.getTargetWeight()))));
+                }
             }
         }
         if (!StringUtil.isEmpty(localAccountEntity.getDoneTime())){
             ((FormEditText)findViewById(R.id.etTargetTime)).setText(localAccountEntity.getDoneTime());
-        }
-        if (!StringUtil.isEmpty(localAccountEntity.getWeight())) {
-            ((TextView) findViewById(R.id.tvWeight)).setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getWeight())) + "Kg");
         }
 
         //女
@@ -213,7 +218,7 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
             ((TextView)findViewById(R.id.tvTopWeight)).setText(StringUtil.doubleToStringOne((localAccountEntity.getHeight()-100)));
         }else{
            //男
-            ((TextView)findViewById(R.id.tvTopWeight)).setText(StringUtil.doubleToStringOne((localAccountEntity.getHeight()-105)));
+            ((TextView)findViewById(R.id.tvTopWeight)).setText(StringUtil.doubleToStringOne((localAccountEntity.getHeight() - 105)));
         }
     }
 
@@ -260,13 +265,19 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
             Log.e(TAG,"account save.");
             saveBtn.setProgress(50);
             localAccountEntity.setTargetType(targetType);
-            localAccountEntity.setTargetWeight(""+targetSB.getProgress());
+            if (targetType==2){
+                localAccountEntity.setTargetFat("" + targetSB.getProgress());
+                if (!StringUtil.isEmpty(localAccountEntity.getTargetWeight())) {
+                    localAccountEntity.setTargetWeight(localAccountEntity.getWeight());
+                }
+            }else {
+                localAccountEntity.setTargetWeight("" + targetSB.getProgress());
+                localAccountEntity.setTargetFat("2.0");
+            }
             localAccountEntity.setDoneTime(timeET.getText().toString());
-
             saveAccountEntity(localAccountEntity);
         }else{
             Toast.makeText(mContext,"请选择成员后,再设定目标！",Toast.LENGTH_LONG).show();
-
         }
 
     }
@@ -305,7 +316,8 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
                 findViewById(R.id.llTargetType1).setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
                 findViewById(R.id.llTargetType2).setBackgroundColor(getResources().getColor(R.color.btn_color));
                 findViewById(R.id.llTargetType3).setBackgroundColor(getResources().getColor(R.color.btn_color));
-
+                ((TextView)findViewById(R.id.tvTargetTitle)).setText("希望体重");
+                ((TextView)findViewById(R.id.tvTargetUnit)).setText("Kg");
                 break;
             }
             case 2:{
@@ -315,7 +327,8 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
                 findViewById(R.id.llTargetType1).setBackgroundColor(getResources().getColor(R.color.btn_color));
                 findViewById(R.id.llTargetType2).setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
                 findViewById(R.id.llTargetType3).setBackgroundColor(getResources().getColor(R.color.btn_color));
-
+                ((TextView)findViewById(R.id.tvTargetTitle)).setText("希望体脂");
+                ((TextView)findViewById(R.id.tvTargetUnit)).setText("%");
                 break;
             }
             case 3:{
@@ -325,7 +338,8 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
                 findViewById(R.id.llTargetType1).setBackgroundColor(getResources().getColor(R.color.btn_color));
                 findViewById(R.id.llTargetType2).setBackgroundColor(getResources().getColor(R.color.btn_color));
                 findViewById(R.id.llTargetType3).setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
-
+                ((TextView)findViewById(R.id.tvTargetTitle)).setText("希望体重");
+                ((TextView)findViewById(R.id.tvTargetUnit)).setText("Kg");
                 break;
             }
         }
