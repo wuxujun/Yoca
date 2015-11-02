@@ -5,13 +5,14 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.4" />
         <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Crouton" />
             <option value="$PROJECT_DIR$/MPChartLib" />
+            <option value="$PROJECT_DIR$/UniversalImageLoader" />
             <option value="$PROJECT_DIR$/ViewPagerIndicator" />
             <option value="$PROJECT_DIR$/actionbarsherlock" />
             <option value="$PROJECT_DIR$/app" />
@@ -19,6 +20,7 @@
             <option value="$PROJECT_DIR$/rebound-android" />
             <option value="$PROJECT_DIR$/rebound-core" />
             <option value="$PROJECT_DIR$/sMSSDK" />
+            <option value="$PROJECT_DIR$/xUtils" />
           </set>
         </option>
       </GradleProjectSettings>

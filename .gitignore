@@ -13,6 +13,10 @@
 /ViewPagerIndicator
 /actionbarsherlock
 /edittextvalidator
+/Crouton
+/rebound-android/build
+/rebound-core/build
+/release
 .apk
 .jks
 .txt
