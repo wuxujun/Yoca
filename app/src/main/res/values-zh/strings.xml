@@ -36,8 +36,8 @@
 
     <string name="login_Other">第三方登录</string>
 
-    <string name="login">登录</string>
-    <string name="register">注册</string>
+    <string name="login">登  录</string>
+    <string name="register">注  册</string>
     <string name="login_Account">帐号</string>
     <string name="login_Account_Hit">请输入帐号</string>
     <string name="login_Mobileoremail">邮箱/手机</string>

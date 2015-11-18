@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
         <FrameLayout android:id="@+id/llHead" android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
-            android:layout_width="match_parent" android:background="@color/white"
+            android:layout_width="match_parent"
             android:layout_height="120dp">
             <ImageView android:id="@+id/ivIcon" android:layout_margin="5dp" android:scaleType="fitXY" android:layout_width="match_parent"
             android:layout_height="match_parent" android:background="@drawable/ic_launcher"/>
@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content" style="@style/main_text_label" android:textSize="16sp" android:text="1"
                 android:singleLine="true" android:layout_marginBottom="5dp" />
         </FrameLayout>
-        <LinearLayout android:id="@+id/llItem" android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:background="@color/white"
+        <LinearLayout android:id="@+id/llItem" android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
             android:layout_width="match_parent" android:layout_gravity="center_vertical" android:gravity="center_vertical"
             android:layout_height="match_parent" android:orientation="horizontal">
             <TextView android:id="@+id/tvItemTitle" android:layout_marginLeft="10dp"
@@ -35,7 +35,7 @@
         </LinearLayout>
         <ImageView
             android:layout_width="match_parent" android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
-            android:layout_height="1dp" android:background="@color/btn_color" />
+            android:layout_height="@dimen/input_line" android:background="@color/btn_color" />
             </LinearLayout>
     </LinearLayout>
 

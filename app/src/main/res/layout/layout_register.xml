@@ -13,12 +13,12 @@
         android:id="@+id/llRegisterAccount"
         android:layout_width="match_parent" android:layout_marginTop="40dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
-        <LinearLayout android:layout_margin="1dp"
+        <LinearLayout android:layout_margin="@dimen/input_line"
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
 
-        <TextView  android:layout_marginRight="10dp" android:id="@+id/tvRegAccount"
-            android:gravity="center_vertical|right" style="@style/input_item_title"
+        <TextView android:id="@+id/tvRegAccount"
+            android:gravity="center_vertical" style="@style/input_item_title"
             android:layout_width="100dp" android:text="@string/login_Mobileoremail"
             android:layout_height="match_parent" />
         <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/login_Mobileoremail_Hit" android:id="@+id/etRegAccount"
@@ -31,12 +31,12 @@
     <LinearLayout android:id="@+id/llRegisterPasswd"
         android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp"  android:layout_marginRight="20dp">
-        <LinearLayout android:layout_margin="1dp"
+        <LinearLayout android:layout_margin="@dimen/input_line"
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
 
-        <TextView  android:layout_marginRight="10dp" android:id="@+id/tvRegPassword"
-            android:gravity="center_vertical|right" style="@style/input_item_title"
+        <TextView  android:id="@+id/tvRegPassword"
+            android:gravity="center_vertical" style="@style/input_item_title"
             android:layout_width="100dp" android:text="@string/login_Password"
             android:layout_height="match_parent" />
         <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/login_Password_Hit" android:id="@+id/etRegPassword"
@@ -47,12 +47,12 @@
     <LinearLayout android:id="@+id/llRegisterPasswd2"
         android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
-        <LinearLayout android:layout_margin="1dp"
+        <LinearLayout android:layout_margin="@dimen/input_line"
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
 
-        <TextView android:layout_marginRight="10dp" style="@style/input_item_title"
-            android:gravity="center_vertical|right" android:id="@+id/tvRegPassword2"
+        <TextView style="@style/input_item_title"
+            android:gravity="center_vertical" android:id="@+id/tvRegPassword2"
             android:layout_width="100dp" android:text="@string/login_ConfirmPassword"
             android:layout_height="match_parent" />
         <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/login_ConfirmPassword_Hit" android:id="@+id/etRegPassword2"
@@ -63,11 +63,11 @@
     <LinearLayout android:id="@+id/llRegisterCode"
         android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
-        <LinearLayout android:layout_margin="1dp"
+        <LinearLayout android:layout_margin="@dimen/input_line"
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
 
-        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:layout_marginLeft="40dp" android:hint="@string/login_VerCode_Hit"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:layout_marginLeft="15dp" android:hint="@string/login_VerCode_Hit"
             android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/etRegCode" style="@style/input_item_edit"
             android:layout_height="match_parent" android:imeOptions="actionDone" android:singleLine="true"/>
         <TextView android:layout_marginLeft="10dp" style="@style/input_item_title"

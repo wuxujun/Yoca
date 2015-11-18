@@ -254,7 +254,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
     private void loadHomeTarget(){
         try {
             items.clear();
-            List<HomeTargetEntity> homeTargetEntityList = getDatabaseHelper().getHomeTargetDao().queryBuilder().where().eq("aid", localAccountEntity.getId()).and().eq("isShow",1).query();
+            List<HomeTargetEntity> homeTargetEntityList = getDatabaseHelper().getHomeTargetDao().queryBuilder().orderBy("type",true).where().eq("aid", localAccountEntity.getId()).and().eq("isShow",1).and().notIn("type",0).query();
             if (homeTargetEntityList.size()>0) {
                 items.addAll(homeTargetEntityList);
             }
@@ -276,7 +276,13 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
     {
         mContentHeader.isShowContent(isTodayData);
        if (localAccountEntity!=null&&localAccountEntity.getTargetWeight()!=null) {
-           mContentHeader.targetValue.setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetWeight())));
+           Log.e(TAG,"refreshView ..."+localAccountEntity.getTargetWeight());
+           if (!localAccountEntity.getTargetWeight().equals("0")) {
+               mContentHeader.targetValue.setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetWeight())));
+           }else{
+               isTodayData=false;
+               mContentHeader.isShowContent(isTodayData);
+           }
        }
 
        if (localAccountEntity!=null&& !StringUtil.isEmpty(localAccountEntity.getDoneTime())&&!localAccountEntity.getDoneTime().equals("0")) {
@@ -309,6 +315,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         int sex=localAccountEntity.getSex();
         int age=localAccountEntity.getAge();
         int height=localAccountEntity.getHeight();
+        double localWeight=0;
         try{
             Dao<WeightHisEntity,Integer> weightHisEntityDao=getDatabaseHelper().getWeightHisEntityDao();
             QueryBuilder<WeightHisEntity, Integer> weightHisQueryBuilder = weightHisEntityDao.queryBuilder();
@@ -318,16 +325,17 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             if (weightHisEntity!=null&&mContentView!=null){
                 mContentHeader.setWeightValue(StringUtil.doubleToStringOne(weightHisEntity.getWeight()));
                 localWeightId=weightHisEntity.getWid();
+                localWeight=weightHisEntity.getWeight();
                 Log.e(TAG, weightHisEntity.getPickTime() + "weight:" + weightHisEntity.getWeight());
-                updateHomeTargetValue(0, StringUtil.doubleToStringOne(weightHisEntity.getBmi()), appConfig.getBMITitle(weightHisEntity.getBmi()), appConfig.getBMIStatus(weightHisEntity.getBmi()), appConfig.getBMIValue(weightHisEntity.getBmi()));
+                updateHomeTargetValue(2,StringUtil.doubleToStringOne(weightHisEntity.getBmi()), appConfig.getBMITitle(weightHisEntity.getBmi()), appConfig.getBMIStatus(weightHisEntity.getBmi()), appConfig.getBMIValue(weightHisEntity.getBmi()));
                 updateHomeTargetValue(1,StringUtil.doubleToStringOne(weightHisEntity.getWeight()),appConfig.getWeightTitle(height, sex, weightHisEntity.getWeight()),appConfig.getWeightStatus(height, sex, weightHisEntity.getWeight()),appConfig.getWeightValue(height, sex, weightHisEntity.getWeight()));
-                updateHomeTargetValue(2,StringUtil.doubleToStringOne(weightHisEntity.getFat()),appConfig.getFatTitle(age, sex, weightHisEntity.getFat()),appConfig.getFatStatus(age, sex, weightHisEntity.getFat()),appConfig.getFatValue(age, sex, weightHisEntity.getFat()));
-                updateHomeTargetValue(3,StringUtil.doubleToStringOne(weightHisEntity.getSubFat()),appConfig.getSubFatTitle(sex, weightHisEntity.getSubFat()),appConfig.getSubFatStatus(sex, weightHisEntity.getSubFat()),appConfig.getSubFatValue(sex, weightHisEntity.getSubFat()));
-                updateHomeTargetValue(4,StringUtil.doubleToStringOne(weightHisEntity.getVisFat()),appConfig.getVisFatTitle(weightHisEntity.getVisFat()),appConfig.getVisFatStatus(weightHisEntity.getVisFat()),appConfig.getVisFatValue(weightHisEntity.getVisFat()));
-                updateHomeTargetValue(5,StringUtil.doubleToStringOne(weightHisEntity.getWater()),appConfig.getWaterTitle(sex, weightHisEntity.getWater()),appConfig.getWaterStatus(sex, weightHisEntity.getWater()),appConfig.getWaterValue(sex, weightHisEntity.getWater()));
+                updateHomeTargetValue(3,StringUtil.doubleToStringOne(weightHisEntity.getFat()),appConfig.getFatTitle(age, sex, weightHisEntity.getFat()),appConfig.getFatStatus(age, sex, weightHisEntity.getFat()),appConfig.getFatValue(age, sex, weightHisEntity.getFat()));
+                updateHomeTargetValue(4,StringUtil.doubleToStringOne(weightHisEntity.getSubFat()),appConfig.getSubFatTitle(sex, weightHisEntity.getSubFat()),appConfig.getSubFatStatus(sex, weightHisEntity.getSubFat()),appConfig.getSubFatValue(sex, weightHisEntity.getSubFat()));
+                updateHomeTargetValue(5,StringUtil.doubleToStringOne(weightHisEntity.getVisFat()),appConfig.getVisFatTitle(weightHisEntity.getVisFat()),appConfig.getVisFatStatus(weightHisEntity.getVisFat()),appConfig.getVisFatValue(weightHisEntity.getVisFat()));
+                updateHomeTargetValue(7,StringUtil.doubleToStringOne(weightHisEntity.getWater()),appConfig.getWaterTitle(sex, weightHisEntity.getWater()),appConfig.getWaterStatus(sex, weightHisEntity.getWater()),appConfig.getWaterValue(sex, weightHisEntity.getWater()));
                 updateHomeTargetValue(6,StringUtil.doubleToStringOne(weightHisEntity.getBMR()),appConfig.getBMRTitle(age, sex, weightHisEntity.getBMR()),appConfig.getBMRStatus(age, sex, weightHisEntity.getBMR()),appConfig.getBMRValue(age, sex, weightHisEntity.getBMR()));
                 if(weightHisEntity.getBodyAge()!=null) {
-                    updateHomeTargetValue(7, StringUtil.doubleToStringOne(weightHisEntity.getBodyAge()), "正常", 1, 50);
+                    updateHomeTargetValue(11, StringUtil.doubleToStringOne(weightHisEntity.getBodyAge()), "正常", 1, 50);
                 }
                 updateHomeTargetValue(8,StringUtil.doubleToStringOne(weightHisEntity.getMuscle()),appConfig.getMuscleTitle(height, sex, weightHisEntity.getMuscle()),appConfig.getMuscleStatus(height, sex, weightHisEntity.getMuscle()),appConfig.getMuscleValue(height, sex, weightHisEntity.getMuscle()));
                 updateHomeTargetValue(9,StringUtil.doubleToStringOne(weightHisEntity.getBone()),appConfig.getBoneTitle(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()),appConfig.getBoneStatus(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()),appConfig.getBoneValue(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()));
@@ -368,6 +376,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             queryBuilder1.where().eq("id",localAccountEntity.getId());
             if (queryBuilder1.queryForFirst()!=null){
                 localAccountEntity=queryBuilder1.queryForFirst();
+                localAccountEntity.setTargetWeight(StringUtil.doubleToString(localWeight));
             }
         }catch (SQLException e){
             e.printStackTrace();
@@ -522,6 +531,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                     Intent intent=new Intent(getSherlockActivity(), AvatarEditAvtivity.class);
                     Bundle bundle=new Bundle();
                     bundle.putSerializable("account",localAccountEntity);
+                    bundle.putString("dataTime",lastQueryDate);
                     intent.putExtras(bundle);
                     getSherlockActivity().startActivity(intent);
                 }
@@ -562,13 +572,15 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             if (currentDay>=dayDatas.size()||currentDay<0){
                 return;
             }
-
+            Log.e(TAG,"refreshDayData.....");
             if (currentDay == 0) {
                 mContentHeader.currentDate.setText(getResources().getString(R.string.main_today));
                 lastQueryDate=strTodayDay;
                 queryHealthData(strTodayDay);
                 if (localAccountEntity.getDoneTime() != null && mContentView != null) {
-                    mContentHeader.targetDay.setText("" + DateUtil.getDayDiff(dfYearMonthDay.format(new Date()), localAccountEntity.getDoneTime()));
+                    if (!localAccountEntity.getDoneTime().equals("0")) {
+                        mContentHeader.targetDay.setText("" + DateUtil.getDayDiff(dfYearMonthDay.format(new Date()), localAccountEntity.getDoneTime()));
+                    }
                 }
 
             } else {
@@ -624,6 +636,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             Bundle bundle=new Bundle();
             bundle.putSerializable("account",localAccountEntity);
             bundle.putLong("weightId",localWeightId);
+            bundle.putString("dataTime",lastQueryDate);
             intent.putExtras(bundle);
             getSherlockActivity().startActivity(intent);
         }

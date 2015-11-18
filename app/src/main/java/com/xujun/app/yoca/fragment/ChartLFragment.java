@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 在用图表
  * Created by xujunwu on 15/6/15.
  */
 public class ChartLFragment extends BaseFragment implements View.OnClickListener{
@@ -160,7 +161,7 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
             }
             ComparatorWeight comparatorWeight=new ComparatorWeight();
             Collections.sort(datas, comparatorWeight);
-            List<TargetEntity> targetEntityList = getDatabaseHelper().getTargetInfoDao().queryBuilder().query();
+            List<TargetEntity> targetEntityList = getDatabaseHelper().getTargetInfoDao().queryBuilder().orderBy("type",true).where().notIn("type",0).query();
             if (targetEntityList.size()>0) {
                 targets.addAll(targetEntityList);
             }
@@ -187,7 +188,7 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                     xVals.add(DateUtil.getDayForDate(date));
                 }
                 switch (type){
-                    case 0:
+                    case 2:
                         value=Float.parseFloat(entity.getBmi());
                         targetTotal+= Float.parseFloat(entity.getBmi());
                         break;
@@ -195,19 +196,19 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                         value=Float.parseFloat(entity.getWeight());
                         targetTotal+= Float.parseFloat(entity.getWeight());
                         break;
-                    case 2:
+                    case 3:
                         value=Float.parseFloat(entity.getFat());
                         targetTotal+= Float.parseFloat(entity.getFat());
                         break;
-                    case 3:
+                    case 4:
                         value=Float.parseFloat(entity.getSubFat());
                         targetTotal+= Float.parseFloat(entity.getSubFat());
                         break;
-                    case 4:
+                    case 5:
                         value=Float.parseFloat(entity.getVisFat());
                         targetTotal+= Float.parseFloat(entity.getVisFat());
                         break;
-                    case 5:
+                    case 7:
                         value=Float.parseFloat(entity.getWater());
                         targetTotal+= Float.parseFloat(entity.getWater());
                         break;
@@ -215,7 +216,7 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                         value=Float.parseFloat(entity.getBMR());
                         targetTotal+= Float.parseFloat(entity.getBMR());
                         break;
-                    case 7:
+                    case 11:
                         value=Float.parseFloat(entity.getBodyAge());
                         targetTotal+= Float.parseFloat(entity.getBodyAge());
                         break;
@@ -227,9 +228,13 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                         value=Float.parseFloat(entity.getBone());
                         targetTotal+= Float.parseFloat(entity.getBone());
                         break;
-                    default:
+                    case 10:
                         value=Float.parseFloat(entity.getProtein());
                         targetTotal+= Float.parseFloat(entity.getProtein());
+                        break;
+                    default:
+                        value=Float.parseFloat(entity.getSholai());
+                        targetTotal+=Float.parseFloat(entity.getSholai());
                         break;
                 }
                 yVals.add(new Entry(value,i));

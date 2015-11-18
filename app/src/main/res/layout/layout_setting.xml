@@ -26,7 +26,7 @@
 
     <LinearLayout android:id="@+id/llGroup" android:layout_marginBottom="2dp"
         android:layout_width="match_parent" android:background="@color/item_background"
-        android:layout_height="56dp" android:gravity="center_vertical">
+        android:layout_height="56dp" android:gravity="center_vertical" android:visibility="gone">
         <TextView
             android:id="@+id/tvGroupTitle" android:text="@string/setting_device" style="@style/setting_item_label"
             android:layout_weight="1" android:layout_marginLeft="20dp"
@@ -139,7 +139,7 @@
     </LinearLayout>
         <LinearLayout android:id="@+id/llRecord" android:background="@color/item_background"
             android:layout_width="match_parent" android:layout_marginBottom="2dp"
-            android:layout_height="56dp" android:gravity="center_vertical">
+            android:layout_height="56dp" android:gravity="center_vertical" android:visibility="gone">
             <TextView android:text="发包记录"
                 android:layout_weight="1" android:layout_marginLeft="20dp" style="@style/setting_item_label"
                 android:layout_width="match_parent" android:gravity="center_vertical"

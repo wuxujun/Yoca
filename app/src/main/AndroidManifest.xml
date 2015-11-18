@@ -19,7 +19,7 @@
         <activity android:name=".HistoryDActivity"/>
         <activity android:name=".SettingActivity"/>
         <activity android:name=".DeviceActivity"/>
-        <activity android:name=".AvatarEditAvtivity"/>
+        <activity android:name=".AvatarEditAvtivity" android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
         <activity android:name=".AvatarMActivity"/>
         <activity android:name=".HomeActivity"/>
         <activity android:name=".PhoneActivity"/>
@@ -34,7 +34,7 @@
         <activity android:name=".DetailActivity"/>
         <activity android:name=".TargetHisActivity"/>
         <activity android:name=".WarnActivity"/>
-        <activity android:name=".WarnSetActivity"/>
+        <activity android:name=".WarnSetActivity" android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
         <activity android:name=".LockSetupActivity"/>
         <activity android:name=".LockActivity"/>
         <activity android:name=".AboutActivity"/>

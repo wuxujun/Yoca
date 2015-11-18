@@ -58,12 +58,20 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onToggle(boolean on) {
                 if (on) {
-                    Intent intent = new Intent(SettingActivity.this, LockSetupActivity.class);
+                    Intent intent = new Intent(SettingActivity.this, LockActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("lockType",1);
+                    intent.putExtras(bundle);
                     startActivity(intent);
+                    appContext.setProperty(AppConfig.USER_LOCK_TYPE,"1");
                 } else {
                     AppConfig.getAppConfig(mContext).set(AppConfig.USER_LOCK_TYPE, "0");
                     Intent intent = new Intent(SettingActivity.this, LockActivity.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putInt("lockType",0);
+                    intent.putExtras(bundle);
                     startActivity(intent);
+                    appContext.setProperty(AppConfig.USER_LOCK_TYPE, "0");
                 }
             }
         });
@@ -159,13 +167,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
-        mUserLock=AppConfig.getAppConfig(mContext).get(AppConfig.USER_LOCK_PASS);
+        mUserLock=appContext.getProperty(AppConfig.USER_LOCK_TYPE);
         if (mUserLock!=null&&mUserLock.equals("1")){
             mPrePassTB.setToggleOn();
         }else{
             mPrePassTB.setToggleOff();
         }
     }
-
-
 }

@@ -224,23 +224,27 @@ public class AppConfig {
             case 1:
                 return "体重";
             case 2:
-                return "体脂率";
+                return "BMI";
             case 3:
-                return "皮下脂肪率";
+                return "体脂率";
             case 4:
-                return "内脏脂肪等级";
+                return "皮下脂肪";
             case 5:
-                return "水份含量";
+                return "内脏脂肪";
             case 6:
-                return "基础代谢率";
+                return "基础代谢";
             case 7:
-                return "身体年龄";
+                return "水份含量";
             case 8:
                 return "肌肉重量";
             case 9:
-                return "骨量";
+                return "骨量重量";
+            case 10:
+                return "蛋白质量";
+            case 11:
+                return "身体年龄";
             case 0:
-                return "BMI";
+                return "Sholai指数";
         }
         return result;
 
@@ -252,17 +256,17 @@ public class AppConfig {
             case 1:
                 return "Kg";
             case 2:
-                return "%";
+                return "";
             case 3:
                 return "%";
             case 4:
-                return "0";
-            case 5:
                 return "%";
-            case 6:
-                return "cal";
-            case 7:
+            case 5:
                 return "0";
+            case 6:
+                return "Cal";
+            case 7:
+                return "%";
             case 8:
                 return "Kg";
             case 9:
@@ -552,7 +556,7 @@ public class AppConfig {
         }else if(value>10&&value<14){
             return "偏高";
         }else if(value>15){
-            return "严重偏高";
+            return "偏高";
         }
         return "标准";
     }
@@ -1074,9 +1078,9 @@ public class AppConfig {
     public String getBMITitle(double value){
         if (value>=24&&value<=28)
         {
-            return "轻度脂肪堆积";
+            return "偏高";
         }else if(value>28){
-            return "严重脂肪堆积";
+            return "偏高";
         }else if(value<18.5){
             return "偏瘦";
         }

@@ -56,8 +56,8 @@
     <string name="main_show_target">测量页显示</string>
     <string name="chart_history_data" translatable="false">显示所有数据</string>
 
-    <string name="login">登录</string>
-    <string name="register">注册</string>
+    <string name="login">登  录</string>
+    <string name="register">注  册</string>
     <string name="login_Account">帐号</string>
     <string name="login_Account_Hit">请输入帐号</string>
     <string name="login_Mobile">手机</string>
@@ -270,5 +270,21 @@
     <string name="lockscreen_access_pattern_detected">Pattern completed</string>
 
 
+    <string name="numeric_keyboard_down">numeric keyboard down</string>
+    <string name="numeric_keyboard_up">numeric keyboard up</string>
+    <string name="numeric_keyboard_cancel">numeric keyboard cancel</string>
+
+    <string name="input_again">重输</string>
+    <string name="delete">删除</string>
+    <string name="zero">0</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="neigh">9</string>
 
 </resources>

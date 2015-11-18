@@ -379,7 +379,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 if (isSync){
                     sendNotifyService(AppConfig.ACTION_ACCOUNT_SYNC);
                 }
-                Log.e(TAG,"loadAccountEntitys ...."+accountEntities.size());
+                Log.e(TAG, "loadAccountEntitys ...." + accountEntities.size());
             }
         }catch (SQLException e){
             e.printStackTrace();
@@ -433,7 +433,9 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 mHeadTitle.setText(localAccountEntity.getUserNick());
                 if (!StringUtil.isEmpty(localAccountEntity.getAvatar())){
                     Log.d(TAG, localAccountEntity.getAvatar());
-                    mHeadIcon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                    if (!localAccountEntity.getAvatar().equals("0")) {
+                        mHeadIcon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                    }
                 }
             }
 
@@ -1246,14 +1248,14 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                     accountEntityDao.createOrUpdate(localAccountEntity);
                     accountEntityDao.commit(dao.startThreadConnection());
 
-                    AddHealthForDay(aid,strToday,0,localAccountEntity.getBmi());
+                    AddHealthForDay(aid,strToday,2,localAccountEntity.getBmi());
                     AddHealthForDay(aid,strToday,1,localAccountEntity.getWeight());
-                    AddHealthForDay(aid,strToday,2,localAccountEntity.getFat());
-                    AddHealthForDay(aid,strToday,3,localAccountEntity.getSubFat());
-                    AddHealthForDay(aid,strToday,4,localAccountEntity.getVisFat());
-                    AddHealthForDay(aid,strToday,5,localAccountEntity.getWater());
+                    AddHealthForDay(aid,strToday,3,localAccountEntity.getFat());
+                    AddHealthForDay(aid,strToday,4,localAccountEntity.getSubFat());
+                    AddHealthForDay(aid,strToday,5,localAccountEntity.getVisFat());
+                    AddHealthForDay(aid,strToday,7,localAccountEntity.getWater());
                     AddHealthForDay(aid,strToday,6,localAccountEntity.getBmr());
-                    AddHealthForDay(aid,strToday,7,localAccountEntity.getBodyAge());
+                    AddHealthForDay(aid,strToday,11,localAccountEntity.getBodyAge());
                     AddHealthForDay(aid,strToday,8,localAccountEntity.getMuscle());
                     AddHealthForDay(aid,strToday,9,localAccountEntity.getBone());
                     AddHealthForDay(aid,strToday,10,localAccountEntity.getProtein());

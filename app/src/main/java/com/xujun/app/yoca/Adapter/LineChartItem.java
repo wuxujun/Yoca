@@ -16,6 +16,7 @@ import com.xujun.app.yoca.R;
 import com.xujun.sqlite.TargetEntity;
 
 /**
+ * 列表图
  * Created by xujunwu on 15/6/15.
  */
 public class LineChartItem extends ChartData{
@@ -58,7 +59,7 @@ public class LineChartItem extends ChartData{
         XAxis xAxis=holder.chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.WHITE);
-        xAxis.setDrawGridLines(true);
+        xAxis.setDrawGridLines(false); //去除横线
         xAxis.setDrawAxisLine(true);
 
         YAxis leftAxis=holder.chart.getAxisLeft();

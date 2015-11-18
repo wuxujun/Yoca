@@ -15,12 +15,12 @@
         android:id="@+id/llForgotAccount"
         android:layout_width="match_parent" android:layout_marginTop="40dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
-        <LinearLayout android:layout_margin="1dp"
+        <LinearLayout android:layout_margin="@dimen/input_line"
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
 
-        <TextView  android:layout_marginRight="10dp" android:id="@+id/tvForgotAccount"
-            android:gravity="center_vertical|right" style="@style/input_item_title"
+        <TextView android:id="@+id/tvForgotAccount"
+            android:gravity="center_vertical" style="@style/input_item_title"
             android:layout_width="100dp" android:text="@string/login_Mobileoremail"
             android:layout_height="match_parent" />
         <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:hint="@string/login_Mobileoremail_Hit" android:id="@+id/etForgotAccount"
@@ -33,11 +33,11 @@
     <LinearLayout android:id="@+id/llForgotCode"
         android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
-        <LinearLayout android:layout_margin="1dp"
+        <LinearLayout android:layout_margin="@dimen/input_line"
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
 
-        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:layout_marginLeft="40dp" android:hint="@string/login_VerCode_Hit"
+        <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:layout_marginLeft="15dp" android:hint="@string/login_VerCode_Hit"
             android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/etForgotCode" style="@style/input_item_edit"
             android:layout_height="match_parent" android:imeOptions="actionDone" />
         <TextView android:layout_marginLeft="10dp" style="@style/input_item_title"

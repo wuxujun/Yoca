@@ -146,7 +146,7 @@ public class WarnSetActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             }
-            case R.id.itemMenuSave:{
+            case R.id.btnHeadEdit:{
                 onMenuSave();
                 break;
             }

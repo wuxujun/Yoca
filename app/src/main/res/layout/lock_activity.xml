@@ -1,19 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@color/main_bg_color" >
+    android:layout_height="match_parent" android:background="#45c979" >
 
     <TextView
+        android:id="@+id/tvInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dip"
         android:gravity="center"
-        android:text="请输入手势密码"
+        android:text="请输入密码"
         android:textSize="19sp" />
 
-    <com.xujun.app.yoca.widget.LockPatternView
-        android:id="@+id/lock_pattern"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <LinearLayout
+        android:id="@+id/ll_pass"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/tvInfo"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+        <com.xujun.widget.PasswordTextView
+            android:id="@+id/et_pwd1"
+            style="@style/style_edit"/>
+        <com.xujun.widget.PasswordTextView
+            android:id="@+id/et_pwd2"
+            style="@style/style_edit"
+            android:layout_marginLeft="15dp"/>
+        <com.xujun.widget.PasswordTextView
+            android:id="@+id/et_pwd3"
+            style="@style/style_edit"
+            android:layout_marginLeft="15dp"/>
+        <com.xujun.widget.PasswordTextView
+            android:id="@+id/et_pwd4"
+            style="@style/style_edit"
+            android:layout_marginLeft="15dp"/>
+    </LinearLayout>
 
+    <com.xujun.widget.NumericKeyboard
+        android:id="@+id/nk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_pass"
+        android:layout_above="@+id/rl_bottom"/>
+    <!-- 底部布局 -->
+    <RelativeLayout
+        android:id="@id/rl_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <!-- 重输按钮 -->
+        <Button
+            android:id="@+id/btn_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/input_again"
+            android:layout_alignParentLeft="true"
+            android:background="@color/transparent"
+            android:textColor="@color/white"
+            android:onClick="doClick"/>
+        <!-- 删除按钮 -->
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"
+            android:background="@color/transparent"
+            android:onClick="doClick"/>
+    </RelativeLayout>
 </RelativeLayout>

@@ -71,7 +71,7 @@ public class AvatarMActivity extends BaseActivity{
 //                getFragmentManager().beginTransaction().replace(R.id.content_frame,sherlockFragment).commit();
             }
         });
-        mHeadTitle.setText(getText(R.string.main_avatar_edit));
+        mHeadTitle.setText("减肥像册");
         mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
         mHeadIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +80,7 @@ public class AvatarMActivity extends BaseActivity{
             }
         });
         mHeadButton.setText(getText(R.string.btn_Edit));
-        mHeadButton.setVisibility(View.GONE);
+        mHeadButton.setVisibility(View.INVISIBLE);
         mHeadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

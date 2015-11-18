@@ -2,6 +2,7 @@ package com.xujun.sqlite;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.xujun.util.StringUtil;
 
 import java.io.Serializable;
 
@@ -21,37 +22,40 @@ public class WeightEntity implements Serializable{
     String              pickTime;
 
     @DatabaseField
-    String              weight; //体重
+    String              weight; //体重  1
 
     @DatabaseField
-    String              fat;  //人体脂肪率
+    String              fat;  //人体脂肪率 3
 
     @DatabaseField
-    String              subFat;//皮下脂肪率
+    String              subFat;//皮下脂肪率 4
 
     @DatabaseField
-    String              visFat;//内脏脂肪等级
+    String              visFat;//内脏脂肪等级 5
 
     @DatabaseField
-    String              water;//人体水分占体重百分比
+    String              water;//人体水分占体重百分比  7
 
     @DatabaseField
-    String              BMR;// 新陈代谢 千卡路里/kg/天）
+    String              BMR;// 新陈代谢 千卡路里/kg/天）6
 
     @DatabaseField
-    String              bodyAge; //身体年龄
+    String              bodyAge; //身体年龄 11
 
     @DatabaseField
-    String              muscle;//肌肉含量kg
+    String              muscle;//肌肉含量kg 8
 
     @DatabaseField
-    String              bone;//骨含量kg
+    String              bone;//骨含量kg 9
 
     @DatabaseField
-    String              bmi;
+    String              bmi; // 2
 
     @DatabaseField(defaultValue="0")
-    String              protein;
+    String              protein; //10 蛋白质量
+
+    @DatabaseField(defaultValue = "0")
+    String              sholai;
 
     @DatabaseField
     Integer             syncid;
@@ -208,5 +212,13 @@ public class WeightEntity implements Serializable{
 
     public void setProtein(String protein) {
         this.protein = protein;
+    }
+
+    public String getSholai() {
+        return sholai;
+    }
+
+    public void setSholai(String sholai) {
+        this.sholai = sholai;
     }
 }

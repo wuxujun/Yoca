@@ -113,7 +113,9 @@ public class PopAccount {
             if (entity!=null){
                 listItemView.title.setText(entity.getUserNick());
                 if (entity.getAvatar()!=null){
-                    listItemView.icon.setImageBitmap(ImageUtils.getBitmapByPath(mAppContext.getCameraPath() + "/crop_" + entity.getAvatar()));
+                    if (!entity.getAvatar().equals("0")) {
+                        listItemView.icon.setImageBitmap(ImageUtils.getBitmapByPath(mAppContext.getCameraPath() + "/crop_" + entity.getAvatar()));
+                    }
                 }
             }
             return convertView;

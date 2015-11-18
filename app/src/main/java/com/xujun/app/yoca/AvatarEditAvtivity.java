@@ -2,6 +2,7 @@ package com.xujun.app.yoca;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -53,6 +54,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 数据拍照
  * Created by xujunwu on 15/7/21.
  */
 public class AvatarEditAvtivity extends BaseActivity{
@@ -119,7 +121,12 @@ public class AvatarEditAvtivity extends BaseActivity{
             }
         });
 
-        mHeadTitle.setText(getText(R.string.main_avatar_edit));
+        String time=getIntent().getStringExtra("dataTime");
+        if (StringUtil.isEmpty(time)){
+            mHeadTitle.setText(time+"数据");
+        }else {
+            mHeadTitle.setText("今日数据");
+        }
         mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
         mHeadIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,11 +191,49 @@ public class AvatarEditAvtivity extends BaseActivity{
         });
         bustET=(FormEditText)findViewById(R.id.etBust);
         bustET.addValidator(new EmptyValidator(getResources().getString(R.string.avatar_Bust_Hit)));
+        bustET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+
+                if (hasFocus) {
+                    // Open keyboard
+                    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(bustET, InputMethodManager.SHOW_FORCED);
+                } else {
+                    // Close keyboard
+                    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(bustET.getWindowToken(), 0);
+                }
+            }
+        });
         waistlineET=(FormEditText)findViewById(R.id.etWaistline);
-        bustET.addValidator(new EmptyValidator(getResources().getString(R.string.avatar_Waistline_Hit)));
+        waistlineET.addValidator(new EmptyValidator(getResources().getString(R.string.avatar_Waistline_Hit)));
+        waistlineET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+
+                if (hasFocus) {
+                    // Open keyboard
+                    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(waistlineET, InputMethodManager.SHOW_FORCED);
+                } else {
+                    // Close keyboard
+                    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(waistlineET.getWindowToken(), 0);
+                }
+            }
+        });
         hipsET=(FormEditText)findViewById(R.id.etHips);
         hipsET.addValidator(new EmptyValidator(getResources().getString(R.string.avatar_Hips_Hit)));
+        hipsET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
 
+                if (hasFocus) {
+                    // Open keyboard
+                    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(hipsET, InputMethodManager.SHOW_FORCED);
+                } else {
+                    // Close keyboard
+                    ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(hipsET.getWindowToken(), 0);
+                }
+            }
+        });
         if (!StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_BUST))){
             bustET.setText(appContext.getProperty(AppConfig.CONF_BUST));
         }
@@ -203,7 +248,7 @@ public class AvatarEditAvtivity extends BaseActivity{
     private void loadHomeTarget(){
         try {
             items.clear();
-            List<HomeTargetEntity> homeTargetEntityList = getDatabaseHelper().getHomeTargetDao().queryBuilder().where().eq("aid", localAccountEntity.getId()).query();
+            List<HomeTargetEntity> homeTargetEntityList = getDatabaseHelper().getHomeTargetDao().queryBuilder().orderBy("type",true).where().eq("aid", localAccountEntity.getId()).and().notIn("type",0).query();
             if (homeTargetEntityList.size()>0) {
                 items.addAll(homeTargetEntityList);
             }
@@ -332,9 +377,14 @@ public class AvatarEditAvtivity extends BaseActivity{
                 if (!StringUtil.isEmpty(entity.getValue())) {
                     holder.value.setText(entity.getValue());
                 }
+
                 if (!StringUtil.isEmpty(entity.getUnit())) {
                     holder.unit.setText(entity.getUnit());
+                    if (entity.getUnit().equals("0")){
+                        holder.unit.setText("");
+                    }
                 }
+
                 if (!StringUtil.isEmpty(entity.getValueTitle())) {
                     holder.status.setText(entity.getValueTitle());
                 }

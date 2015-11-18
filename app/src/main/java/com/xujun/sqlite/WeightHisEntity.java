@@ -53,6 +53,9 @@ public class WeightHisEntity implements Serializable{
     @DatabaseField(defaultValue="0")
     Double              protein;//蛋白质
 
+    @DatabaseField(defaultValue = "0")
+    Double              sholai;//Sholai指数
+
     @DatabaseField(defaultValue="0")
     Integer             syncid;
 
@@ -250,5 +253,13 @@ public class WeightHisEntity implements Serializable{
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Double getSholai() {
+        return sholai;
+    }
+
+    public void setSholai(Double sholai) {
+        this.sholai = sholai;
     }
 }

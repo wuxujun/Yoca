@@ -12,7 +12,7 @@
     <LinearLayout android:id="@+id/llLoginAccount"
         android:layout_width="match_parent" android:layout_marginTop="40dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
-        <LinearLayout android:layout_margin="1dp"
+        <LinearLayout android:layout_margin="@dimen/input_line"
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
         <TextView android:layout_marginLeft="20dp" android:id="@+id/tvLoginAccount"
@@ -29,7 +29,7 @@
     <LinearLayout android:id="@+id/llLoginPassword"
         android:layout_width="match_parent" android:layout_marginTop="10dp" android:background="@color/btn_color"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
-        <LinearLayout android:layout_margin="1dp"
+        <LinearLayout android:layout_margin="@dimen/input_line"
             android:layout_width="match_parent" android:background="#303030"
             android:layout_height="match_parent">
         <TextView android:layout_marginLeft="20dp" android:id="@+id/tvLoginPassword"
@@ -44,13 +44,13 @@
     <LinearLayout
         android:layout_width="match_parent" android:layout_marginTop="10dp"
         android:layout_height="@dimen/input_item_height" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
-        <TextView android:layout_marginLeft="20dp" android:id="@+id/tvForgotPassword"
+        <TextView android:id="@+id/tvForgotPassword"
             android:gravity="center_vertical" android:layout_weight="1"
             android:layout_width="match_parent" android:text="@string/login_ForgotPassword"
             android:layout_height="match_parent" style="@style/input_item_title"/>
         <TextView android:layout_marginLeft="20dp" android:id="@+id/tvRegister"
             android:gravity="right|center_vertical" android:layout_weight="1"
-            android:layout_width="match_parent" android:layout_marginRight="10dp" android:text="@string/register"
+            android:layout_width="match_parent"  android:text="@string/register"
             android:layout_height="match_parent" style="@style/input_item_title"/>
     </LinearLayout>
 

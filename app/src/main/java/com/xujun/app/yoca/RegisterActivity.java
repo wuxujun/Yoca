@@ -44,7 +44,7 @@ import cn.smssdk.SMSSDK;
 /**
  * Created by xujunwu on 14/12/15.
  */
-public class RegisterActivity extends SherlockActivity implements View.OnClickListener{
+public class RegisterActivity extends BaseActivity implements View.OnClickListener{
 
     public static final String TAG = "RegisterActivity";
 
@@ -63,6 +63,8 @@ public class RegisterActivity extends SherlockActivity implements View.OnClickLi
     private AppContext              appContext;
     private ProgressDialog          progress;
 
+    private boolean                 isEmailReg=false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,14 +73,14 @@ public class RegisterActivity extends SherlockActivity implements View.OnClickLi
         mContext=getApplicationContext();
         appContext=(AppContext)getApplication();
 
-        SMSSDK.initSDK(this,AppConfig.SMS_APPKEY,AppConfig.SMS_APPKSECRET);
-        getActionBar().setTitle(R.string.register);
-        getActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
-        getActionBar().setDisplayShowHomeEnabled(false);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        SMSSDK.initSDK(this, AppConfig.SMS_APPKEY, AppConfig.SMS_APPKSECRET);
+        mHeadTitle.setText(getResources().getString(R.string.register));
+        mHeadButton.setVisibility(View.INVISIBLE);
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(this);
 
         accountET=(FormEditText)findViewById(R.id.etRegAccount);
-        accountET.addValidator(new OrValidator(getResources().getString(R.string.login_Mobileoremail_Hit),new PhoneValidator(null),new EmailValidator(null)));
+        accountET.addValidator(new OrValidator(getResources().getString(R.string.login_Mobileoremail_Hit), new PhoneValidator(null), new EmailValidator(null)));
         accountET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -97,6 +99,26 @@ public class RegisterActivity extends SherlockActivity implements View.OnClickLi
                 } else {
                     // Close keyboard
                     ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(accountET.getWindowToken(), 0);
+                }
+            }
+        });
+        accountET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String val=editable.toString();
+                if (val!=null&&val.contains("0")){
+                    isEmailReg=true;
+                    findViewById(R.id.llRegisterCode).setVisibility(View.GONE);
                 }
             }
         });
@@ -211,6 +233,10 @@ public class RegisterActivity extends SherlockActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.ibHeadBack:{
+                finish();
+                break;
+            }
             case R.id.btnRegister:{
                 register();
                 break;
@@ -289,12 +315,13 @@ public class RegisterActivity extends SherlockActivity implements View.OnClickLi
             Toast.makeText(this,getResources().getString(R.string.login_ConfirmPassword_Error),Toast.LENGTH_LONG).show();
             return;
         }
-        if (!codeET.testValidity()){
+        if (!codeET.testValidity()&&!isEmailReg){
             Toast.makeText(this,getResources().getString(R.string.login_VerCode_Hit),Toast.LENGTH_LONG).show();
             return;
         }
-        SMSSDK.submitVerificationCode("86",mobile,codeET.getText().toString());
-
+        if (!isEmailReg) {
+            SMSSDK.submitVerificationCode("86", mobile, codeET.getText().toString());
+        }
 
         Map<String,String> sb=new HashMap<String, String>();
         sb.put("imei",appContext.getIMSI());
@@ -306,7 +333,6 @@ public class RegisterActivity extends SherlockActivity implements View.OnClickLi
             e.printStackTrace();
         }
     }
-
 
     private void request(final String url,final String params){
         progress= AppUtil.showProgress(this,getString(R.string.register_loading));

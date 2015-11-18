@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * Created by xujunwu on 14/12/15.
  */
-public class LoginActivity extends SherlockActivity implements View.OnClickListener{
+public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     public static final String TAG = "LoginActivity";
 
@@ -76,9 +76,10 @@ public class LoginActivity extends SherlockActivity implements View.OnClickListe
         mContext=getApplicationContext();
         appContext=(AppContext)getApplication();
 
-        getActionBar().setTitle(R.string.login);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setDisplayShowHomeEnabled(false);
+        mHeadTitle.setText(getResources().getString(R.string.login));
+        mHeadButton.setVisibility(View.INVISIBLE);
+        mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
+        mHeadIcon.setOnClickListener(this);
 
         loginBtn=(CircularProgressButton)findViewById(R.id.btnLogin);
         loginBtn.setOnClickListener(this);
@@ -148,6 +149,10 @@ public class LoginActivity extends SherlockActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.ibHeadBack:{
+                finish();
+                break;
+            }
             case R.id.btnLogin:{
                 login();
                 break;

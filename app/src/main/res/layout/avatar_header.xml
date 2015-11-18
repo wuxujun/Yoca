@@ -16,7 +16,7 @@
                 android:layout_height="wrap_content" android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content" android:textColor="@color/white"
-                android:layout_height="wrap_content" android:id="@+id/tvYoca" android:text="Yoca:"/>
+                android:layout_height="wrap_content" android:id="@+id/tvYoca" android:text="Sholai指数:"/>
                 <TextView
                     android:layout_width="wrap_content" android:textColor="@color/white"
                     android:layout_height="wrap_content" android:text="@string/main_value_unit"/>
