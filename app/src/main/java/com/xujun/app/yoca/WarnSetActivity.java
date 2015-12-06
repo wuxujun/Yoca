@@ -19,6 +19,7 @@ import com.xujun.app.yoca.fragment.WarnFragment;
 import com.xujun.app.yoca.widget.PickerView;
 import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.sqlite.WarnEntity;
+import com.xujun.util.StringUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -107,7 +108,7 @@ public class WarnSetActivity extends BaseActivity implements View.OnClickListene
         });
 
         tagET=(FormEditText)findViewById(R.id.etWeekTag);
-        tagET.addValidator(new EmptyValidator(getResources().getString(R.string.setting_warn_tag_hit)));
+//        tagET.addValidator(new EmptyValidator(getResources().getString(R.string.setting_warn_tag_hit)));
     }
 
     @Override
@@ -287,16 +288,18 @@ public class WarnSetActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void onMenuSave(){
-        if (!tagET.testValidity()){
-            return;
-        }
+//        if (!tagET.testValidity()){
+//            return;
+//        }
         WarnEntity entity=new WarnEntity();
         if (localWarnEntity!=null){
             entity.setWId(localWarnEntity.getWId());
+        }else{
+            entity.setWId(System.currentTimeMillis());
         }
         entity.setType(1);
         entity.setStatus(0);
-        entity.setValue(mHours+":"+mMinutes);
+        entity.setValue(mHours + ":" + mMinutes);
         if (everyDay){
             entity.setRepeats(0);
         }else if (workdays){
@@ -304,7 +307,7 @@ public class WarnSetActivity extends BaseActivity implements View.OnClickListene
         }else if (weekend){
             entity.setRepeats(2);
         }
-        entity.setWeek_mon(week1?1:0);
+        entity.setWeek_mon(week1 ? 1 : 0);
         entity.setWeek_tue(week2 ? 1 : 0);
         entity.setWeek_wed(week3 ? 1 : 0);
         entity.setWeek_thu(week4 ? 1 : 0);
@@ -313,7 +316,11 @@ public class WarnSetActivity extends BaseActivity implements View.OnClickListene
         entity.setWeek_sun(week7 ? 1 : 0);
         entity.setHours(Integer.parseInt(mHours));
         entity.setMinutes(Integer.parseInt(mMinutes));
-        entity.setNote(tagET.getText().toString());
+        if (StringUtil.isEmpty(tagET.getText().toString())){
+            entity.setNote("");
+        }else {
+            entity.setNote(tagET.getText().toString());
+        }
         insertWarnEntity(entity);
     }
 

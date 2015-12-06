@@ -26,6 +26,7 @@ import com.xujun.app.yoca.Adapter.LineChartItem;
 import com.xujun.app.yoca.widget.ChartController;
 import com.xujun.app.yoca.widget.ChartFooter;
 import com.xujun.sqlite.AccountEntity;
+import com.xujun.sqlite.HealthEntity;
 import com.xujun.sqlite.HomeTargetEntity;
 import com.xujun.sqlite.TargetEntity;
 import com.xujun.sqlite.WeightEntity;
@@ -53,14 +54,13 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
 
     private ChartFooter      chartFooter;
     private ChartDataAdapter adapter;
-    private List<WeightEntity>  datas=new ArrayList<WeightEntity>();
+    private List<HealthEntity>  datas=new ArrayList<HealthEntity>();
     private List<LineChartItem> items=new ArrayList<LineChartItem>();
 
     private HomeTargetEntity    homeTargetEntity;
     private float               targetTotla;
+    private int                 dataType;
 
-
-    private Button btnChartDay;
     private Button              btnChartWeek;
     private Button              btnChartMonth;
     private Button              btnChartYear;
@@ -70,6 +70,7 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart_d);
         appConfig=AppConfig.getAppConfig(mContext);
+        dataType=Integer.parseInt(appConfig.get(AppConfig.CONF_CHART_TYPE));
         mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
         mHeadIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,12 +81,10 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
 
         localAccountEntity=(AccountEntity)getIntent().getSerializableExtra("account");
         targetType=getIntent().getIntExtra("targetType",0);
-
+        dataType=getIntent().getIntExtra("dataType",1);
         mHeadTitle.setText(appConfig.getTargetType(targetType));
         mHeadButton.setVisibility(View.INVISIBLE);
 
-        btnChartDay=(Button)findViewById(R.id.btnChartDay);
-        btnChartDay.setOnClickListener(this);
         btnChartWeek=(Button)findViewById(R.id.btnChartWeek);
         btnChartWeek.setOnClickListener(this);
         btnChartMonth=(Button)findViewById(R.id.btnChartMonth);
@@ -119,16 +118,29 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
         loadData();
     }
     private void loadData(){
+        switch (dataType){
+            case 1:
+                btnChartWeek.setBackground(getResources().getDrawable(R.drawable.header_tab_left));
+                break;
+            case 2:
+                btnChartMonth.setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
+                break;
+            case 3:
+                btnChartYear.setBackground(getResources().getDrawable(R.drawable.header_tab_right));
+                break;
+        }
         datas.clear();
         try {
-            Dao<WeightEntity, Integer> weightEntities = getDatabaseHelper().getWeightEntityDao();
-            QueryBuilder<WeightEntity, Integer> queryBuilder = weightEntities.queryBuilder();
-            queryBuilder.where().eq("aid", localAccountEntity.getId());
+            Dao<HealthEntity, Integer> healthEntities = getDatabaseHelper().getHealthDao();
+            QueryBuilder<HealthEntity, Integer> queryBuilder = healthEntities.queryBuilder();
+            queryBuilder.where().eq("aid", localAccountEntity.getId()).and().eq("dataType",dataType);
             queryBuilder.orderBy("pickTime", false);
-            List<WeightEntity> list = queryBuilder.query();
-            for (int i = 0; i < list.size()&&i<7; i++) {
-                WeightEntity entity = list.get(i);
-                datas.add(entity);
+            List<HealthEntity> list = queryBuilder.query();
+            for (int i = 0; i < list.size(); i++) {
+                HealthEntity entity = list.get(i);
+                if (StringUtil.toDouble(entity.getWeight())>0.0) {
+                   datas.add(entity);
+                }
             }
             ComparatorWeight comparatorWeight=new ComparatorWeight();
             Collections.sort(datas, comparatorWeight);
@@ -151,10 +163,10 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
             chartFooter.setRemark(targetEntity.getContent());
         }
         LineData lineData=generateDataLine(targetType);
-        if (targetEntity!=null&&!StringUtil.isEmpty(StringUtil.doubleToStringOne(targetTotla/7.0))) {
-            targetEntity.setContent(StringUtil.doubleToStringOne(targetTotla / 7.0));
+        if (targetEntity!=null&&!StringUtil.isEmpty(StringUtil.doubleToStringOne(targetTotla/datas.size()))) {
+            targetEntity.setContent(StringUtil.doubleToStringOne(targetTotla /datas.size()));
         }
-        items.add(new LineChartItem(targetEntity,lineData, appContext));
+        items.add(new LineChartItem(targetEntity, lineData, appContext));
 
         if (mListView!=null) {
             adapter=new ChartDataAdapter(appContext,items);
@@ -180,7 +192,7 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
     private LineData generateDataLine(int type){
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<Entry> yVals = new ArrayList<Entry>();
-        WeightEntity entity;
+        HealthEntity entity;
         int count=datas.size();
         String date="";
         float value=0.0f;
@@ -194,7 +206,7 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
                     xVals.add(DateUtil.getDayForDate(date));
                 }
                 switch (type){
-                    case 0:
+                    case 2:
                         value=Float.parseFloat(entity.getBmi());
                         targetTotla+=Float.parseFloat(entity.getBmi());
                         break;
@@ -202,19 +214,19 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
                         value=Float.parseFloat(entity.getWeight());
                         targetTotla+=Float.parseFloat(entity.getWeight());
                         break;
-                    case 2:
+                    case 3:
                         value=Float.parseFloat(entity.getFat());
                         targetTotla+=Float.parseFloat(entity.getFat());
                         break;
-                    case 3:
+                    case 4:
                         value=Float.parseFloat(entity.getSubFat());
                         targetTotla+=Float.parseFloat(entity.getBmi());
                         break;
-                    case 4:
+                    case 5:
                         value=Float.parseFloat(entity.getVisFat());
                         targetTotla+=Float.parseFloat(entity.getVisFat());
                         break;
-                    case 5:
+                    case 7:
                         value=Float.parseFloat(entity.getWater());
                         targetTotla+=Float.parseFloat(entity.getWater());
                         break;
@@ -222,7 +234,7 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
                         value=Float.parseFloat(entity.getBMR());
                         targetTotla+=Float.parseFloat(entity.getBMR());
                         break;
-                    case 7:
+                    case 11:
                         value=Float.parseFloat(entity.getBodyAge());
                         targetTotla+=Float.parseFloat(entity.getBodyAge());
                         break;
@@ -234,7 +246,7 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
                         value=Float.parseFloat(entity.getBone());
                         targetTotla+=Float.parseFloat(entity.getBone());
                         break;
-                    default:
+                    case 10:
                         value=Float.parseFloat(entity.getProtein());
                         targetTotla+=Float.parseFloat(entity.getProtein());
                         break;
@@ -244,7 +256,7 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
         }
         LineDataSet d1=new LineDataSet(yVals,appConfig.getTargetType(type));
         d1.setLineWidth(2.0f);
-        d1.setCircleSize(3.5f);
+        d1.setCircleSize(3.0f);
         d1.setHighLightColor(Color.WHITE);
         d1.setFillColor(Color.WHITE);
         d1.setCircleColor(Color.WHITE);
@@ -292,28 +304,27 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View view) {
         resetButtonNormal();
         switch (view.getId()){
-            case R.id.btnChartDay:{
-                btnChartDay.setBackground(getResources().getDrawable(R.drawable.header_tab_left));
-                break;
-            }
             case R.id.btnChartWeek:{
-                btnChartWeek.setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
+                dataType=1;
+                btnChartWeek.setBackground(getResources().getDrawable(R.drawable.header_tab_left));
                 break;
             }
             case R.id.btnChartMonth:{
+                dataType=2;
                 btnChartMonth.setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
                 break;
             }
             case R.id.btnChartYear:{
+                dataType=3;
                 btnChartYear.setBackground(getResources().getDrawable(R.drawable.header_tab_right));
                 break;
             }
         }
+        loadData();
     }
 
     private void resetButtonNormal(){
-        btnChartDay.setBackground(getResources().getDrawable(R.drawable.header_tab_bg_left));
-        btnChartWeek.setBackgroundColor(getResources().getColor(R.color.item_background));
+        btnChartWeek.setBackground(getResources().getDrawable(R.drawable.header_tab_bg_left));
         btnChartMonth.setBackgroundColor(getResources().getColor(R.color.item_background));
         btnChartYear.setBackground(getResources().getDrawable(R.drawable.header_tab_bg_right));
     }
@@ -345,9 +356,9 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
 
         @Override
         public int compare(Object o, Object t1) {
-            WeightEntity entity=(WeightEntity)o;
-            WeightEntity entity1=(WeightEntity)t1;
-            int flag=entity.getPickTime().compareTo(((WeightEntity) t1).getPickTime());
+            HealthEntity entity=(HealthEntity)o;
+            HealthEntity entity1=(HealthEntity)t1;
+            int flag=entity.getPickTime().compareTo(((HealthEntity) t1).getPickTime());
             return flag;
         }
     }

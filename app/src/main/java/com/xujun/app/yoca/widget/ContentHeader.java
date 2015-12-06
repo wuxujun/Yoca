@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xujun.app.yoca.R;
+import com.xujun.util.StringUtil;
 import com.xujun.widget.RunningTextView;
 
 /**
@@ -51,12 +52,13 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
         mContext = context;
         mContentView = LayoutInflater.from(mContext).inflate(R.layout.layout_content, null);
 
-        mContentView.findViewById(R.id.llTargetSet).setOnClickListener(this);
+//        mContentView.findViewById(R.id.llTargetSet).setOnClickListener(this);
         mContentView.findViewById(R.id.ibLeft).setOnClickListener(this);
         mContentView.findViewById(R.id.ibRight).setOnClickListener(this);
         mContentView.findViewById(R.id.flDetail).setOnClickListener(this);
 
         mContentView.findViewById(R.id.ibMainShared).setOnClickListener(this);
+        mContentView.findViewById(R.id.llTarget).setOnClickListener(this);
         sharedButton=(ImageButton)mContentView.findViewById(R.id.ibMainShared);
         weightTextView=(TextView)mContentView.findViewById(R.id.tvWeightValue);
         scanLine=(ImageView)mContentView.findViewById(R.id.ivScan);
@@ -97,6 +99,10 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
                 getContentController().onViewDetailClicked();
                 break;
             }
+            case R.id.llTarget:{
+                getContentController().onViewTargetClicked();
+                break;
+            }
         }
 
     }
@@ -131,6 +137,11 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
     public void stopEffect(String val){
         weightTextView.setVisibility(VISIBLE);
         weightTextView.setText(val);
+        if (StringUtil.toDouble(val)>99.0){
+            weightTextView.setTextSize(46);
+        }else{
+            weightTextView.setTextSize(66);
+        }
         scanLine.setVisibility(GONE);
         if (mAnimation!=null){
             mAnimation.cancel();
@@ -167,7 +178,7 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
         mContentView.findViewById(R.id.ivInfo).setVisibility(flag?View.VISIBLE:View.GONE);
         mContentView.findViewById(R.id.ibMainShared).setVisibility(flag?View.VISIBLE:View.INVISIBLE);
         mContentView.findViewById(R.id.tvHeaderStatus).setVisibility(flag?View.VISIBLE:View.GONE);
-        mContentView.findViewById(R.id.tvHeaderUnit).setVisibility(flag?View.VISIBLE:View.GONE);
+        mContentView.findViewById(R.id.tvHeaderUnit).setVisibility(flag ? View.VISIBLE : View.GONE);
     }
 
 
@@ -175,10 +186,16 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
     {
         scanLine.setVisibility(View.GONE);
         isShowContent(true);
-       stopEffect(value);
+        stopEffect(value);
     }
 
     public LinearLayout getTargetView(){
         return mTargetView;
+    }
+
+    public void setWeekValue(int weeks,double weight,double targetWeight)
+    {
+        double val=(weight-targetWeight)/weeks;
+        ((TextView)mContentView.findViewById(R.id.tvWeekValue)).setText(StringUtil.doubleToStringOne(val));
     }
 }

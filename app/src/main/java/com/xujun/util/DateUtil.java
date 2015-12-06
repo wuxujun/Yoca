@@ -85,6 +85,17 @@ public class DateUtil {
         return 0l;
     }
 
+    public static Date monthToDate(String day){
+        try{
+            java.text.SimpleDateFormat format=new SimpleDateFormat("yyyy-MM");
+            java.util.Date endDate = format.parse(day);
+            return endDate;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
     public static Date dayToDate(String day){
         try{
             java.text.SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
@@ -151,6 +162,12 @@ public class DateUtil {
     public static String getDayForDate(String date) {
         Date newDate=dayToDate(date);
         SimpleDateFormat sf=new SimpleDateFormat("dd");
+        return sf.format(newDate.getTime());
+    }
+
+    public static String getYearForMonth(String date) {
+        Date newDate=monthToDate(date);
+        SimpleDateFormat sf=new SimpleDateFormat("MM");
         return sf.format(newDate.getTime());
     }
 
@@ -232,7 +249,7 @@ public class DateUtil {
     }
 
 
-    public String getWeekFirst(){
+    public static String getWeekFirst(){
         Date startDt=new Date();
         Calendar calendar=new GregorianCalendar();
         calendar.setTime(startDt);
@@ -240,5 +257,30 @@ public class DateUtil {
         startDt=calendar.getTime();
         SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
         return sf.format(startDt);
+    }
+
+
+    public static String getHealthTimeForWeek(int idx){
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH,idx-6);
+        SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+        return sf.format(cal.getTime());
+    }
+
+    public static String getHealthTimeForMonth(int idx){
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH,idx-29);
+        SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
+        return sf.format(cal.getTime());
+    }
+
+    public static String getHealthTimeForYear(int idx){
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.MONTH,idx-11);
+        SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM");
+        return sf.format(cal.getTime());
     }
 }

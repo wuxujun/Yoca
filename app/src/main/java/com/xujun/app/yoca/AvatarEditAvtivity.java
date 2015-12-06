@@ -93,7 +93,7 @@ public class AvatarEditAvtivity extends BaseActivity{
     private FormEditText bustET;
     private FormEditText waistlineET;
     private FormEditText hipsET;
-    private ImageButton  cameraIB;
+    private ImageView  cameraIB;
 
     DisplayImageOptions options = new DisplayImageOptions.Builder()
             .cacheInMemory(true)
@@ -122,7 +122,7 @@ public class AvatarEditAvtivity extends BaseActivity{
         });
 
         String time=getIntent().getStringExtra("dataTime");
-        if (StringUtil.isEmpty(time)){
+        if (!StringUtil.isEmpty(time)){
             mHeadTitle.setText(time+"数据");
         }else {
             mHeadTitle.setText("今日数据");
@@ -147,29 +147,35 @@ public class AvatarEditAvtivity extends BaseActivity{
     }
 
     private void saveAvatar(){
-        if (StringUtil.isEmpty(bustET.getText().toString())){
-            Toast.makeText(mContext, getText(R.string.avatar_Bust_Hit), Toast.LENGTH_SHORT).show();
-            return;
+        String bust="0";
+        if (!StringUtil.isEmpty(bustET.getText().toString())){
+//            Toast.makeText(mContext, getText(R.string.avatar_Bust_Hit), Toast.LENGTH_SHORT).show();
+//            return;
+            bust=bustET.getText().toString();
         }
-        if (StringUtil.isEmpty(waistlineET.getText().toString())){
-            Toast.makeText(mContext,getText(R.string.avatar_Waistline_Hit), Toast.LENGTH_SHORT).show();
-            return;
+        String waistline="0";
+        if (!StringUtil.isEmpty(waistlineET.getText().toString())){
+//            Toast.makeText(mContext,getText(R.string.avatar_Waistline_Hit), Toast.LENGTH_SHORT).show();
+//            return;
+            waistline=waistlineET.getText().toString();
         }
-        if (StringUtil.isEmpty(hipsET.getText().toString())){
-            Toast.makeText(mContext,getText(R.string.avatar_Hips_Hit), Toast.LENGTH_SHORT).show();
-            return;
+        String hips="0";
+        if (!StringUtil.isEmpty(hipsET.getText().toString())){
+//            Toast.makeText(mContext,getText(R.string.avatar_Hips_Hit), Toast.LENGTH_SHORT).show();
+//            return;
+            hips=hipsET.getText().toString();
         }
         if (!isAvatar||StringUtil.isEmpty(imageName)){
             Toast.makeText(mContext,getText(R.string.avatar_Avatar_Hit), Toast.LENGTH_SHORT).show();
             return;
         }
-        appContext.setProperty(bustET.getText().toString(), AppConfig.CONF_BUST);
-        appContext.setProperty(waistlineET.getText().toString(), AppConfig.CONF_WAISTLINE);
-        appContext.setProperty(hipsET.getText().toString(), AppConfig.CONF_HIPS);
+        appContext.setProperty(bust, AppConfig.CONF_BUST);
+        appContext.setProperty(waistline,AppConfig.CONF_WAISTLINE);
+        appContext.setProperty(hips, AppConfig.CONF_HIPS);
         if (localWeightId>0&&localWeightEntity!=null){
-            localWeightEntity.setBust(bustET.getText().toString());
-            localWeightEntity.setWaistline(waistlineET.getText().toString());
-            localWeightEntity.setHips(hipsET.getText().toString());
+            localWeightEntity.setBust(bust);
+            localWeightEntity.setWaistline(waistline);
+            localWeightEntity.setHips(hips);
             if (isAvatar&&!StringUtil.isEmpty(imageName)){
                 localWeightEntity.setAvatar("crop_" + imageName);
             }
@@ -181,7 +187,7 @@ public class AvatarEditAvtivity extends BaseActivity{
     }
 
     private void initUIView(){
-        cameraIB=(ImageButton)findViewById(R.id.ibCamera);
+        cameraIB=(ImageView)findViewById(R.id.ibCamera);
         cameraIB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -312,7 +318,9 @@ public class AvatarEditAvtivity extends BaseActivity{
                     }
                 }
                 ((TextView)findViewById(R.id.tvTime)).setText(DateUtil.getTimeString(localWeightEntity.getAddtime()));
-                Log.e(TAG,"---------->"+localWeightEntity.getAddtime());
+                ((TextView)findViewById(R.id.tvYoca)).setText("Sholai指数:   "+appConfig.getSholaiValue(localAccountEntity,localWeightEntity));
+
+                Log.e(TAG, "---------->" + localWeightEntity.getAddtime());
             }
         }catch (SQLException e){
             e.printStackTrace();
@@ -480,7 +488,7 @@ public class AvatarEditAvtivity extends BaseActivity{
                         Bitmap img = null;
                         try {
                             Bitmap bitmap = BitmapFactory.decodeStream(resolver.openInputStream(uri));
-                            img = ImageUtils.zoomBitmap(bitmap, 640, 640);
+                            img = ImageUtils.zoomBitmap(bitmap, 640, 800);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -510,7 +518,7 @@ public class AvatarEditAvtivity extends BaseActivity{
         intent.putExtra("aspectX",1);
         intent.putExtra("aspectY",1);
         intent.putExtra("outputX",640);
-        intent.putExtra("outputY",640);
+        intent.putExtra("outputY",800);
         startActivityForResult(intent,AppConfig.REQUEST_CHOOSE_PIC);
     }
 

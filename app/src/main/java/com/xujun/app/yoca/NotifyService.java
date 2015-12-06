@@ -16,12 +16,13 @@ import android.os.Messenger;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
+import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.nostra13.universalimageloader.utils.L;
-import com.xujun.app.yoca.fragment.ContentFragment;
 import com.xujun.model.BaseResp;
 import com.xujun.model.WeightHisResp;
 import com.xujun.model.WeightResp;
@@ -30,6 +31,7 @@ import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.sqlite.HealthEntity;
 import com.xujun.sqlite.WeightEntity;
 import com.xujun.sqlite.WeightHisEntity;
+import com.xujun.util.DateUtil;
 import com.xujun.util.JsonUtil;
 import com.xujun.util.StringUtil;
 import com.xujun.util.URLs;
@@ -70,6 +72,9 @@ public class NotifyService extends Service {
     private Handler handlerAccountSync=new Handler();
     private Handler handlerWarnSync=new Handler();
     private Handler handlerAvatarSync=new Handler();
+
+
+    private Handler handlerHealthSync=new Handler();
 
     private class IncomingHandler extends Handler{
         @Override
@@ -120,7 +125,278 @@ public class NotifyService extends Service {
         AlarmManager am=(AlarmManager)getSystemService(ALARM_SERVICE);
         am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,firsttime,1*60*1000,sender);
         initNotifiManager();
+        initHealthData();
     }
+
+    private void initHealthData(){
+
+        handlerHealthSync.post(health_run);
+    }
+
+    private void deleteHealthData(long aid,int dType){
+        try{
+            Dao<HealthEntity,Integer> dao=getDatabaseHelper().getHealthDao();
+            DeleteBuilder<HealthEntity,Integer> deleteBuilder=dao.deleteBuilder();
+            if (dType==1) {
+                deleteBuilder.where().eq("dataType", dType).and().eq("aid",aid).and().lt("pickTime", DateUtil.getHealthTimeForWeek(0));
+            }else if(dType==2){
+                deleteBuilder.where().eq("dataType",dType).and().eq("aid",aid).and().lt("pickTime", DateUtil.getHealthTimeForMonth(0));
+            }else{
+                deleteBuilder.where().eq("dataType",dType).and().eq("aid",aid).and().lt("pickTime", DateUtil.getHealthTimeForYear(0));
+            }
+            deleteBuilder.delete();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void createHealthData(long aid,int dType){
+        int size=7;
+        if (dType==2){
+            size=30;
+        }else if(dType==3){
+            size=12;
+        }
+        for (int i=0;i<size;i++){
+            Log.e(TAG,"insertHealthData  aid="+aid+"  dataType:"+dType+"   idx="+i+"  "+getHealthTime(dType,i));
+            String time=getHealthTime(dType,i);
+            int count=getHealthData(aid,time,dType);
+            if (count==0){
+                if (dType==3){
+                    addYearHealth(aid, time);
+                }else {
+                    insertHealthForWeight(aid, dType, time);
+                }
+            }else{
+                if (dType==3){
+                    updateYearHealth(aid,time);
+                }
+            }
+
+        }
+    }
+
+    private  void updateYearHealth(long aid,String time) {
+        try {
+            Dao<HealthEntity ,Integer> healthEntityDao=getDatabaseHelper().getHealthDao();
+            QueryBuilder<HealthEntity, Integer> queryBuilder = healthEntityDao.queryBuilder();
+            queryBuilder.where().eq("aid", aid).and().eq("pickTime", time);
+            List<HealthEntity> list = queryBuilder.query();
+            long hid=System.currentTimeMillis();
+            if (list.size()>0){
+                HealthEntity entity=list.get(0);
+                hid=entity.getHid();
+            }
+
+            Dao<WeightHisEntity, Integer> dao = getDatabaseHelper().getWeightHisEntityDao();
+            GenericRawResults<String[]> rawResults = dao.queryRaw("select count(*),sum(weight),sum(bmi),sum(fat),sum(subFat),sum(visFat)," +
+                    "sum(BMR),sum(water),sum(muscle),sum(bone),sum(protein),sum(bodyAge) from t_weight_his where aid=" + aid + " and pickTime like '" + time + "%' ");
+            List<String[]> results = rawResults.getResults();
+            if (results.size() > 0) {
+                for (int j=0;j<results.size();j++){
+                    HealthEntity healthEntity=new HealthEntity();
+                    healthEntity.setHid(hid);
+                    healthEntity.setAid(aid);
+                    healthEntity.setDataType(3);
+                    healthEntity.setPickTime(time);
+                    String[] resultArray = results.get(j);
+                    int count = Integer.parseInt(resultArray[0]);
+                    if (count==0){
+                        healthEntity.setSholai("0");
+                        healthEntity.setWeight("0");
+                        healthEntity.setBmi("0");
+                        healthEntity.setFat("0");
+                        healthEntity.setSubFat("0");
+                        healthEntity.setVisFat("0");
+                        healthEntity.setBMR("0");
+                        healthEntity.setWater("0");
+                        healthEntity.setMuscle("0");
+                        healthEntity.setBone("0");
+                        healthEntity.setProtein("0");
+                        healthEntity.setBodyAge("0");
+                    }else {
+                        Log.e(TAG, "pickTime " + time + "  " + resultArray[0] + "  " + resultArray[1] + "  " + resultArray[2] + "  " + resultArray[3] + "  " + resultArray[4] + "  " + resultArray[5] + "  " + resultArray[6] + "  " + resultArray[7] + "  " + resultArray[8] + "  " + resultArray[9] + "  " + resultArray[10] + "  " + resultArray[11]);
+                        Log.e(TAG, "pickTime:" + time + "  " + StringUtil.toDouble(resultArray[0]) / count + "  " + StringUtil.toDouble(resultArray[1]) / count + "  " + StringUtil.toDouble(resultArray[2]) / count +
+                                "  " + StringUtil.toDouble(resultArray[3]) / count + "  " + StringUtil.toDouble(resultArray[4]) / count + "  " + StringUtil.toDouble(resultArray[5]) / count +
+                                "  " + StringUtil.toDouble(resultArray[6]) / count + "  " + StringUtil.toDouble(resultArray[7]) / count + "  " + StringUtil.toDouble(resultArray[8]) / count +
+                                "  " + StringUtil.toDouble(resultArray[9]) / count + "  " + StringUtil.toDouble(resultArray[10]) / count + "  " + StringUtil.toDouble(resultArray[11]) / count);
+                        healthEntity.setSholai("0");
+                        healthEntity.setWeight(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[1]) / count));
+                        healthEntity.setBmi(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[2]) / count));
+                        healthEntity.setFat(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[3]) / count));
+                        healthEntity.setSubFat(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[4]) / count));
+                        healthEntity.setVisFat(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[5]) / count));
+                        healthEntity.setBMR(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[6]) / count));
+                        healthEntity.setWater(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[7]) / count));
+                        healthEntity.setMuscle(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[8]) / count));
+                        healthEntity.setBone(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[9]) / count));
+                        healthEntity.setProtein(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[10]) / count));
+                        healthEntity.setBodyAge(StringUtil.doubleToString(StringUtil.toDouble(resultArray[11])/count));
+                    }
+                    addHealthEntity(healthEntity);
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 添加每月数据汇总 年
+     * @param time
+     */
+    private  void addYearHealth(long aid,String time) {
+        try {
+
+            Dao<WeightHisEntity, Integer> dao = getDatabaseHelper().getWeightHisEntityDao();
+            GenericRawResults<String[]> rawResults = dao.queryRaw("select count(*),sum(weight),sum(bmi),sum(fat),sum(subFat),sum(visFat)," +
+                    "sum(BMR),sum(water),sum(muscle),sum(bone),sum(protein),sum(bodyAge) from t_weight_his where aid=" + aid + " and pickTime like '" + time + "%' ");
+            List<String[]> results = rawResults.getResults();
+            if (results.size() > 0) {
+                for (int j=0;j<results.size();j++){
+                    HealthEntity healthEntity=new HealthEntity();
+                    healthEntity.setHid(System.currentTimeMillis());
+                    healthEntity.setAid(aid);
+                    healthEntity.setDataType(3);
+                    healthEntity.setPickTime(time);
+                    String[] resultArray = results.get(j);
+                    int count = Integer.parseInt(resultArray[0]);
+                    if (count==0){
+                        healthEntity.setSholai("0");
+                        healthEntity.setWeight("0");
+                        healthEntity.setBmi("0");
+                        healthEntity.setFat("0");
+                        healthEntity.setSubFat("0");
+                        healthEntity.setVisFat("0");
+                        healthEntity.setBMR("0");
+                        healthEntity.setWater("0");
+                        healthEntity.setMuscle("0");
+                        healthEntity.setBone("0");
+                        healthEntity.setProtein("0");
+                        healthEntity.setBodyAge("0");
+                    }else {
+                        Log.e(TAG, "pickTime " + time + "  " + resultArray[0] + "  " + resultArray[1] + "  " + resultArray[2] + "  " + resultArray[3] + "  " + resultArray[4] + "  " + resultArray[5] + "  " + resultArray[6] + "  " + resultArray[7] + "  " + resultArray[8] + "  " + resultArray[9] + "  " + resultArray[10] + "  " + resultArray[11]);
+                        Log.e(TAG, "pickTime:" + time + "  " + StringUtil.toDouble(resultArray[0]) / count + "  " + StringUtil.toDouble(resultArray[1]) / count + "  " + StringUtil.toDouble(resultArray[2]) / count +
+                                "  " + StringUtil.toDouble(resultArray[3]) / count + "  " + StringUtil.toDouble(resultArray[4]) / count + "  " + StringUtil.toDouble(resultArray[5]) / count +
+                                "  " + StringUtil.toDouble(resultArray[6]) / count + "  " + StringUtil.toDouble(resultArray[7]) / count + "  " + StringUtil.toDouble(resultArray[8]) / count +
+                                "  " + StringUtil.toDouble(resultArray[9]) / count + "  " + StringUtil.toDouble(resultArray[10]) / count + "  " + StringUtil.toDouble(resultArray[11]) / count);
+                        healthEntity.setSholai("0");
+                        healthEntity.setWeight(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[1]) / count));
+                        healthEntity.setBmi(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[2]) / count));
+                        healthEntity.setFat(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[3]) / count));
+                        healthEntity.setSubFat(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[4]) / count));
+                        healthEntity.setVisFat(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[5]) / count));
+                        healthEntity.setBMR(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[6]) / count));
+                        healthEntity.setWater(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[7]) / count));
+                        healthEntity.setMuscle(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[8]) / count));
+                        healthEntity.setBone(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[9]) / count));
+                        healthEntity.setProtein(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[10]) / count));
+                        healthEntity.setBodyAge(StringUtil.doubleToString(StringUtil.toDouble(resultArray[11]) / count));
+                    }
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    /***
+     * 计算周 月图表数据
+     * @param aid
+     * @param dType
+     * @param pickTime
+     */
+    private void insertHealthForWeight(long aid,int dType,String pickTime){
+        WeightEntity weightEntity=searchWeightForDate(aid,dType,pickTime);
+        HealthEntity healthEntity=new HealthEntity();
+        healthEntity.setHid(System.currentTimeMillis());
+        healthEntity.setAid(aid);
+        healthEntity.setDataType(dType);
+        healthEntity.setPickTime(pickTime);
+        if (weightEntity!=null&&weightEntity.getAid()>0){
+            healthEntity.setSholai("0");
+            healthEntity.setWeight(weightEntity.getWeight());
+            healthEntity.setBmi(weightEntity.getBmi());
+            healthEntity.setFat(weightEntity.getFat());
+            healthEntity.setSubFat(weightEntity.getSubFat());
+            healthEntity.setVisFat(weightEntity.getVisFat());
+            healthEntity.setBMR(weightEntity.getBMR());
+            healthEntity.setWater(weightEntity.getWater());
+            healthEntity.setMuscle(weightEntity.getMuscle());
+            healthEntity.setBone(weightEntity.getBone());
+            healthEntity.setProtein(weightEntity.getProtein());
+            healthEntity.setBodyAge(weightEntity.getBodyAge());
+        }else{
+            healthEntity.setSholai("0");
+            healthEntity.setWeight("0");
+            healthEntity.setBmi("0");
+            healthEntity.setFat("0");
+            healthEntity.setSubFat("0");
+            healthEntity.setVisFat("0");
+            healthEntity.setBMR("0");
+            healthEntity.setWater("0");
+            healthEntity.setMuscle("0");
+            healthEntity.setBone("0");
+            healthEntity.setProtein("0");
+            healthEntity.setBodyAge("0");
+        }
+        addHealthEntity(healthEntity);
+    }
+
+    private String getHealthTime(int dType,int idx){
+        String time=DateUtil.getWeekFirst();
+        switch (dType){
+            case 1:
+            {
+                time=DateUtil.getHealthTimeForWeek(idx);
+                break;
+            }
+            case 2:{
+                time=DateUtil.getHealthTimeForMonth(idx);
+                break;
+            }
+            case 3:{
+                time=DateUtil.getHealthTimeForYear(idx);
+                break;
+            }
+        }
+        return time;
+    }
+
+
+    private Runnable health_run=new Runnable(){
+
+        @Override
+        public void run() {
+            try{
+                Dao<AccountEntity,Integer> dao=getDatabaseHelper().getAccountEntityDao();
+                QueryBuilder<AccountEntity,Integer> queryBuilder=dao.queryBuilder();
+                Where<AccountEntity,Integer> where=queryBuilder.where();
+                where.or(where.eq("type",0),where.eq("type",1));
+                queryBuilder.orderBy("type", true);
+                PreparedQuery<AccountEntity> preparedQuery=queryBuilder.prepare();
+                List<AccountEntity> lists=dao.query(preparedQuery);
+                if (lists.size()>0){
+                    for (int i=0;i<lists.size();i++){
+                        AccountEntity accountEntity=lists.get(i);
+                        if (accountEntity!=null&&accountEntity.getId()>0){
+                            deleteHealthData(accountEntity.getId(),1);
+                            deleteHealthData(accountEntity.getId(),2);
+                            deleteHealthData(accountEntity.getId(),3);
+                            createHealthData(accountEntity.getId(),1);
+                            createHealthData(accountEntity.getId(),2);
+                            createHealthData(accountEntity.getId(),3);
+                        }
+                    }
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+
+
+        }
+    };
 
     private Runnable uploadData_run=new Runnable() {
         @Override
@@ -358,6 +634,13 @@ public class NotifyService extends Service {
                         addWeightEntity(weightResp.getRoot().get(i));
                     }
                 }
+            }else if(baseResp.getDataType().equals("getHealth")){
+                WeightResp weightResp=(WeightResp)JsonUtil.ObjFromJson(resp,WeightResp.class);
+                if (weightResp.getRoot()!=null&&weightResp.getRoot().size()>0){
+                    for (int i=0;i<weightResp.getRoot().size();i++){
+                        addWeightEntity(weightResp.getRoot().get(i));
+                    }
+                }
             }else if(baseResp.getDataType().equals("getWeightHiss")){
                 WeightHisResp weightHisResp=(WeightHisResp)JsonUtil.ObjFromJson(resp,WeightHisResp.class);
                 if (weightHisResp.getRoot()!=null&&weightHisResp.getRoot().size()>0){
@@ -383,6 +666,21 @@ public class NotifyService extends Service {
         }
     }
 
+    private WeightEntity searchWeightForDate(long aid,int dType,String pickTime){
+        try {
+            Dao<WeightEntity, Integer> weightEntities = getDatabaseHelper().getWeightEntityDao();
+            QueryBuilder<WeightEntity, Integer> queryBuilder = weightEntities.queryBuilder();
+            queryBuilder.where().eq("aid", aid).and().eq("pickTime", pickTime);
+            List<WeightEntity> list = queryBuilder.query();
+            if (list.size()>0){
+                return list.get(0);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return new WeightEntity();
+    }
+
     private HealthEntity searchForHealth(long accountId,String pickTime,int targetType){
         try{
             List<HealthEntity> healths=getDatabaseHelper().getHealthDao().queryBuilder().where().eq("accountId",accountId).and().eq("pickTime",pickTime).and().eq("targetType", targetType).query();
@@ -396,17 +694,28 @@ public class NotifyService extends Service {
     }
 
     private void AddHealthForDay(long accountId,String pickTime,int targetType,String targetValue){
+//        try{
+//            HealthEntity entity=searchForHealth(accountId, pickTime, targetType);
+//            if (entity==null){
+//                entity=new HealthEntity();
+//                entity.setAccountId(accountId);
+//                entity.setPickTime(pickTime);
+//                entity.setCreateTime(System.currentTimeMillis());
+//            }
+//            entity.setTargetType(targetType);
+//            entity.setTargetValue(targetValue);
+//            entity.setIsSync(0);
+//            Dao<HealthEntity,Integer> dao=getDatabaseHelper().getHealthDao();
+//            dao.setAutoCommit(dao.startThreadConnection(),false);
+//            dao.createOrUpdate(entity);
+//            dao.commit(dao.startThreadConnection());
+//        }catch (SQLException e){
+//            e.printStackTrace();
+//        }
+    }
+
+    private void addHealthEntity(HealthEntity entity){
         try{
-            HealthEntity entity=searchForHealth(accountId, pickTime, targetType);
-            if (entity==null){
-                entity=new HealthEntity();
-                entity.setAccountId(accountId);
-                entity.setPickTime(pickTime);
-                entity.setCreateTime(System.currentTimeMillis());
-            }
-            entity.setTargetType(targetType);
-            entity.setTargetValue(targetValue);
-            entity.setIsSync(0);
             Dao<HealthEntity,Integer> dao=getDatabaseHelper().getHealthDao();
             dao.setAutoCommit(dao.startThreadConnection(),false);
             dao.createOrUpdate(entity);
@@ -415,22 +724,9 @@ public class NotifyService extends Service {
             e.printStackTrace();
         }
     }
+
     private void addWeightEntity(WeightEntity entity){
         try{
-            if (entity!=null){
-                Log.d(TAG,"------------>"+entity.getPickTime()+" "+entity.getWeight()+"  "+entity.getIsSync());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),0,entity.getBmi());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),1,entity.getWeight());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),2,entity.getFat());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),3,entity.getSubFat());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),4,entity.getVisFat());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),5,entity.getWater());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),6,entity.getBMR());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),7,entity.getBodyAge());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),8,entity.getMuscle());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),9,entity.getBone());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),10,entity.getProtein());
-            }
             Dao<WeightEntity,Integer> dao=getDatabaseHelper().getWeightEntityDao();
             dao.setAutoCommit(dao.startThreadConnection(),false);
             dao.createOrUpdate(entity);
@@ -490,6 +786,23 @@ public class NotifyService extends Service {
         return 0;
     }
 
+    private int getHealthData(long aid,String pickTime,int dType){
+        try{
+            Dao<HealthEntity,Integer> dao=getDatabaseHelper().getHealthDao();
+            GenericRawResults<String[]> rawResults=dao.queryRaw("select count(1) from t_health where aid="+aid+" and dataType="+dType+"  and pickTime='"+pickTime+"' ");
+            List<String[]> results=rawResults.getResults();
+            Log.d(TAG, " getHealthData select result size:" + results.size());
+            if (results.size()>0) {
+                String[] resultArray = results.get(0);
+                if (!StringUtil.isEmpty(resultArray[0])) {
+                    return Integer.parseInt(resultArray[0]);
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     @Override
     public void onDestroy(){

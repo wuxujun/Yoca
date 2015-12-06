@@ -9,12 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.xujun.app.yoca.AppConfig;
-import com.xujun.app.yoca.LockActivity;
-import com.xujun.app.yoca.LockSetupActivity;
 import com.xujun.app.yoca.R;
-import com.xujun.charting.charts.Chart;
-import com.xujun.util.StringUtil;
 import com.xujun.widget.ToggleButton;
 
 /**

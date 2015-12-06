@@ -19,31 +19,36 @@
                 android:layout_width="match_parent" android:layout_weight="1" android:orientation="vertical"
                 android:layout_height="wrap_content" android:gravity="center_horizontal">
             <TextView
-                android:layout_width="match_parent" android:gravity="center_horizontal"
-                android:layout_height="wrap_content" android:text="@string/target_top_weight"/>
-            <TextView android:id="@+id/tvTopWeight"
-                android:layout_width="match_parent" android:gravity="center_horizontal"
-                android:layout_height="wrap_content" android:text="65" android:textSize="65sp"/>
-            <TextView
-                android:layout_width="match_parent" android:gravity="right" android:layout_marginRight="20dp"
-                android:layout_height="wrap_content"  android:text="@string/main_kpi_unit"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="@string/target_top_weight" android:textSize="26sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent" android:gravity="right|center_vertical"
+                    android:layout_height="wrap_content">
+
+                <TextView android:id="@+id/tvTopWeight"  android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content" android:gravity="right|bottom"
+                android:layout_height="match_parent" android:text="65" android:textSize="56sp"/>
+            <TextView android:layout_weight="1"
+                android:layout_width="match_parent" android:gravity="left|bottom" android:layout_marginRight="10dp"
+                android:layout_height="match_parent"  android:text="@string/main_kpi_unit" android:layout_marginBottom="5dp"/>
+                    </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent" android:layout_marginRight="24dp" android:gravity="right|center_vertical"
-                android:layout_height="wrap_content" android:layout_weight="1">
+                android:layout_height="wrap_content" android:layout_weight="2">
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:background="@drawable/remand"/>
                 </LinearLayout>
-            </LinearLayout>
+        </LinearLayout>
         <LinearLayout
-            android:layout_width="match_parent" android:padding="10dp" android:background="@color/target_header_weight_color"
+            android:layout_width="match_parent" android:padding="10dp" android:background="@color/black" android:alpha="0.3"
             android:layout_height="wrap_content" android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content" android:layout_marginLeft="10dp"
-                android:layout_height="wrap_content" android:text="@string/target_current_weight"/>
+                android:layout_height="wrap_content" android:textColor="@color/white" android:text="@string/target_current_weight"/>
 
-            <TextView android:id="@+id/tvWeight"
+            <TextView android:id="@+id/tvWeight" android:textColor="@color/white"
                 android:layout_width="match_parent" android:gravity="left" android:layout_marginLeft="20dp" android:layout_weight="1"
                 android:layout_height="wrap_content" android:text="65kg"/>
 
@@ -52,7 +57,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent" android:layout_margin="20dp"
-        android:layout_height="@dimen/input_item_height" android:gravity="center_vertical|center_horizontal">
+        android:layout_height="48dp" android:gravity="center_vertical|center_horizontal">
         <LinearLayout
             android:layout_width="match_parent" android:id="@+id/llTargetType1" android:background="@color/btn_color_selected"
             android:layout_height="match_parent" android:layout_weight="1" android:layout_marginRight="5dp">
@@ -76,22 +81,22 @@
             android:layout_height="match_parent" android:text="@string/target_type_3" />
             </LinearLayout>
     </LinearLayout>
-    <LinearLayout android:id="@+id/llAccountNick"
+    <LinearLayout
         android:layout_width="match_parent" android:orientation="vertical"
         android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_marginRight="20dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView  android:layout_marginRight="10dp" android:id="@+id/tvTargetTitle"
-                android:gravity="center_vertical|right" style="@style/input_item_title"
-                android:layout_width="80dp" android:text="@string/target_weight"
+            <TextView android:id="@+id/tvTargetTitle"
+                android:gravity="center_vertical" android:textSize="18sp" android:textColor="#808080"
+                android:layout_width="wrap_content" android:text="@string/target_weight"
                 android:layout_height="match_parent" />
             <TextView  android:layout_marginLeft="20dp" android:id="@+id/tvTargetValue"
-                android:gravity="center_vertical|right" android:textSize="36sp"
-                android:layout_width="match_parent" android:layout_weight="1" android:textColor="#808080"
+                android:gravity="center_vertical" android:textSize="36sp"
+                android:layout_width="wrap_content" android:textColor="#808080"
                 android:layout_height="match_parent" android:text="65" />
-            <TextView android:id="@+id/tvTargetUnit"
-                android:gravity="center_vertical|center_horizontal" android:textSize="20sp"
+            <TextView android:id="@+id/tvTargetUnit" android:layout_marginLeft="10dp"
+                android:gravity="center_vertical" android:textSize="16sp"
                 android:layout_width="wrap_content" android:textColor="#808080"
                 android:layout_height="match_parent" android:text="Kg" android:layout_marginRight="60sp" />
             </LinearLayout>

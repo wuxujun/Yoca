@@ -76,7 +76,7 @@ public class TabAdapter extends BaseAdapter{
         }
         HealthEntity info=listItems.get(position);
         if (info!=null){
-            listItemView.title.setText(AppConfig.getAppConfig(context).getTargetType(info.getTargetType()));
+//            listItemView.title.setText(AppConfig.getAppConfig(context).getTargetType(info.getTargetType()));
         }
 
         if (currentIndex==position){

@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -155,6 +156,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
     private PopAccount           popAccount;
 //    private AccountAdapter       accountAdapter;
 
+    private long                startTime;
     private Handler             mHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -172,7 +174,9 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         mBluetoothManager=(BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter=mBluetoothManager.getAdapter();
         if (mBluetoothAdapter==null||!mBluetoothAdapter.isEnabled()) {
-            mBluetoothAdapter.enable();
+            if (mBluetoothAdapter!=null) {
+                mBluetoothAdapter.enable();
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -332,11 +336,16 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             List<AccountEntity> lists=dao.query(preparedQuery);
             Log.e(TAG, "checkUserInfo list:" + lists.size());
             if (lists.size()>0){
-                Log.e(TAG,""+lists.toString());
                 for (int i=0;i<lists.size();i++){
                     AccountEntity entity=lists.get(i);
                     if (entity.getType()==1){
                         localAccountEntity=entity;
+                        Log.e(TAG,localAccountEntity.getUserNick()+"  "+localAccountEntity.getTargetWeight()+"  "+localAccountEntity.getWeight());
+                        SherlockFragment sherlockFragment=(SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                        if (sherlockFragment instanceof ContentFragment) {
+                            ((ContentFragment)sherlockFragment).setLocalAccountEntity(localAccountEntity);
+                        }
+
                     }
                 }
             }else{
@@ -434,7 +443,11 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 if (!StringUtil.isEmpty(localAccountEntity.getAvatar())){
                     Log.d(TAG, localAccountEntity.getAvatar());
                     if (!localAccountEntity.getAvatar().equals("0")) {
-                        mHeadIcon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                        if (ImageUtils.isFileExist(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar())) {
+                            mHeadIcon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                        }else{
+                            mHeadIcon.setImageResource(R.drawable.ic_my_item_user);
+                        }
                     }
                 }
             }
@@ -505,7 +518,9 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             }
         }else{
             mScanning=false;
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            if (mBluetoothAdapter!=null) {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            }
         }
     }
 
@@ -798,6 +813,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 if (status==BluetoothGatt.GATT_SUCCESS){
                     mCurrentAddress=intent.getStringExtra(BluetoothLeService.EXTRA_ADDRESS);
                     mBluetoothLeService.discoverService(mCurrentAddress);
+                    startTime=System.currentTimeMillis();
                     updateUIStatus(getResources().getString(R.string.main_connected), 0);
                 }else{
                     updateUIStatus(getResources().getString(R.string.main_connect_err),-1);
@@ -899,7 +915,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 public void run() {
                     if (!StringUtil.isEmpty(bluetoothDevice.getName())){
                         String strName=bluetoothDevice.getName();
-                        Log.e(TAG,"|"+strName+"|"+bluetoothDevice.getAddress()+" "+rssi);
+//                        Log.e(TAG,"|"+strName+"|"+bluetoothDevice.getAddress()+" "+rssi);
                         if (strName.equals(AppConfig.APP_DEVICE_UUID)){
                             onConnect(bluetoothDevice);
                         }
@@ -920,7 +936,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             String len = String.format("%02x", data[1]);
             String dType = String.format("%02x", data[2]);
             if(cmd.equals("37")&&dType.equals("01")){
-                Log.e(TAG, "dealRecvData  Disconnect ......" + mCurrentAddress);
+//                Log.e(TAG, "dealRecvData  Disconnect ......" + mCurrentAddress);
                 mBluetoothLeService.disconnect();
                 mConnIndex=NO_DEVICE;
                 mBluetoothLeService.close();
@@ -960,18 +976,18 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 Log.e(TAG,"=====>dealRecvData  requestID:"+requestID+"   ============> "+((h*256+l)/5.0)/20.0+"    "+StringUtil.doubleToStringOne(((h*256+l)/5.0)/20.0));
                 String weight=String.format("%.1f",((h*256+l)/5.0)/2.0/10.0);
                 if (requestID.equals("00")||requestID.equals("80")){
-                    updateUIStatus(weight, 2);
+//                    updateUIStatus(weight, 2);
                 }else if (requestID.equals("01")){
                     //传参数
-                    updateUIStatus(weight,2);
+//                    updateUIStatus(weight,2);
                     sendStartWeight();
                 }else if(requestID.equals("02")){
                     //计算完成
                     respCmd(16);
                     updateUIStatus(weight,2);
                     saveWeightData(weight, StringUtil.doubleToStringOne((fatH * 256 + fatL) / 10.0),
-                            StringUtil.doubleToStringOne((subFatH * 256 + subFatL) / 10.0), StringUtil.doubleToStringOne(visFat), StringUtil.doubleToStringOne((waterH * 256 + waterL) / 10.0),
-                            StringUtil.doubleToString((bmrH * 256 + bmrL)), String.format("%d", bodyAge), StringUtil.doubleToStringOne((muscleH * 256 + muscleL) / 10.0), StringUtil.doubleToStringOne(bone));
+                            StringUtil.doubleToStringOne((subFatH * 256 + subFatL) / 10.0), StringUtil.doubleToStringOne(visFat/10.0), StringUtil.doubleToStringOne((waterH * 256 + waterL) / 10.0),
+                            StringUtil.doubleToString((bmrH * 256 + bmrL)), String.format("%d", bodyAge), StringUtil.doubleToStringOne((muscleH * 256 + muscleL) / 10.0), StringUtil.doubleToStringOne(bone/10.0));
                     updateUIResult();
                 }
             }
@@ -983,13 +999,13 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         if(gattServices!=null&&gattServices.size()>0) {
             for (BluetoothGattService gattService : gattServices) {
                 int type=gattService.getType();
-                Log.i(TAG,"---->service type:"+type);
-                Log.i(TAG,"---->includedServices size:"+gattService.getIncludedServices().size());
-                Log.i(TAG,"---->service uuid:"+gattService.getUuid());
+//                Log.i(TAG,"---->service type:"+type);
+//                Log.i(TAG,"---->includedServices size:"+gattService.getIncludedServices().size());
+//                Log.i(TAG,"---->service uuid:"+gattService.getUuid());
 
                 List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
                 for (final BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
-                    Log.i(TAG, gattCharacteristic.getProperties() + "  " + gattCharacteristic.getUuid()+" "+gattCharacteristic.getPermissions());
+//                    Log.i(TAG, gattCharacteristic.getProperties() + "  " + gattCharacteristic.getUuid()+" "+gattCharacteristic.getPermissions());
                     UUID uuid = gattCharacteristic.getUuid();
                     if (uuid.toString().equals(BluetoothLeService.SERVICE_UUID1)) {
                         mBluetoothLeService.setCharacteristicNotification(mCurrentAddress, gattCharacteristic, true);
@@ -1014,10 +1030,10 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             text=stringBuilder.toString();
         }
         if (mBluetoothLeService.writeCharacteristic(mCurrentAddress,gattCharacteristic)){
-            Log.e(TAG, "write data Success..." + text);
+//            Log.e(TAG, "write data Success..." + text);
             record.setStatus(1);
         }else {
-            Log.e(TAG, "write data Failed..." + text);
+//            Log.e(TAG, "write data Failed..." + text);
             record.setStatus(0);
         }
         addSendRecord(record);
@@ -1042,7 +1058,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         if (total!=data[7]){
             Log.e(TAG, "checknumber is not ...");
         }
-        Log.e(TAG, "checknumber =====" + total + "  ===== " + data[7]);
+//        Log.e(TAG, "checknumber =====" + total + "  ===== " + data[7]);
 
 
         for (BluetoothGattService gattService : gattServices) {
@@ -1066,7 +1082,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
      */
     private void sendStartWeight(){
         if (localAccountEntity==null){
-            Log.e(TAG,"sendStartWeight  localAccountEntity is null");
+//            Log.e(TAG,"sendStartWeight  localAccountEntity is null");
             return;
         }
         int h=localAccountEntity.getHeight();
@@ -1102,7 +1118,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));
-            Log.e(TAG,"write :--->"+stringBuilder.toString());
+//            Log.e(TAG,"write :--->"+stringBuilder.toString());
             sendPacket=stringBuilder.toString();
         }
         byte total=0;
@@ -1110,7 +1126,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             total+=data[i];
         }
         if (total!=data[15]){
-            Log.e(TAG,"checknumber is not ...");
+//            Log.e(TAG,"checknumber is not ...");
         }
         for (BluetoothGattService gattService : gattServices) {
             if (!gattService.getUuid().toString().equals(BluetoothLeService.SERVICE_UUID)){
@@ -1154,7 +1170,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         int wH=target/256;
         int wL=target-wH*256;
         int checkNum=18+13+1+h+age+sex+1+0+wH+wL+fH+fL;
-        Log.e(TAG, "" + h + "  " + age + "  " + sex+  "  "+target+"  "+wH+"  "+wL+ ""+fat+"  "+fH+"  "+fL);
+//        Log.e(TAG, "" + h + "  " + age + "  " + sex+  "  "+target+"  "+wH+"  "+wL+ ""+fat+"  "+fH+"  "+fL);
         byte[]  data={9,16,18,18,13,1,(byte)(h & 0xFF),(byte)(age & 0xFF),(byte)(sex & 0xFF),1,0,(byte)(wH&0xFF),(byte)(wL&0xFF),(byte)(fH&0xff),(byte)(fL&0xff),(byte)(checkNum & 0xFF)};
         //09 10 12
         //09 0B 12 12 08 1 height age sex 1 0 0 0 0 0
@@ -1163,7 +1179,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));
-            Log.e(TAG,"write :--->"+stringBuilder.toString());
+//            Log.e(TAG,"write :--->"+stringBuilder.toString());
             sendPacket=stringBuilder.toString();
         }
         byte total=0;
@@ -1173,7 +1189,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         if (total!=data[15]){
             Log.e(TAG,"checknumber is not ...");
         }
-        Log.e(TAG,"checknumber ====="+total+"  ===== "+data[15]);
+//        Log.e(TAG,"checknumber ====="+total+"  ===== "+data[15]);
 
         for (BluetoothGattService gattService : gattServices) {
             if (!gattService.getUuid().toString().equals(BluetoothLeService.SERVICE_UUID)){
@@ -1192,6 +1208,12 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 
     private void saveWeightData(String weight,String fat,String subFat,String visFat,String water,String bmr,String bodyAge,String muscle,String bone)
     {
+        Log.e(TAG,"+++++++++++"+System.currentTimeMillis()+"  "+startTime+"  "+(System.currentTimeMillis()-startTime));
+        if ((System.currentTimeMillis()-startTime)<1000){
+            startTime=System.currentTimeMillis();
+            return;
+        }
+        startTime=System.currentTimeMillis();
         SherlockFragment fragment = (SherlockFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
         WeightHisEntity entity=new WeightHisEntity();
         entity.setWid(System.currentTimeMillis());
@@ -1214,6 +1236,8 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         entity.setBodyAge(Integer.parseInt(bodyAge));
         entity.setMuscle(StringUtil.toDouble(muscle));
         entity.setBone(StringUtil.toDouble(bone));
+        double protein=0.27*StringUtil.toDouble(muscle)+0.02*StringUtil.toDouble(fat);
+        entity.setProtein(StringUtil.toDouble(StringUtil.doubleToStringOne(protein)));
         entity.setIsSync(0);
         entity.setAddtime(System.currentTimeMillis());
         try{
@@ -1223,15 +1247,12 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             dao.commit(dao.startThreadConnection());
 
             GenericRawResults<String[]> rawResults=dao.queryRaw("select pickTime,count(*),sum(weight),sum(fat),sum(subFat),sum(visFat)," +
-                    "sum(water),sum(BMR),sum(bodyAge),sum(muscle),sum(bone),sum(bmi) from t_weight_his where aid="+aid+" and pickTime='"+strToday+"' group by pickTime");
+                    "sum(water),sum(BMR),sum(bodyAge),sum(muscle),sum(bone),sum(bmi),sum(protein) from t_weight_his where aid="+aid+" and pickTime='"+strToday+"' group by pickTime");
             List<String[]> results=rawResults.getResults();
             if (results.size()>0) {
-
-                Log.e(TAG,"++++++++++++++++===============> "+results.size());
                 String[] resultArray = results.get(0);
                 if (localAccountEntity != null) {
                     int count = Integer.parseInt(resultArray[1]);
-
                     localAccountEntity.setWeight(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[2]) / count));
                     localAccountEntity.setFat(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[3]) / count));
                     localAccountEntity.setSubFat(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[4]) / count));
@@ -1242,25 +1263,13 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                     localAccountEntity.setMuscle(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[9]) / count));
                     localAccountEntity.setBone(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[10]) / count));;
                     localAccountEntity.setBmi(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[11]) / count));
+                    localAccountEntity.setProtein(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[12]) / count));
                     localAccountEntity.setIsSync(0);
                     Dao<AccountEntity, Integer> accountEntityDao = getDatabaseHelper().getAccountEntityDao();
                     accountEntityDao.setAutoCommit(accountEntityDao.startThreadConnection(), false);
                     accountEntityDao.createOrUpdate(localAccountEntity);
                     accountEntityDao.commit(dao.startThreadConnection());
-
-                    AddHealthForDay(aid,strToday,2,localAccountEntity.getBmi());
-                    AddHealthForDay(aid,strToday,1,localAccountEntity.getWeight());
-                    AddHealthForDay(aid,strToday,3,localAccountEntity.getFat());
-                    AddHealthForDay(aid,strToday,4,localAccountEntity.getSubFat());
-                    AddHealthForDay(aid,strToday,5,localAccountEntity.getVisFat());
-                    AddHealthForDay(aid,strToday,7,localAccountEntity.getWater());
-                    AddHealthForDay(aid,strToday,6,localAccountEntity.getBmr());
-                    AddHealthForDay(aid,strToday,11,localAccountEntity.getBodyAge());
-                    AddHealthForDay(aid,strToday,8,localAccountEntity.getMuscle());
-                    AddHealthForDay(aid,strToday,9,localAccountEntity.getBone());
-                    AddHealthForDay(aid,strToday,10,localAccountEntity.getProtein());
-
-                    AddWeightForDay(aid,strToday,localAccountEntity.getWeight(),localAccountEntity.getFat(),localAccountEntity.getSubFat(),localAccountEntity.getVisFat(),localAccountEntity.getWater(),localAccountEntity.getBmr(),localAccountEntity.getBodyAge(),localAccountEntity.getMuscle(),localAccountEntity.getBone(),localAccountEntity.getBmi());
+                    AddWeightForDay(aid,strToday,localAccountEntity.getWeight(),localAccountEntity.getFat(),localAccountEntity.getSubFat(),localAccountEntity.getVisFat(),localAccountEntity.getWater(),localAccountEntity.getBmr(),localAccountEntity.getBodyAge(),localAccountEntity.getMuscle(),localAccountEntity.getBone(),localAccountEntity.getBmi(),localAccountEntity.getProtein());
                 }
             }
 
@@ -1271,18 +1280,28 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         sendNotifyService(AppConfig.ACTION_WEIGH_DATA_UPLOAD);
     }
 
-    private void AddHealthForDay(long accountId,String pickTime,int targetType,String targetValue){
+    private void AddHealthForDay(WeightEntity weightEntity,int dType){
         try{
-            HealthEntity entity=searchForHealth(accountId, pickTime, targetType);
+            HealthEntity entity=searchForHealth(weightEntity.getAid(), weightEntity.getPickTime(), dType);
             if (entity==null){
                 entity=new HealthEntity();
-                entity.setAccountId(accountId);
-                entity.setPickTime(pickTime);
-                entity.setCreateTime(System.currentTimeMillis());
+                entity.setHid(System.currentTimeMillis());
+                entity.setAid(weightEntity.getAid());
+                entity.setPickTime(weightEntity.getPickTime());
+                entity.setDataType(dType);
             }
-            entity.setTargetType(targetType);
-            entity.setTargetValue(targetValue);
-            entity.setIsSync(0);
+//            entity.setSholai(weightEntity.getSholai());
+            entity.setWeight(weightEntity.getWeight());
+            entity.setBmi(weightEntity.getBmi());
+            entity.setFat(weightEntity.getFat());
+            entity.setSubFat(weightEntity.getSubFat());
+            entity.setVisFat(weightEntity.getVisFat());
+            entity.setBMR(weightEntity.getBMR());
+            entity.setWater(weightEntity.getWater());
+            entity.setMuscle(weightEntity.getMuscle());
+            entity.setBone(weightEntity.getBone());
+//            entity.setProtein(weightEntity.getProtein());
+            entity.setBodyAge(weightEntity.getBodyAge());
             Dao<HealthEntity,Integer> dao=getDatabaseHelper().getHealthDao();
             dao.setAutoCommit(dao.startThreadConnection(),false);
             dao.createOrUpdate(entity);
@@ -1292,9 +1311,9 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         }
     }
 
-    private HealthEntity searchForHealth(long accountId,String pickTime,int targetType){
+    private HealthEntity searchForHealth(long accountId,String pickTime,int dType){
         try{
-            List<HealthEntity> healths=getDatabaseHelper().getHealthDao().queryBuilder().where().eq("accountId",accountId).and().eq("pickTime",pickTime).and().eq("targetType", targetType).query();
+            List<HealthEntity> healths=getDatabaseHelper().getHealthDao().queryBuilder().where().eq("aid",accountId).and().eq("pickTime",pickTime).and().eq("dataType", dType).query();
             if (healths.size()>0){
                 return healths.get(0);
             }
@@ -1304,19 +1323,8 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         return null;
     }
 
-    private int deleteForHealth(String pickTime){
-        try {
-            DeleteBuilder<HealthEntity,Integer> deleteBuilder=getDatabaseHelper().getHealthDao().deleteBuilder();
-            deleteBuilder.where().eq("pickTime",pickTime);
-            return deleteBuilder.delete();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
     private void AddWeightForDay(long aId,String pickTime,String weight,String fat,String subFat,String visFat,String water
-            ,String bmr,String bodyAge,String muscle,String bone,String bmi){
+            ,String bmr,String bodyAge,String muscle,String bone,String bmi,String protein){
         try{
             WeightEntity entity=searchForWeight(aId, pickTime);
             if (entity==null){
@@ -1338,11 +1346,15 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             entity.setMuscle(muscle);
             entity.setBone(bone);
             entity.setBmi(bmi);
+            entity.setProtein(protein);
             entity.setIsSync(0);
             Dao<WeightEntity,Integer> dao=getDatabaseHelper().getWeightEntityDao();
             dao.setAutoCommit(dao.startThreadConnection(),false);
             dao.createOrUpdate(entity);
             dao.commit(dao.startThreadConnection());
+
+            AddHealthForDay(entity,1);
+            AddHealthForDay(entity,2);
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -1554,20 +1566,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 
     private void addWeightEntity(WeightEntity entity){
         try{
-            if (entity!=null){
-                Log.d(TAG,"------------>"+entity.getPickTime()+" "+entity.getWeight()+"  "+entity.getIsSync());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),0,entity.getBmi());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),1,entity.getWeight());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),2,entity.getFat());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),3,entity.getSubFat());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),4,entity.getVisFat());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),5,entity.getWater());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),6,entity.getBMR());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),7,entity.getBodyAge());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),8,entity.getMuscle());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),9,entity.getBone());
-                AddHealthForDay(entity.getAid(),entity.getPickTime(),10,entity.getProtein());
-            }
             Dao<WeightEntity,Integer> dao=getDatabaseHelper().getWeightEntityDao();
             dao.setAutoCommit(dao.startThreadConnection(),false);
             dao.createOrUpdate(entity);

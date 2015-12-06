@@ -14,7 +14,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.utils.Highlight;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -102,9 +103,9 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
         xAxis.setTextColor(Color.WHITE);
 
         YAxis leftAxis=mChart.getAxisLeft();
-        leftAxis.setLabelCount(5);
+        leftAxis.setLabelCount(5,false);
         YAxis rightAxis=mChart.getAxisRight();
-        rightAxis.setLabelCount(5);
+        rightAxis.setLabelCount(5,false);
         rightAxis.setTextColor(Color.WHITE);
         rightAxis.setDrawGridLines(true);
 
@@ -145,28 +146,28 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
     }
 
     private void initBottomTabbar(){
-        for (int i=0;i<8;i++) {
-            HealthEntity entity = new HealthEntity();
-            entity.setTargetType(i + 1);
-            tabLists.add(entity);
-        }
-        tabListView=(HorizontalListView)findViewById(R.id.lv_tab);
-        tabAdapter=new TabAdapter(mContext,tabLists,R.layout.tab_item);
-        tabListView.setAdapter(tabAdapter);
-        tabListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                tabAdapter.setCurrentIndex(i);
-                tabAdapter.notifyDataSetChanged();
-            }
-        });
+//        for (int i=0;i<8;i++) {
+//            HealthEntity entity = new HealthEntity();
+//            entity.setTargetType(i + 1);
+//            tabLists.add(entity);
+//        }
+
+//        tabListView=(HorizontalListView)findViewById(R.id.lv_tab);
+//        tabAdapter=new TabAdapter(mContext,tabLists,R.layout.tab_item);
+//        tabListView.setAdapter(tabAdapter);
+//        tabListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                tabAdapter.setCurrentIndex(i);
+//                tabAdapter.notifyDataSetChanged();
+//            }
+//        });
     }
 
     private void initData()
     {
         mChart.setBackgroundColor(getResources().getColor(R.color.chart_background_color));
         mChart.setGridBackgroundColor(Color.GRAY);
-        mChart.setHighlightEnabled(true);
         mChart.setDescription("");
         refreshData();
         mChart.animateX(1500);
@@ -201,6 +202,16 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
     }
 
     @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
     public void onChartLongPressed(MotionEvent motionEvent) {
 
     }
@@ -229,7 +240,6 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
     public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
     }
-
 
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
@@ -268,7 +278,7 @@ public class ChartActivity extends SherlockActivity implements SeekBar.OnSeekBar
             if (entity!=null) {
                 date=entity.getPickTime();
                 xVals.add(date.substring(date.indexOf("-")+1));
-                yVals.add(new Entry(Float.parseFloat(entity.getTargetValue()),i));
+//                yVals.add(new Entry(Float.parseFloat(entity.getTargetValue()),i));
             }
         }
         xVals.add("0");

@@ -27,6 +27,11 @@
     <color name="chart_grid_color">#5D5D5D</color>
     <color name="chart_line_color">#45c878</color>
 
+    <color name="chart_day_color_item0">#42c274</color>
+    <color name="chart_day_color_item1">#41B385</color>
+    <color name="chart_day_color_item2">#40B2B2</color>
+
+
 
     <color name="cpb_backgroud_color">#45c878</color>
     <color name="cpb_grey">#ffdedede</color>

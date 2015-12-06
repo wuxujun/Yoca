@@ -10,7 +10,7 @@ public class BaseResp implements Serializable{
     private int     errorCode;
     private int     success;
     private String  dataType;
-    private int     dataId;
+    private long     dataId;
 
     private String  filename;
 
@@ -24,11 +24,11 @@ public class BaseResp implements Serializable{
         this.filename = filename;
     }
 
-    public int getDataId() {
+    public long getDataId() {
         return dataId;
     }
 
-    public void setDataId(int dataId) {
+    public void setDataId(long dataId) {
         this.dataId = dataId;
     }
 

@@ -65,12 +65,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     startActivity(intent);
                     appContext.setProperty(AppConfig.USER_LOCK_TYPE,"1");
                 } else {
-                    AppConfig.getAppConfig(mContext).set(AppConfig.USER_LOCK_TYPE, "0");
-                    Intent intent = new Intent(SettingActivity.this, LockActivity.class);
-                    Bundle bundle=new Bundle();
-                    bundle.putInt("lockType",0);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+//                    AppConfig.getAppConfig(mContext).set(AppConfig.USER_LOCK_TYPE, "0");
+//                    Intent intent = new Intent(SettingActivity.this, LockActivity.class);
+//                    Bundle bundle=new Bundle();
+//                    bundle.putInt("lockType",0);
+//                    intent.putExtras(bundle);
+//                    startActivity(intent);
                     appContext.setProperty(AppConfig.USER_LOCK_TYPE, "0");
                 }
             }

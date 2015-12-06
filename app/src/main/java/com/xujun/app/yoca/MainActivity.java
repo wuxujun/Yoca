@@ -877,24 +877,24 @@ public class MainActivity extends SlidingFragmentActivity {
     }
 
     private void AddHealthForDay(long accountId,String pickTime,int targetType,String targetValue){
-        try{
-            HealthEntity entity=searchForHealth(accountId,pickTime,targetType);
-            if (entity==null){
-                entity=new HealthEntity();
-                entity.setAccountId(accountId);
-                entity.setPickTime(pickTime);
-                entity.setCreateTime(System.currentTimeMillis());
-            }
-            entity.setTargetType(targetType);
-            entity.setTargetValue(targetValue);
-            entity.setIsSync(0);
-            Dao<HealthEntity,Integer> dao=getDatabaseHelper().getHealthDao();
-            dao.setAutoCommit(dao.startThreadConnection(),false);
-            dao.createOrUpdate(entity);
-            dao.commit(dao.startThreadConnection());
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+//        try{
+//            HealthEntity entity=searchForHealth(accountId,pickTime,targetType);
+//            if (entity==null){
+//                entity=new HealthEntity();
+//                entity.setAccountId(accountId);
+//                entity.setPickTime(pickTime);
+//                entity.setCreateTime(System.currentTimeMillis());
+//            }
+//            entity.setTargetType(targetType);
+//            entity.setTargetValue(targetValue);
+//            entity.setIsSync(0);
+//            Dao<HealthEntity,Integer> dao=getDatabaseHelper().getHealthDao();
+//            dao.setAutoCommit(dao.startThreadConnection(),false);
+//            dao.createOrUpdate(entity);
+//            dao.commit(dao.startThreadConnection());
+//        }catch (SQLException e){
+//            e.printStackTrace();
+//        }
     }
 
     private HealthEntity searchForHealth(long accountId,String pickTime,int targetType){

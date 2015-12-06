@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -55,6 +56,8 @@ public class WarnActivity extends BaseActivity{
 
     private ItemAdapter adapter;
 
+    public boolean         isEdit=false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +80,15 @@ public class WarnActivity extends BaseActivity{
         mHeadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                isEdit = !isEdit;
+                if (isEdit) {
+                    mHeadButton.setText(getText(R.string.btn_main_done));
+                } else {
+                    mHeadButton.setText(getText(R.string.btn_manager));
+                }
+                if (adapter!=null) {
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
         mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
@@ -139,8 +150,8 @@ public class WarnActivity extends BaseActivity{
             if (list.size()>0){
                 Map<String,Object> params=new HashMap<String, Object>();
                 params.put("root",list);
-                if (!StringUtil.isEmpty(appContext.getProperty("uid"))) {
-                    params.put("uid", appContext.getProperty("uid"));
+                if (!StringUtil.isEmpty(appContext.getProperty(AppConfig.CONF_USER_UID))) {
+                    params.put("uid", appContext.getProperty(AppConfig.CONF_USER_UID));
                 }
                 params.put("imei",appContext.getIMSI());
                 params.put("umeng_token", UmengRegistrar.getRegistrationId(mContext));
@@ -213,6 +224,9 @@ public class WarnActivity extends BaseActivity{
         public TextView         warnDesc;
         public TextView         warnTag;
         public ToggleButton tbOff;
+
+
+        public ImageButton delIB;
     }
 
     class ItemAdapter extends BaseAdapter {
@@ -243,6 +257,7 @@ public class WarnActivity extends BaseActivity{
                 holder.llItem=(LinearLayout)convertView.findViewById(R.id.llWarnItem);
                 holder.icon=(ImageView)convertView.findViewById(R.id.ivItemIcon);
                 holder.title=(TextView)convertView.findViewById(R.id.tvItemTitle);
+                holder.delIB=(ImageButton)convertView.findViewById(R.id.ibWarnDel);
 
                 holder.warnTitle=(TextView)convertView.findViewById(R.id.tvWarnTitle);
                 holder.warnDesc=(TextView)convertView.findViewById(R.id.tvWarnDesc);
@@ -259,7 +274,11 @@ public class WarnActivity extends BaseActivity{
             }else{
                 holder.llAdd.setVisibility(View.GONE);
                 holder.llItem.setVisibility(View.VISIBLE);
-
+                if (isEdit){
+                    holder.delIB.setVisibility(View.VISIBLE);
+                }else{
+                    holder.delIB.setVisibility(View.GONE);
+                }
                 holder.warnTitle.setText(entity.getValue());
                 holder.warnTag.setText(""+entity.getNote());
                 String desc="";
@@ -286,8 +305,34 @@ public class WarnActivity extends BaseActivity{
                 }
                 holder.warnDesc.setText(desc);
             }
+            holder.delIB.setOnClickListener(new DelClickListener(i));
             return convertView;
         }
+    }
+
+    class DelClickListener implements View.OnClickListener{
+
+        private int position;
+        DelClickListener(int pos){
+            position=pos;
+        }
+        @Override
+        public void onClick(View view) {
+            WarnEntity entity=items.get(position);
+            items.remove(position);
+            deleteWarn(entity);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void deleteWarn(WarnEntity entity){
+        try{
+            Dao<WarnEntity, Integer> warnEntityDao = getDatabaseHelper().getWarnEntityDao();
+            warnEntityDao.updateRaw("UPDATE `t_warn` SET isSync = 0,status=3 WHERE wid="+entity.getWId()+";");
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        synchData();
     }
 
 }

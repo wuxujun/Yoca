@@ -15,68 +15,68 @@
                 android:layout_width="match_parent" android:layout_margin="5dp"
                 android:layout_height="wrap_content" android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content" android:textColor="@color/white"
+                android:layout_width="wrap_content" android:textColor="#808080"
                 android:layout_height="wrap_content" android:id="@+id/tvYoca" android:text="Sholai指数:"/>
                 <TextView
-                    android:layout_width="wrap_content" android:textColor="@color/white"
+                    android:layout_width="wrap_content" android:textColor="#808080"
                     android:layout_height="wrap_content" android:text="@string/main_value_unit"/>
 
             </LinearLayout>
             <LinearLayout android:id="@+id/llAvatarBust"
-                android:layout_width="match_parent" android:background="@color/item_background"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/avatar_input_item_height" android:layout_margin="1dp">
                 <LinearLayout android:layout_marginBottom="1dp"
                     android:layout_width="match_parent" android:background="@color/transparent"
                     android:layout_height="match_parent">
-                    <TextView android:layout_marginLeft="20dp"
+                    <TextView android:layout_marginLeft="5dp"
                         android:gravity="center_vertical" style="@style/avatar_input_item_title"
                         android:layout_width="wrap_content" android:text="@string/avatar_Bust"
                         android:layout_height="match_parent" />
                     <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null" android:id="@+id/etBust" android:textSize="14sp" android:inputType="number"  android:maxLength="3"
                         android:layout_width="match_parent" android:layout_weight="1" android:singleLine="true"
-                        android:layout_height="match_parent" android:hint="@string/avatar_Bust_Hit" style="@style/input_item_edit" android:imeOptions="actionNext"
+                        android:layout_height="match_parent" android:hint="@string/avatar_Bust_Hit" style="@style/avatar_input_item_edit" android:imeOptions="actionNext"
                         />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout android:id="@+id/llAvatarWaistline"
-                android:layout_width="match_parent"  android:background="@color/item_background"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/avatar_input_item_height" android:layout_margin="1dp">
                 <LinearLayout android:layout_marginBottom="1dp"
                     android:layout_width="match_parent" android:background="@color/transparent"
                     android:layout_height="match_parent">
-                    <TextView android:layout_marginLeft="20dp"
+                    <TextView android:layout_marginLeft="5dp"
                         android:gravity="center_vertical" style="@style/avatar_input_item_title"
                         android:layout_width="wrap_content" android:text="@string/avatar_Waistline"
                         android:layout_height="match_parent" />
                     <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:id="@+id/etWaistline" android:textSize="14sp"
                         android:layout_width="match_parent" android:layout_weight="1" android:singleLine="true" android:inputType="number"  android:maxLength="3"
-                        android:layout_height="match_parent" android:hint="@string/avatar_Waistline_Hit" style="@style/input_item_edit" android:imeOptions="actionNext"
+                        android:layout_height="match_parent" android:hint="@string/avatar_Waistline_Hit" style="@style/avatar_input_item_edit" android:imeOptions="actionNext"
                         />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout android:id="@+id/llAvatarHips"
-                android:layout_width="match_parent"  android:background="@color/item_background"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/avatar_input_item_height" android:layout_margin="1dp">
                 <LinearLayout android:layout_marginBottom="1dp"
                     android:layout_width="match_parent" android:background="@color/transparent"
                     android:layout_height="match_parent">
-                    <TextView android:layout_marginLeft="20dp"
+                    <TextView android:layout_marginLeft="5dp"
                         android:gravity="center_vertical" style="@style/avatar_input_item_title"
                         android:layout_width="wrap_content" android:text="@string/avatar_Hips"
                         android:layout_height="match_parent" />
                     <com.andreabaccega.widget.FormEditText android:textCursorDrawable="@null"  android:id="@+id/etHips" android:textSize="14sp" android:inputType="number"  android:maxLength="3"
                         android:layout_width="match_parent" android:layout_weight="1" android:singleLine="true"
-                        android:layout_height="match_parent" android:hint="@string/avatar_Hips_Hit" style="@style/input_item_edit" android:imeOptions="actionDone"
+                        android:layout_height="match_parent" android:hint="@string/avatar_Hips_Hit" style="@style/avatar_input_item_edit" android:imeOptions="actionDone"
                         />
                 </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:gravity="center_vertical|center_horizontal" android:layout_weight="1">
-            <ImageButton android:layout_margin="10dp"
-                android:layout_width="match_parent" android:background="@drawable/ic_launcher"
+        <LinearLayout android:layout_margin="10dp" android:layout_weight="1"
+            android:layout_width="280dp" android:background="@color/item_background"
+            android:layout_height="match_parent" android:gravity="center_vertical|center_horizontal">
+            <ImageView
+                android:layout_width="match_parent" android:src="@drawable/ic_camera"
                 android:layout_height="match_parent" android:id="@+id/ibCamera" />
         </LinearLayout>
 

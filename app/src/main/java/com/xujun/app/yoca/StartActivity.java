@@ -11,12 +11,15 @@ import android.view.Window;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.umeng.message.UmengRegistrar;
 import com.xujun.model.LoginResp;
 import com.xujun.model.TargetInfoResp;
 import com.xujun.sqlite.ConfigEntity;
 import com.xujun.sqlite.DatabaseHelper;
+import com.xujun.sqlite.HealthEntity;
 import com.xujun.sqlite.TargetEntity;
+import com.xujun.sqlite.WeightHisEntity;
 import com.xujun.util.AppUtil;
 import com.xujun.util.JsonUtil;
 import com.xujun.util.StringUtil;
@@ -132,7 +135,7 @@ public class StartActivity extends SherlockActivity{
         Map<String, String> sb = new HashMap<String, String>();
         sb.put("imei", appContext.getIMSI());
         try{
-            requestConfig(URLs.INIT_CONFIG_URL,JsonUtil.toJson(sb));
+            requestConfig(URLs.INIT_CONFIG_URL, JsonUtil.toJson(sb));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -198,7 +201,7 @@ public class StartActivity extends SherlockActivity{
 
 
     private void request(final String url,final String params){
-        progress= AppUtil.showProgress(this, getString(R.string.login_loading));
+        progress= AppUtil.showProgress(this, getString(R.string.init_loading));
         final Handler handler=new Handler(){
             public void handleMessage(Message msg){
                 if (msg.what==1){
@@ -289,7 +292,7 @@ public class StartActivity extends SherlockActivity{
     }
 
     private void requestConfig(final String url,final String params){
-        progress= AppUtil.showProgress(this, getString(R.string.login_loading));
+        progress= AppUtil.showProgress(this, getString(R.string.init_loading));
         final Handler handler=new Handler(){
             public void handleMessage(Message msg){
                 if (msg.what==1){

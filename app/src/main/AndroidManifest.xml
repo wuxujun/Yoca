@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.xujun.app.yoca">
 
     <application android:allowBackup="true" android:label="@string/app_name" android:name=".AppContext"
-        android:icon="@drawable/ic_launcher" android:theme="@style/Theme.Yocatheme">
+        android:icon="@drawable/ic_launcher" android:theme="@style/Theme.Yocatheme" android:largeHeap="true">
         <activity android:name=".StartActivity" android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -22,7 +22,7 @@
         <activity android:name=".AvatarEditAvtivity" android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
         <activity android:name=".AvatarMActivity"/>
         <activity android:name=".HomeActivity"/>
-        <activity android:name=".PhoneActivity"/>
+        <activity android:name=".PhoneActivity" android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
         <activity android:name=".LoginActivity" android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
         <activity android:name=".ForgotPwdActivity"/>
         <activity android:name=".RegisterActivity" android:configChanges="keyboardHidden|orientation" android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait"/>

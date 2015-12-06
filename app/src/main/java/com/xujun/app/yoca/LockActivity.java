@@ -107,6 +107,7 @@ public class LockActivity extends SherlockActivity {
         });
     }
 
+
     private void showCrouton(String message){
         Crouton crouton;
         crouton=Crouton.makeText(this,message,INFINITE);
@@ -118,12 +119,11 @@ public class LockActivity extends SherlockActivity {
 
         // disable back key
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(type==0){
+            if(type==1){
                 finish();
             }
             return true;
         }
-
         return super.onKeyDown(keyCode, event);
     }
 

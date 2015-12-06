@@ -139,12 +139,29 @@ public class MyFragment  extends BaseFragment implements View.OnClickListener {
                 userNick.setText(localAccountEntity.getUserNick());
                 if (!StringUtil.isEmpty(localAccountEntity.getAvatar())){
                     Log.e(TAG, localAccountEntity.getAvatar());
-                    userAvatar.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                    if (!localAccountEntity.getAvatar().equals("0")) {
+                        if (ImageUtils.isFileExist(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar())) {
+                            userAvatar.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                        }else{
+                            userAvatar.setImageResource(R.drawable.ic_my_item_user);
+                        }
+                    }
                 }
+                String  userType=appContext.getProperty(AppConfig.CONF_USER_TYPE);
                 if (!appContext.getProperty(AppConfig.CONF_USER_TYPE).equals("0")){
-                    ImageLoader.getInstance().displayImage(appContext.getProperty(AppConfig.CONF_USER_AVATAR), userAvatar,options);
+                    ImageLoader.getInstance().displayImage(appContext.getProperty(AppConfig.CONF_USER_AVATAR), userAvatar, options);
+                    if (userType.equals("1")){
+                        userAccount.setText("帐号:微信用户");
+                    }else if(userType.equals("2")){
+                        userAccount.setText("帐号:QQ用户");
+                    }else if(userType.equals("3")){
+                        userAccount.setText("帐号:微博用户");
+                    }
+                } else {
+
+                    userAccount.setText("帐号:" + AppConfig.getAppConfig(mContext).get(AppConfig.CONF_LOGIN_ACCOUNT));
                 }
-                userAccount.setText(AppConfig.getAppConfig(mContext).get(AppConfig.CONF_LOGIN_ACCOUNT));
+
             }
         }catch (SQLException e){
             e.printStackTrace();

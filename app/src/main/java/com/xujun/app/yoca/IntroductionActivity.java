@@ -44,10 +44,36 @@ public class IntroductionActivity extends Activity{
 
         LayoutInflater  inflater=getLayoutInflater();
         pageViews=new ArrayList<View>();
-        pageViews.add(inflater.inflate(R.layout.viewpager_page0,null));
-        pageViews.add(inflater.inflate(R.layout.viewpager_page1,null));
-        pageViews.add(inflater.inflate(R.layout.viewpager_page2,null));
-        pageViews.add(inflater.inflate(R.layout.viewpager_page3, null));
+//        pageViews.add(inflater.inflate(R.layout.viewpager_page0,null));
+//        pageViews.add(inflater.inflate(R.layout.viewpager_page1,null));
+//        pageViews.add(inflater.inflate(R.layout.viewpager_page2,null));
+//        pageViews.add(inflater.inflate(R.layout.viewpager_page3,null));
+        ImageView v1=new ImageView(this);
+        v1.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
+        v1.setScaleType(ImageView.ScaleType.FIT_XY);
+        v1.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//        v1.setImageResource(R.drawable.intruduce0);
+        pageViews.add(v1);
+
+        ImageView v2=new ImageView(this);
+        v2.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
+        v2.setScaleType(ImageView.ScaleType.FIT_XY);
+        v2.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//        v2.setImageResource(R.drawable.intruduce1);
+        pageViews.add(v2);
+        ImageView v3=new ImageView(this);
+        v3.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
+        v3.setScaleType(ImageView.ScaleType.FIT_XY);
+        v3.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//        v3.setImageResource(R.drawable.intruduce2);
+        pageViews.add(v3);
+
+        ImageView v4=new ImageView(this);
+        v4.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
+        v4.setScaleType(ImageView.ScaleType.FIT_XY);
+        v4.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//        v4.setImageResource(R.drawable.intruduce3);
+        pageViews.add(v4);
 
         mImageViews=new ImageView[pageViews.size()];
 
@@ -75,14 +101,9 @@ public class IntroductionActivity extends Activity{
 
         @Override
         public void onClick(View view) {
-            switch (view.getId()){
-                case R.id.btnStart: {
-                    UIHelper.openHome(IntroductionActivity.this);
-                    appContext.setProperty(AppConfig.CONF_FIRST_START,"1");
-                    finish();
-                    break;
-                }
-            }
+            UIHelper.openHome(IntroductionActivity.this);
+            appContext.setProperty(AppConfig.CONF_FIRST_START,"1");
+            finish();
         }
     };
 
@@ -111,12 +132,28 @@ public class IntroductionActivity extends Activity{
         @Override
         public Object instantiateItem(View v, int position) {
             // TODO Auto-generated method stub
-            ((ViewPager) v).addView(pageViews.get(position));
+            ImageView img=(ImageView)pageViews.get(position);
+            switch (position)
+            {
+                case 0:
+                    img.setImageResource(R.drawable.intruduce0);
+                    break;
+                case 1:
+                    img.setImageResource(R.drawable.intruduce1);
+                    break;
+                case 2:
+                    img.setImageResource(R.drawable.intruduce2);
+                    break;
+                default:
+                    img.setImageResource(R.drawable.intruduce3);
+                    break;
+            }
+
+            ((ViewPager) v).addView(img);
 
             // 测试页卡3内的按钮事件
             if (position == 3) {
-                Button btn = (Button) v.findViewById(R.id.btnStart);
-                btn.setOnClickListener(mBtnClickListener);
+                img.setOnClickListener(mBtnClickListener);
             }
 
             return pageViews.get(position);
@@ -128,8 +165,6 @@ public class IntroductionActivity extends Activity{
             // TODO Auto-generated method stub
             return v == arg1;
         }
-
-
 
         @Override
         public void startUpdate(View arg0) {

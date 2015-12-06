@@ -117,7 +117,7 @@
                 <LinearLayout
                     android:layout_width="match_parent" android:layout_weight="1" android:layout_marginBottom="10dp"
                     android:layout_height="match_parent" android:orientation="horizontal">
-                    <TextView
+                    <TextView android:id="@+id/tvWeekValue"
                         android:layout_width="match_parent" android:layout_weight="1" android:gravity="right"
                         android:layout_height="wrap_content" android:text="0" style="@style/main_text_value"/>
                     <TextView

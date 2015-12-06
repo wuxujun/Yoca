@@ -49,7 +49,7 @@
     <string name="main_current_weight">当前体重</string>
     <string name="login_Other">第三方登录</string>
     <string name="data_loading" translatable="false">数据加载中...</string>
-
+    <string name="init_loading" translatable="false">请稍候,数据初化中...</string>
 
     <string name="main_detail">当前数据</string>
     <string name="main_unit">Unit</string>

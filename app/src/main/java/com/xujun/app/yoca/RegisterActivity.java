@@ -116,7 +116,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable editable) {
                 String val=editable.toString();
-                if (val!=null&&val.contains("0")){
+                if (val!=null&&val.contains("@")){
                     isEmailReg=true;
                     findViewById(R.id.llRegisterCode).setVisibility(View.GONE);
                 }

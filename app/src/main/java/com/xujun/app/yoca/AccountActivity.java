@@ -108,11 +108,20 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         mHeadTitle.setText(getResources().getString(R.string.account_Edit));
         mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
         mHeadIcon.setOnClickListener(this);
-        mHeadButton.setOnClickListener(this);
-        mHeadButton.setText(getText(R.string.btn_Target));
+        mHeadButton.setVisibility(View.INVISIBLE);
+//        mHeadButton.setOnClickListener(this);
+//        mHeadButton.setText(getText(R.string.btn_Target));
         localAccountEntity=(AccountEntity)getIntent().getSerializableExtra("account");
+
         sourceType=getIntent().getIntExtra(AppConfig.PARAM_SOURCE_TYPE,0);
         dataType=getIntent().getIntExtra(AppConfig.PARAM_ACCOUNT_DATA_TYPE,AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_OTHER);
+        if ((localAccountEntity!=null&&localAccountEntity.getType()==1)||sourceType==1){
+            mHeadTitle.setText("个人资料");
+        }
+        if (localAccountEntity!=null&&localAccountEntity.getType()==0){
+            mHeadTitle.setText("成员信息");
+        }
+
         initView();
     }
 
@@ -145,7 +154,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                if (motionEvent.getAction()==MotionEvent.ACTION_UP){
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     onCreateDateDialog(birthdayET).show();
                 }
                 return false;
@@ -258,8 +267,12 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
             birthdayET.setText(localAccountEntity.getBirthday());
             Log.e(TAG,""+localAccountEntity.getHeight());
             if (localAccountEntity.getAvatar()!=null){
-                Log.e(TAG,""+localAccountEntity.getAvatar());
-                ((ImageButton)findViewById(R.id.ibAvatar)).setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath()+"/crop_"+localAccountEntity.getAvatar()));
+                Log.e(TAG, "" + localAccountEntity.getAvatar());
+                if (ImageUtils.isFileExist(appContext.getCameraPath()+"/crop_"+localAccountEntity.getAvatar())) {
+                    ((ImageButton) findViewById(R.id.ibAvatar)).setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                }else{
+                    ((ImageButton)findViewById(R.id.ibAvatar)).setBackgroundResource(R.drawable.userbig);
+                }
             }
             if (localAccountEntity.getSex()!=null&&localAccountEntity.getSex()==0){
                 bSex=false;
@@ -283,9 +296,9 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onToggle(boolean on) {
                 if (on) {
-                    bType=true;
+                    bType = true;
                 } else {
-                    bType=false;
+                    bType = false;
                 }
             }
         });

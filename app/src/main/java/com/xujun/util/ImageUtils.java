@@ -44,6 +44,14 @@ import android.widget.ListView;
 
 public class ImageUtils {
 
+	public static final int CORNER_NONE = 0;
+	public static final int CORNER_TOP_LEFT = 1;
+	public static final int CORNER_TOP_RIGHT = 1 << 1;
+	public static final int CORNER_BOTTOM_LEFT = 1 << 2;
+	public static final int CORNER_BOTTOM_RIGHT = 1 << 3;
+	public static final int CORNER_ALL = CORNER_TOP_LEFT | CORNER_TOP_RIGHT | CORNER_BOTTOM_LEFT | CORNER_BOTTOM_RIGHT;
+
+
 	public final static String SDCARD_MNT = "/mnt/sdcard";
 	public final static String SDCARD = "/sdcard";
 
@@ -160,6 +168,27 @@ public class ImageUtils {
 		return bitmap;
 	}
 
+	public static  boolean isFileExist(String fileName){
+		FileInputStream fis = null;
+		boolean isExist = true;
+		try {
+			File file = new File(fileName);
+			fis = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			isExist=false;
+		} catch (OutOfMemoryError e) {
+			e.printStackTrace();
+			isExist=false;
+		} finally {
+			try {
+				fis.close();
+			} catch (Exception e) {
+				isExist=false;
+			}
+		}
+		return isExist;
+	}
 	/**
 	 * 获取bitmap
 	 * 
@@ -495,7 +524,7 @@ public class ImageUtils {
 	 *            一般设成14
 	 * @return
 	 */
-	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
+	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx,int corners) {
 
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
 				bitmap.getHeight(), Config.ARGB_8888);
@@ -510,6 +539,21 @@ public class ImageUtils {
 		canvas.drawARGB(0, 0, 0, 0);
 		paint.setColor(color);
 		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+		int notRoundedCorners = corners ^ CORNER_ALL;
+		Log.e("---------","################ =>"+notRoundedCorners+"  "+CORNER_BOTTOM_LEFT+"  "+CORNER_TOP_LEFT+"  "+CORNER_TOP_RIGHT+"  "+CORNER_BOTTOM_RIGHT);
+		if ((notRoundedCorners & CORNER_TOP_LEFT) != 0) {
+			canvas.drawRect(0, 0, roundPx, roundPx, paint);
+		}
+		if ((notRoundedCorners & CORNER_TOP_RIGHT) != 0) {
+			canvas.drawRect(rectF.right - roundPx, 0, rectF.right, roundPx, paint);
+		}
+		if ((notRoundedCorners & CORNER_BOTTOM_LEFT) != 0) {
+			canvas.drawRect(0, rectF.bottom - roundPx, roundPx, rectF.bottom, paint);
+		}
+		if ((notRoundedCorners & CORNER_BOTTOM_RIGHT) != 0) {
+			canvas.drawRect(rectF.right - roundPx, rectF.bottom - roundPx, rectF.right, rectF.bottom, paint);
+		}
 
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, rect, rect, paint);

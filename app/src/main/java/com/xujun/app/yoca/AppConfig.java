@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.xujun.sqlite.AccountEntity;
+import com.xujun.sqlite.WeightHisEntity;
 import com.xujun.util.StringUtil;
 
 import java.io.File;
@@ -123,6 +125,9 @@ public class AppConfig {
     public final static String CONF_USER_AVATAR="conf_user_avatar";
     public final static String CONF_USER_NICK="conf_user_nick";
 
+    public final static String CONF_CHART_TYPE="conf_chart_type";
+
+
     public final static String LOCK="lock";
     public final static String LOCK_KEY="lock_key";
 
@@ -206,7 +211,7 @@ public class AppConfig {
     }
     public void set(String key,String value){
         Properties props=get();
-        props.setProperty(key,value);
+        props.setProperty(key, value);
         setProps(props);
     }
 
@@ -1451,5 +1456,655 @@ public class AppConfig {
         return result;
     }
 
+    public int getSholaiValue(AccountEntity entity,WeightHisEntity hisEntity){
+        int suc=0;
+        int w=entity.getHeight()-105;
+        int nHeight=entity.getHeight();
+        int nSex=entity.getSex();
+        int nAge=entity.getAge();
+        if (nSex==0){
+            w=nHeight-100;
+        }
+        double weightVal=100.0;
+        if (hisEntity.getWeight()>(w*1.1)||hisEntity.getWeight()<(w*0.9)) {
+            if ((hisEntity.getWeight()-(w*1.1))<(hisEntity.getWeight()-(w*0.9))) {
+                weightVal=100-Math.abs(hisEntity.getWeight()-(w*1.1))/(w*1.1)*100.0;
+            }else{
+                weightVal=100-Math.abs(hisEntity.getWeight()-(w*0.9))/(w*0.9)*100.0;
+            }
+        }
+        if (weightVal>80.0){
+            suc++;
+        }
+        System.out.println("Weight="+weightVal);
+
+        double bmiVal=100.0;
+        if (hisEntity.getBmi()>23.0||hisEntity.getBmi()<18.5) {
+            if (Math.abs(hisEntity.getBmi()-23.0)<Math.abs(hisEntity.getBmi()-18.5)){
+                bmiVal=100-Math.abs(hisEntity.getBmi()-23.0)/23.0*100.0;
+            }else{
+                bmiVal=100-Math.abs(hisEntity.getBmi()-18.5)/18.5*100.0;
+            }
+        }
+        if (bmiVal>80.0){
+            suc++;
+        }
+        System.out.println("Bmi="+bmiVal);
+
+        double fatVal=100.0;
+        switch (nSex){
+            case 1:{
+                if (nAge>17&&nAge<40){
+                    if (hisEntity.getFat()>16||hisEntity.getFat()<11) {
+                        if (Math.abs(hisEntity.getFat()-16)<Math.abs(hisEntity.getFat()-11)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-16)/16.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-11)/11.0*100.0;
+                        }
+                    }
+                }else if(nAge>39&&nAge<60){
+                    if (hisEntity.getFat()>17||hisEntity.getFat()<12) {
+                        if (Math.abs(hisEntity.getFat()-17)<Math.abs(hisEntity.getFat()-12)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-17)/17.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-12)/12.0*100.0;
+                        }
+                    }
+                }else if(nAge>59){
+                    if (hisEntity.getFat()>19||hisEntity.getFat()<14) {
+                        if (Math.abs(hisEntity.getFat()-19)<Math.abs(hisEntity.getFat()-14)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-19)/19.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-14)/14.0*100.0;
+                        }
+                    }
+                }
+                break;
+            }
+            case 0:{
+                if (nAge>17&&nAge<40){
+                    if (hisEntity.getFat()>27||hisEntity.getFat()<21) {
+                        if (Math.abs(hisEntity.getFat()-27)<Math.abs(hisEntity.getFat()-21)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-27)/27.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat() - 21)/21.0*100.0;
+                        }
+                    }
+                }else if(nAge>39&&nAge<60){
+                    if (hisEntity.getFat()>28||hisEntity.getFat()<22) {
+                        if (Math.abs(hisEntity.getFat()-28)<Math.abs(hisEntity.getFat()-22)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-28)/28.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-22)/22.0*100.0;
+                        }
+                    }
+                }else if(nAge>59){
+                    if (hisEntity.getFat()>29||hisEntity.getFat()<23) {
+                        if (Math.abs(hisEntity.getFat()-29)<Math.abs(hisEntity.getFat()-23)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-29)/29.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-23)/23.0*100.0;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        if (fatVal>80.0){
+            suc++;
+        }
+        System.out.println("Fat="+fatVal);
+
+
+        double subFatVal=100.0;
+        switch (nSex){
+            case 1: {
+                if (hisEntity.getSubFat()>16.7||hisEntity.getSubFat()<8.6) {
+                    if (Math.abs(hisEntity.getSubFat()-16.7)<Math.abs(hisEntity.getSubFat()-8.6)){
+                        subFatVal=100-Math.abs(hisEntity.getSubFat()-16.7)/16.7*100.0;
+                    }else{
+                        subFatVal=100-Math.abs(hisEntity.getSubFat()-8.6)/8.6*100.0;
+                    }
+                }
+                break;
+            }
+            case 0:{
+                if (hisEntity.getSubFat()>26.7||hisEntity.getSubFat()<18.5) {
+                    if (Math.abs(hisEntity.getSubFat()-26.7)<Math.abs(hisEntity.getSubFat()-18.5)){
+                        subFatVal=100-Math.abs(hisEntity.getSubFat()-26.7)/26.7*100.0;
+                    }else{
+                        subFatVal=100-Math.abs(hisEntity.getSubFat()-18.5)/18.5*100.0;
+                    }
+                }
+                break;
+            }
+        }
+        if (subFatVal>80.0){
+            suc++;
+        }
+        System.out.println("SubFat="+subFatVal);
+
+
+        double visFatVal=100.0;
+        if (hisEntity.getVisFat()>9||hisEntity.getVisFat()<1) {
+            if (Math.abs(hisEntity.getVisFat()-9)<Math.abs(hisEntity.getVisFat()-1)){
+                visFatVal=100-Math.abs(hisEntity.getVisFat()-9.0)/9.0*100.0;
+            }else{
+                visFatVal=100-Math.abs(hisEntity.getVisFat()-1.0)/1.0*100.0;
+            }
+        }
+        if (visFatVal>80.0){
+            suc++;
+        }
+        System.out.println("VisFat="+visFatVal);
+
+        double bmrVal=100.0;
+        switch (nSex){
+            case 1:{
+                if(nAge<=17){
+                    if (hisEntity.getBMR()>1386||hisEntity.getBMR()<1134) {
+                        if (Math.abs(hisEntity.getBMR()-1386)<Math.abs(hisEntity.getBMR()-1134)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1386)/1386*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1134)/1134*100.0;
+                        }
+                    }
+
+                }else if(nAge>17&&nAge<30){
+                    if (hisEntity.getBMR()>1716||hisEntity.getBMR()<1404) {
+                        if (Math.abs(hisEntity.getBMR()-1716)<Math.abs(hisEntity.getBMR()-1404)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1716)/1716*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1404)/1404*100.0;
+                        }
+                    }
+                }else if(nAge>29&&nAge<50){
+                    if (hisEntity.getBMR()>1717||hisEntity.getBMR()<1405) {
+                        if (Math.abs(hisEntity.getBMR()-1717)<Math.abs(hisEntity.getBMR()-1405)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1717)/1717*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1405)/1405*100.0;
+                        }
+                    }
+                }else if(nAge>49&&nAge<70){
+                    if (hisEntity.getBMR()>1656||hisEntity.getBMR()<1355) {
+                        if (Math.abs(hisEntity.getBMR()-1656)<Math.abs(hisEntity.getBMR()-1355)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1656)/1656*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1355)/1355*100.0;
+                        }
+                    }
+                }else{
+                    if (hisEntity.getBMR()>1538||hisEntity.getBMR()<1405) {
+                        if (Math.abs(hisEntity.getBMR()-1538)<Math.abs(hisEntity.getBMR()-1258)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1538)/1538*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1258)/1258*100.0;
+                        }
+                    }
+                }
+                break;
+            }
+            case 0:{
+                if(nAge<=17){
+                    if (hisEntity.getBMR()>1392||hisEntity.getBMR()<1139) {
+                        if (Math.abs(hisEntity.getBMR()-1392)<Math.abs(hisEntity.getBMR()-1139)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1392)/1392*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1139)/1139*100.0;
+                        }
+                    }
+                }else if (nAge>17&&nAge<30){
+                    if (hisEntity.getBMR()>1428||hisEntity.getBMR()<1168) {
+                        if (Math.abs(hisEntity.getBMR()-1428)<Math.abs(hisEntity.getBMR()-1168)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1428)/1428*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1168)/1168*100.0;
+                        }
+                    }
+                }else if(nAge>29&&nAge<50){
+                    if (hisEntity.getBMR()>1432||hisEntity.getBMR()<1172) {
+                        if (Math.abs(hisEntity.getBMR()-1432)<Math.abs(hisEntity.getBMR()-1172)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1432)/1432*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1172)/1172*100.0;
+                        }
+                    }
+                }else if(nAge>49&&nAge<70){
+                    if (hisEntity.getBMR()>1366||hisEntity.getBMR()<1118) {
+                        if (Math.abs(hisEntity.getBMR()-1366)<Math.abs(hisEntity.getBMR()-1118)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1366)/1366*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1118)/1118*100.0;
+                        }
+                    }
+                }else{
+                    if (hisEntity.getBMR()>1139||hisEntity.getBMR()<932) {
+                        if (Math.abs(hisEntity.getBMR()-1139)<Math.abs(hisEntity.getBMR()-932)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1139)/1139*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-932)/932*100.0;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        if (bmrVal>80.0){
+            suc++;
+        }
+        System.out.println("BMR="+bmrVal);
+
+        double waterVal=100.0;
+        if (nSex==1) {
+            if (hisEntity.getWater()>65.0||hisEntity.getWater()<55.0) {
+                if (Math.abs(hisEntity.getWater() - 65.0) < Math.abs(hisEntity.getWater() - 55.0)) {
+                    waterVal=100-Math.abs(hisEntity.getWater()-65.0)/65.0*100.0;
+                }else{
+                    waterVal=100-Math.abs(hisEntity.getWater()-55.0)/55.0*100.0;
+                }
+            }
+        }else {
+            if (hisEntity.getWater()>60||hisEntity.getWater()<45) {
+                if (Math.abs(hisEntity.getWater()-60.0)<Math.abs(hisEntity.getWater()-45.0)){
+                    waterVal=100-Math.abs(hisEntity.getWater()-60.0)/60.0*100.0;
+                }else{
+                    waterVal=100-Math.abs(hisEntity.getWater()-45.0)/45.0*100.0;
+                }
+            }
+        }
+        if (weightVal>80.0){
+            suc++;
+        }
+        System.out.println("Water="+waterVal);
+
+        double boneVal=100.0;
+        if (nSex==1){
+            if (hisEntity.getWeight()<60.0){
+                if (hisEntity.getBone()>4.5||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-4.5)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-4.5)/4.5*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }else if(hisEntity.getWeight()>59&&hisEntity.getWeight()<76){
+                if (hisEntity.getBone()>6.0||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-6.0)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-6.0)/6.0*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }else if (hisEntity.getWeight()>75.0){
+                if (hisEntity.getBone()>7.5||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-7.5)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-7.5)/7.5*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }
+        }else{
+            if (hisEntity.getWeight()<45.0){
+                if (hisEntity.getBone()>3.0||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-3.0)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-3.0)/3.0*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }else if(hisEntity.getWeight()>44&&hisEntity.getWeight()<61){
+                if (hisEntity.getBone()>4.2||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-4.2)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-4.2)/4.2*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }else if (hisEntity.getWeight()>60.0){
+                if (hisEntity.getBone()>3.0||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-3.0)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-3.0)/3.0*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }
+        }
+        if (boneVal>80.0){
+            suc++;
+        }
+        System.out.println("Bone="+boneVal);
+
+        double total=(20*weightVal+20*bmiVal+20*fatVal+5*subFatVal+5*visFatVal+10*bmrVal+10*waterVal+10*boneVal)/100.0;
+        System.out.println("Totla="+total);
+
+        return (int)total;
+    }
+
+    public int getSholaiSuc(AccountEntity entity,WeightHisEntity hisEntity){
+        int suc=0;
+        int w=entity.getHeight()-105;
+        int nHeight=entity.getHeight();
+        int nSex=entity.getSex();
+        int nAge=entity.getAge();
+        if (nSex==0){
+            w=nHeight-100;
+        }
+        double weightVal=100.0;
+        if (hisEntity.getWeight()>(w*1.1)||hisEntity.getWeight()<(w*0.9)) {
+            if ((hisEntity.getWeight()-(w*1.1))<(hisEntity.getWeight()-(w*0.9))) {
+                weightVal=100-Math.abs(hisEntity.getWeight()-(w*1.1))/(w*1.1)*100.0;
+            }else{
+                weightVal=100-Math.abs(hisEntity.getWeight()-(w*0.9))/(w*0.9)*100.0;
+            }
+        }
+        if (weightVal>80.0){
+            suc++;
+        }
+        System.out.println("Weight="+weightVal);
+
+        double bmiVal=100.0;
+        if (hisEntity.getBmi()>23.0||hisEntity.getBmi()<18.5) {
+            if (Math.abs(hisEntity.getBmi()-23.0)<Math.abs(hisEntity.getBmi()-18.5)){
+                bmiVal=100-Math.abs(hisEntity.getBmi()-23.0)/23.0*100.0;
+            }else{
+                bmiVal=100-Math.abs(hisEntity.getBmi()-18.5)/18.5*100.0;
+            }
+        }
+        if (bmiVal>80.0){
+            suc++;
+        }
+        System.out.println("Bmi="+bmiVal);
+
+        double fatVal=100.0;
+        switch (nSex){
+            case 1:{
+                if (nAge>17&&nAge<40){
+                    if (hisEntity.getFat()>16||hisEntity.getFat()<11) {
+                        if (Math.abs(hisEntity.getFat()-16)<Math.abs(hisEntity.getFat()-11)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-16)/16.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-11)/11.0*100.0;
+                        }
+                    }
+                }else if(nAge>39&&nAge<60){
+                    if (hisEntity.getFat()>17||hisEntity.getFat()<12) {
+                        if (Math.abs(hisEntity.getFat()-17)<Math.abs(hisEntity.getFat()-12)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-17)/17.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-12)/12.0*100.0;
+                        }
+                    }
+                }else if(nAge>59){
+                    if (hisEntity.getFat()>19||hisEntity.getFat()<14) {
+                        if (Math.abs(hisEntity.getFat()-19)<Math.abs(hisEntity.getFat()-14)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-19)/19.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-14)/14.0*100.0;
+                        }
+                    }
+                }
+                break;
+            }
+            case 0:{
+                if (nAge>17&&nAge<40){
+                    if (hisEntity.getFat()>27||hisEntity.getFat()<21) {
+                        if (Math.abs(hisEntity.getFat()-27)<Math.abs(hisEntity.getFat()-21)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-27)/27.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat() - 21)/21.0*100.0;
+                        }
+                    }
+                }else if(nAge>39&&nAge<60){
+                    if (hisEntity.getFat()>28||hisEntity.getFat()<22) {
+                        if (Math.abs(hisEntity.getFat()-28)<Math.abs(hisEntity.getFat()-22)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-28)/28.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-22)/22.0*100.0;
+                        }
+                    }
+                }else if(nAge>59){
+                    if (hisEntity.getFat()>29||hisEntity.getFat()<23) {
+                        if (Math.abs(hisEntity.getFat()-29)<Math.abs(hisEntity.getFat()-23)){
+                            fatVal=100-Math.abs(hisEntity.getFat()-29)/29.0*100.0;
+                        }else{
+                            fatVal=100-Math.abs(hisEntity.getFat()-23)/23.0*100.0;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        if (fatVal>80.0){
+            suc++;
+        }
+        System.out.println("Fat="+fatVal);
+
+
+        double subFatVal=100.0;
+        switch (nSex){
+            case 1: {
+                if (hisEntity.getSubFat()>16.7||hisEntity.getSubFat()<8.6) {
+                    if (Math.abs(hisEntity.getSubFat()-16.7)<Math.abs(hisEntity.getSubFat()-8.6)){
+                        subFatVal=100-Math.abs(hisEntity.getSubFat()-16.7)/16.7*100.0;
+                    }else{
+                        subFatVal=100-Math.abs(hisEntity.getSubFat()-8.6)/8.6*100.0;
+                    }
+                }
+                break;
+            }
+            case 0:{
+                if (hisEntity.getSubFat()>26.7||hisEntity.getSubFat()<18.5) {
+                    if (Math.abs(hisEntity.getSubFat()-26.7)<Math.abs(hisEntity.getSubFat()-18.5)){
+                        subFatVal=100-Math.abs(hisEntity.getSubFat()-26.7)/26.7*100.0;
+                    }else{
+                        subFatVal=100-Math.abs(hisEntity.getSubFat()-18.5)/18.5*100.0;
+                    }
+                }
+                break;
+            }
+        }
+        if (subFatVal>80.0){
+            suc++;
+        }
+        System.out.println("SubFat="+subFatVal);
+
+
+        double visFatVal=100.0;
+        if (hisEntity.getVisFat()>9||hisEntity.getVisFat()<1) {
+            if (Math.abs(hisEntity.getVisFat()-9)<Math.abs(hisEntity.getVisFat()-1)){
+                visFatVal=100-Math.abs(hisEntity.getVisFat()-9.0)/9.0*100.0;
+            }else{
+                visFatVal=100-Math.abs(hisEntity.getVisFat()-1.0)/1.0*100.0;
+            }
+        }
+        if (visFatVal>80.0){
+            suc++;
+        }
+        System.out.println("VisFat="+visFatVal);
+
+        double bmrVal=100.0;
+        switch (nSex){
+            case 1:{
+                if(nAge<=17){
+                    if (hisEntity.getBMR()>1386||hisEntity.getBMR()<1134) {
+                        if (Math.abs(hisEntity.getBMR()-1386)<Math.abs(hisEntity.getBMR()-1134)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1386)/1386*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1134)/1134*100.0;
+                        }
+                    }
+
+                }else if(nAge>17&&nAge<30){
+                    if (hisEntity.getBMR()>1716||hisEntity.getBMR()<1404) {
+                        if (Math.abs(hisEntity.getBMR()-1716)<Math.abs(hisEntity.getBMR()-1404)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1716)/1716*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1404)/1404*100.0;
+                        }
+                    }
+                }else if(nAge>29&&nAge<50){
+                    if (hisEntity.getBMR()>1717||hisEntity.getBMR()<1405) {
+                        if (Math.abs(hisEntity.getBMR()-1717)<Math.abs(hisEntity.getBMR()-1405)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1717)/1717*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1405)/1405*100.0;
+                        }
+                    }
+                }else if(nAge>49&&nAge<70){
+                    if (hisEntity.getBMR()>1656||hisEntity.getBMR()<1355) {
+                        if (Math.abs(hisEntity.getBMR()-1656)<Math.abs(hisEntity.getBMR()-1355)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1656)/1656*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1355)/1355*100.0;
+                        }
+                    }
+                }else{
+                    if (hisEntity.getBMR()>1538||hisEntity.getBMR()<1405) {
+                        if (Math.abs(hisEntity.getBMR()-1538)<Math.abs(hisEntity.getBMR()-1258)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1538)/1538*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1258)/1258*100.0;
+                        }
+                    }
+                }
+                break;
+            }
+            case 0:{
+                if(nAge<=17){
+                    if (hisEntity.getBMR()>1392||hisEntity.getBMR()<1139) {
+                        if (Math.abs(hisEntity.getBMR()-1392)<Math.abs(hisEntity.getBMR()-1139)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1392)/1392*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1139)/1139*100.0;
+                        }
+                    }
+                }else if (nAge>17&&nAge<30){
+                    if (hisEntity.getBMR()>1428||hisEntity.getBMR()<1168) {
+                        if (Math.abs(hisEntity.getBMR()-1428)<Math.abs(hisEntity.getBMR()-1168)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1428)/1428*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1168)/1168*100.0;
+                        }
+                    }
+                }else if(nAge>29&&nAge<50){
+                    if (hisEntity.getBMR()>1432||hisEntity.getBMR()<1172) {
+                        if (Math.abs(hisEntity.getBMR()-1432)<Math.abs(hisEntity.getBMR()-1172)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1432)/1432*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1172)/1172*100.0;
+                        }
+                    }
+                }else if(nAge>49&&nAge<70){
+                    if (hisEntity.getBMR()>1366||hisEntity.getBMR()<1118) {
+                        if (Math.abs(hisEntity.getBMR()-1366)<Math.abs(hisEntity.getBMR()-1118)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1366)/1366*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1118)/1118*100.0;
+                        }
+                    }
+                }else{
+                    if (hisEntity.getBMR()>1139||hisEntity.getBMR()<932) {
+                        if (Math.abs(hisEntity.getBMR()-1139)<Math.abs(hisEntity.getBMR()-932)) {
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-1139)/1139*100.0;
+                        }else{
+                            bmrVal=100-Math.abs(hisEntity.getBMR()-932)/932*100.0;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        if (bmrVal>80.0){
+            suc++;
+        }
+        System.out.println("BMR="+bmrVal);
+
+        double waterVal=100.0;
+        if (nSex==1) {
+            if (hisEntity.getWater()>65.0||hisEntity.getWater()<55.0) {
+                if (Math.abs(hisEntity.getWater() - 65.0) < Math.abs(hisEntity.getWater() - 55.0)) {
+                    waterVal=100-Math.abs(hisEntity.getWater()-65.0)/65.0*100.0;
+                }else{
+                    waterVal=100-Math.abs(hisEntity.getWater()-55.0)/55.0*100.0;
+                }
+            }
+        }else {
+            if (hisEntity.getWater()>60||hisEntity.getWater()<45) {
+                if (Math.abs(hisEntity.getWater()-60.0)<Math.abs(hisEntity.getWater()-45.0)){
+                    waterVal=100-Math.abs(hisEntity.getWater()-60.0)/60.0*100.0;
+                }else{
+                    waterVal=100-Math.abs(hisEntity.getWater()-45.0)/45.0*100.0;
+                }
+            }
+        }
+        if (weightVal>80.0){
+            suc++;
+        }
+        System.out.println("Water="+waterVal);
+
+        double boneVal=100.0;
+        if (nSex==1){
+            if (hisEntity.getWeight()<60.0){
+                if (hisEntity.getBone()>4.5||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-4.5)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-4.5)/4.5*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }else if(hisEntity.getWeight()>59&&hisEntity.getWeight()<76){
+                if (hisEntity.getBone()>6.0||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-6.0)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-6.0)/6.0*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }else if (hisEntity.getWeight()>75.0){
+                if (hisEntity.getBone()>7.5||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-7.5)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-7.5)/7.5*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }
+        }else{
+            if (hisEntity.getWeight()<45.0){
+                if (hisEntity.getBone()>3.0||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-3.0)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-3.0)/3.0*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }else if(hisEntity.getWeight()>44&&hisEntity.getWeight()<61){
+                if (hisEntity.getBone()>4.2||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-4.2)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-4.2)/4.2*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }else if (hisEntity.getWeight()>60.0){
+                if (hisEntity.getBone()>3.0||hisEntity.getBone()<0.5) {
+                    if (Math.abs(hisEntity.getBone()-3.0)<Math.abs(hisEntity.getBone()-0.5)){
+                        boneVal=100-Math.abs(hisEntity.getBone()-3.0)/3.0*100.0;
+                    }else{
+                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
+                    }
+                }
+            }
+        }
+        if (boneVal>80.0){
+            suc++;
+        }
+        System.out.println("Bone="+boneVal);
+
+        return suc;
+    }
 
 }

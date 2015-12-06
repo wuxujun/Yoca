@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout android:id="@+id/llItem"
+        android:layout_width="match_parent" android:background="@drawable/chart_item_normal0"
+        android:layout_height="150dp" android:layout_margin="5dp" android:orientation="horizontal">
+        <RelativeLayout android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent" android:layout_alignParentTop="true"
+            android:layout_height="match_parent" android:orientation="vertical">
+            <TextView android:layout_margin="10dp"
+                android:layout_width="match_parent" android:id="@+id/tvTime" android:textStyle="bold"
+                android:layout_height="wrap_content" android:textColor="@color/white" android:text="20:00" android:textSize="20sp"/>
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content" android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content" android:id="@+id/tvSholai"
+                    android:layout_height="wrap_content" android:textColor="@color/white" android:text="Sholai指数:20" android:textSize="16sp"/>
+                <TextView android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content" android:textColor="@color/white"
+                    android:layout_height="wrap_content" android:text="分" android:textSize="12sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+            <TextView android:layout_alignParentBottom="true" android:layout_margin="10dp"
+                android:layout_width="match_parent" android:id="@+id/tvItemValue"
+                android:layout_height="wrap_content" android:textColor="@color/white" android:text="Sholai指数:20" android:textSize="16sp"/>
+
+        </RelativeLayout>
+        <View
+            android:layout_width="0.5dip" android:alpha="0.4"
+            android:layout_height="match_parent" android:background="@color/black"/>
+        <ImageView android:id="@+id/ivIcon"
+            android:layout_width="120dp" android:scaleType="fitXY" android:visibility="invisible"
+            android:layout_height="150dp" android:src="@drawable/ic_launcher" />
+
+    </LinearLayout>
+</LinearLayout>

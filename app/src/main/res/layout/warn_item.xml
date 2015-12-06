@@ -46,6 +46,9 @@
             toggle:spotColor="#45c878"
             toggle:offBorderColor="#000"
             />
+            <ImageButton android:id="@+id/ibWarnDel" android:visibility="gone"
+                android:layout_width="wrap_content" android:layout_margin="20dp"
+                android:layout_height="wrap_content" android:background="@drawable/delete_red"/>
         </LinearLayout>
         <TextView android:id="@+id/tvWarnTag"  android:background="@color/wran_tag_bg_color" android:paddingLeft="20dp" android:layout_marginTop="1dp"
             android:layout_width="match_parent" style="@style/warn_item_desc_value"

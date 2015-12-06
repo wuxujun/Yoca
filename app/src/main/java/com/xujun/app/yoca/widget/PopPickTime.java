@@ -2,7 +2,6 @@ package com.xujun.app.yoca.widget;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +23,9 @@ import java.util.List;
 /**
  * Created by xujunwu on 7/17/15.
  */
-public class PopAccount {
+public class PopPickTime {
 
-    private List<AccountEntity> items=new ArrayList<AccountEntity>();
+    private List<String> items=new ArrayList<String>();
 
     private ItemAdapter      mAdapter;
 
@@ -38,7 +37,7 @@ public class PopAccount {
 
     private PopupWindow     mPopupWindow;
 
-    public PopAccount(Context context,AppContext appContext,List<AccountEntity> list){
+    public PopPickTime(Context context, AppContext appContext, List<String> list){
         this.mContext=context;
         this.mAppContext=appContext;
         items=list;
@@ -74,7 +73,6 @@ public class PopAccount {
     }
 
     static class ListItemView{
-        public ImageView    icon;
         public TextView title;
     }
 
@@ -99,29 +97,16 @@ public class PopAccount {
         public View getView(int position, View convertView, ViewGroup viewGroup) {
             ListItemView listItemView=null;
             if (convertView==null){
-                convertView= LayoutInflater.from(mContext).inflate(R.layout.account_item,null);
+                convertView= LayoutInflater.from(mContext).inflate(R.layout.picktime_item,null);
 
                 listItemView=new ListItemView();
-                convertView.findViewById(R.id.ivMenuItemEnter).setVisibility(View.GONE);
-                listItemView.title=(TextView)convertView.findViewById(R.id.tvMenuItemTitle);
-                listItemView.icon=(ImageView)convertView.findViewById(R.id.ivMenuItemIcon);
+                listItemView.title=(TextView)convertView.findViewById(R.id.tvItemTitle);
                 convertView.setTag(listItemView);
             }else {
                 listItemView=(ListItemView)convertView.getTag();
             }
-            AccountEntity entity=items.get(position);
-            if (entity!=null){
-                listItemView.title.setText(entity.getUserNick());
-                if (entity.getAvatar()!=null){
-                    if (!entity.getAvatar().equals("0")) {
-                        if (ImageUtils.isFileExist(mAppContext.getCameraPath() + "/crop_" + entity.getAvatar())) {
-                            listItemView.icon.setImageBitmap(ImageUtils.getBitmapByPath(mAppContext.getCameraPath() + "/crop_" + entity.getAvatar()));
-                        }else{
-                            listItemView.icon.setImageResource(R.drawable.ic_my_item_user);
-                        }
-                    }
-                }
-            }
+
+            listItemView.title.setText(items.get(position));
             return convertView;
         }
     }

@@ -100,6 +100,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
 
     private AccountEntity           localAccountEntity=null;
     private long                     localWeightId=0;
+    private double                  localWeight=0.0;
 
     private boolean                 bVisitor=false;
 
@@ -204,7 +205,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         setHasOptionsMenu(true);
         loadWeightHis();
         refreshDayData();
-//        queryHealthData(lastQueryDate);
+        queryHealthData(strTodayDay);
         refreshView();
 
         if (mAdapter==null){
@@ -227,7 +228,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         if (localAccountEntity!=null) {
 //            mHeadTitle.setText(localAccountEntity.getUserNick());
             if (!StringUtil.isEmpty(localAccountEntity.getAvatar())){
-                Log.e(TAG, localAccountEntity.getAvatar());
+                Log.e(TAG, localAccountEntity.getAvatar()+" ===> "+localAccountEntity.getTargetWeight());
 //                getSherlockActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 //               mHeadIcon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
             }
@@ -276,17 +277,20 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
     {
         mContentHeader.isShowContent(isTodayData);
        if (localAccountEntity!=null&&localAccountEntity.getTargetWeight()!=null) {
-           Log.e(TAG,"refreshView ..."+localAccountEntity.getTargetWeight());
+           Log.e(TAG, "refreshView ..." + localAccountEntity.getTargetWeight());
            if (!localAccountEntity.getTargetWeight().equals("0")) {
+               Log.e(TAG,"------------------------------>..........................."+localAccountEntity.getTargetWeight()+"  ");
                mContentHeader.targetValue.setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetWeight())));
-           }else{
-               isTodayData=false;
-               mContentHeader.isShowContent(isTodayData);
            }
        }
 
        if (localAccountEntity!=null&& !StringUtil.isEmpty(localAccountEntity.getDoneTime())&&!localAccountEntity.getDoneTime().equals("0")) {
           mContentHeader.targetDay.setText("" + DateUtil.getDayDiff(localAccountEntity.getDoneTime()));
+           if (!localAccountEntity.getTargetWeight().equals("0")&&localWeight>0){
+
+               long days=DateUtil.getDayDiff(localAccountEntity.getDoneTime());
+               mContentHeader.setWeekValue((int) days / 7,localWeight,StringUtil.toDouble(localAccountEntity.getTargetWeight()));
+           }
        }
 
         String showTarget=appContext.getProperty(AppConfig.USER_SHOW_TARGET);
@@ -298,7 +302,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                 mContentHeader.getTargetView().setVisibility(View.VISIBLE);
             }
         }
-
     }
     private void queryHealthData(String pickTime){
         Log.i(TAG,"queryHealthData "+pickTime);
@@ -315,7 +318,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         int sex=localAccountEntity.getSex();
         int age=localAccountEntity.getAge();
         int height=localAccountEntity.getHeight();
-        double localWeight=0;
         try{
             Dao<WeightHisEntity,Integer> weightHisEntityDao=getDatabaseHelper().getWeightHisEntityDao();
             QueryBuilder<WeightHisEntity, Integer> weightHisQueryBuilder = weightHisEntityDao.queryBuilder();
@@ -324,6 +326,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             WeightHisEntity weightHisEntity=weightHisQueryBuilder.queryForFirst();
             if (weightHisEntity!=null&&mContentView!=null){
                 mContentHeader.setWeightValue(StringUtil.doubleToStringOne(weightHisEntity.getWeight()));
+//                mContentHeader.setWeightValue("182.3");
                 localWeightId=weightHisEntity.getWid();
                 localWeight=weightHisEntity.getWeight();
                 Log.e(TAG, weightHisEntity.getPickTime() + "weight:" + weightHisEntity.getWeight());
@@ -376,15 +379,18 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             queryBuilder1.where().eq("id",localAccountEntity.getId());
             if (queryBuilder1.queryForFirst()!=null){
                 localAccountEntity=queryBuilder1.queryForFirst();
-                localAccountEntity.setTargetWeight(StringUtil.doubleToString(localWeight));
+                if (StringUtil.isEmpty(localAccountEntity.getTargetWeight())) {
+                    localAccountEntity.setTargetWeight(StringUtil.doubleToString(localWeight));
+                }
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
-
-        loadHomeTarget();
-        if (mAdapter!=null) {
-            mAdapter.notifyDataSetChanged();
+        if (isTodayData) {
+            loadHomeTarget();
+            if (mAdapter != null) {
+                mAdapter.notifyDataSetChanged();
+            }
         }
         if (mContentHeader!=null) {
             refreshView();
@@ -580,6 +586,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                 if (localAccountEntity.getDoneTime() != null && mContentView != null) {
                     if (!localAccountEntity.getDoneTime().equals("0")) {
                         mContentHeader.targetDay.setText("" + DateUtil.getDayDiff(dfYearMonthDay.format(new Date()), localAccountEntity.getDoneTime()));
+
                     }
                 }
 
@@ -593,7 +600,10 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                 lastQueryDate=str;
                 queryHealthData(lastQueryDate);
                 if (localAccountEntity.getDoneTime() != null && mContentView != null) {
-                    mContentHeader.targetDay.setText("" + DateUtil.getDayDiff(day, localAccountEntity.getDoneTime()));
+                    if (!localAccountEntity.getDoneTime().equals("0")) {
+                        mContentHeader.targetDay.setText("" + DateUtil.getDayDiff(day, localAccountEntity.getDoneTime()));
+
+                    }
                 }
             }
         }

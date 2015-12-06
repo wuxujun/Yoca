@@ -185,7 +185,11 @@ public class AccountMActivity extends BaseActivity{
                     holder.delIB.setVisibility(View.GONE);
                 }
                 if (entity.getAvatar()!=null){
-                    holder.icon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + entity.getAvatar()));
+                    if (ImageUtils.isFileExist(appContext.getCameraPath() + "/crop_" + entity.getAvatar())) {
+                        holder.icon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + entity.getAvatar()));
+                    }else{
+                        holder.icon.setImageResource(R.drawable.ic_my_item_user);
+                    }
                 }
             }
             holder.delIB.setOnClickListener(new DelClickListener(i));

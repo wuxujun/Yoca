@@ -15,7 +15,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.utils.Highlight;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -105,7 +106,7 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
         mContext=getSherlockActivity().getApplicationContext();
         appContext=(AppContext)getActivity().getApplication();
         appConfig=AppConfig.getAppConfig(mContext);
-        Log.e(TAG,"onCreate()");
+        Log.e(TAG, "onCreate()");
     }
 
     @Override
@@ -134,16 +135,15 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
         xAxis.setTextColor(Color.WHITE);
 
         YAxis leftAxis=mChart.getAxisLeft();
-        leftAxis.setLabelCount(5);
+        leftAxis.setLabelCount(5, false);
         leftAxis.setTextColor(Color.WHITE);
 
         YAxis rightAxis=mChart.getAxisRight();
-        rightAxis.setLabelCount(5);
+        rightAxis.setLabelCount(5, false);
         rightAxis.setTextColor(Color.WHITE);
         rightAxis.setDrawGridLines(true);
         mChart.setBackgroundColor(getResources().getColor(R.color.chart_background_color));
         mChart.setGridBackgroundColor(Color.GRAY);
-        mChart.setHighlightEnabled(true);
         mChart.setDescription("");
 
         mChart.setOnTouchListener(new View.OnTouchListener() {
@@ -174,7 +174,7 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
                     String[] rs=list.get(i);
                     HealthEntity entity=new HealthEntity();
                     entity.setPickTime(rs[0]);
-                    entity.setTargetValue(rs[1]);
+//                    entity.setTargetValue(rs[1]);
                     items.add(entity);
                 }
             }
@@ -227,7 +227,7 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
                 }else if (showType==1){
                     xVals.add(DateUtil.getDayForDate(date));
                 }
-                yVals.add(new Entry(Float.parseFloat(entity.getTargetValue()),i));
+//                yVals.add(new Entry(Float.parseFloat(entity.getTargetValue()),i));
             }
         }
 //        xVals.add("0");
@@ -344,6 +344,16 @@ public class ChartFrgment extends SherlockFragment implements View.OnClickListen
         Log.d(TAG, "onResume");
     }
 
+
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+    }
 
     @Override
     public void onChartLongPressed(MotionEvent me) {

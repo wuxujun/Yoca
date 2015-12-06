@@ -41,7 +41,7 @@
     </style>
 
     <style name="ActionBar.Solid.Yocatheme" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@drawable/ic_nav_bg</item>
+        <item name="android:background">@color/action_bar_bg_color</item>
         <item name="android:backgroundStacked">@color/action_bar_bg_color</item>
         <item name="android:backgroundSplit">@color/action_bar_bg_color</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Yocatheme</item>
@@ -148,6 +148,12 @@
         <item name="android:layout_marginLeft">10dp</item>
     </style>
 
+    <style name="avatar_input_item_edit">
+        <item name="android:textColor">#45c878</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
     <style name="input_item_button">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">56dp</item>
@@ -169,7 +175,7 @@
 
     <style name="number_text_style">
         <item name="android:background">@drawable/item_normal_blue</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">32sp</item>
         <item name="android:textColor">@color/green</item>
         <item name="android:gravity">center</item>
     </style>
@@ -214,7 +220,7 @@
     </style>
     <style name="main_text_label">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">#808080</item>
     </style>
 
     <style name="chart_text_label">

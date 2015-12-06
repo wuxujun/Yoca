@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout android:background="@drawable/header_tab_bg_s"
+    <LinearLayout android:background="@drawable/chart_item_normal0" android:id="@+id/llItem"
         android:layout_width="match_parent" android:orientation="vertical"
         android:layout_height="wrap_content" android:layout_margin="5dp">
         <LinearLayout android:layout_marginRight="10dp"
@@ -21,6 +21,6 @@
     <com.github.mikephil.charting.charts.LineChart
         android:layout_width="match_parent"
         android:id="@+id/lineChart"
-        android:layout_height="180dp"/>
+        android:layout_height="150dp"/>
     </LinearLayout>
 </LinearLayout>

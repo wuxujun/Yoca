@@ -45,7 +45,7 @@ import java.util.Calendar;
  */
 public class TargetActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final String TAG = "TargetFragment";
+    public static final String TAG = "TargetActivity";
 
 
     private static final int DATE_DIALOG_ID=1;
@@ -268,12 +268,13 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
             if (targetType==2){
                 localAccountEntity.setTargetFat("" + targetSB.getProgress());
                 if (!StringUtil.isEmpty(localAccountEntity.getTargetWeight())) {
-                    localAccountEntity.setTargetWeight(localAccountEntity.getWeight());
+                    localAccountEntity.setTargetWeight(""+targetSB.getProgress());
                 }
             }else {
                 localAccountEntity.setTargetWeight("" + targetSB.getProgress());
                 localAccountEntity.setTargetFat("2.0");
             }
+            Log.e(TAG,"---> "+localAccountEntity.getTargetWeight()+"  "+targetSB.getProgress());
             localAccountEntity.setDoneTime(timeET.getText().toString());
             saveAccountEntity(localAccountEntity);
         }else{

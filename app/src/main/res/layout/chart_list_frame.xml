@@ -3,8 +3,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:background="#2A2A2A">
     <include android:layout_width="match_parent" android:layout_height="wrap_content" layout="@layout/chart_header"/>
-    <ListView
+    <ListView android:visibility="gone"
         android:layout_width="match_parent" android:divider="@null" android:cacheColorHint="@android:color/transparent"
-        android:layout_height="match_parent" android:id="@+id/lvList"></ListView>
-
+        android:layout_height="match_parent" android:id="@+id/lvList"/>
+    <LinearLayout android:id="@+id/llDayData" android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:orientation="vertical">
+        <LinearLayout android:id="@+id/llPickTime"
+            android:layout_width="match_parent"
+            android:layout_height="44dp" android:orientation="horizontal">
+            <TextView android:id="@+id/tvDay" android:textSize="16sp" android:layout_marginLeft="15dp" android:gravity="center_vertical"
+                android:layout_width="wrap_content" android:textColor="@color/btn_color"
+                android:layout_height="match_parent" android:text="2015-12-01"/>
+            <ImageView
+                android:layout_width="wrap_content" android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content" android:src="@drawable/spinner_ab_default_yocatheme"/>
+        </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:id="@+id/listDay" android:divider="@null" android:cacheColorHint="@color/transparent"/>
+        </LinearLayout>
 </LinearLayout>
