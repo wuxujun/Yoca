@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,7 +122,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        Log.e(TAG, "onCreateView()");
         mContentView=inflater.inflate(R.layout.list_frame,null);
         mContentHeader=new ContentHeader(mContext);
         mContentHeader.setContentController(this);
@@ -133,7 +131,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG, "onItemClick  " + i);
 //                SherlockFragment sherlockFragment=new ChartFragment();
 //                ((ChartFragment)sherlockFragment).loadData(localAccountEngity);
 //                getFragmentManager().beginTransaction().replace(R.id.content_frame,sherlockFragment).commit();
@@ -228,7 +225,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         if (localAccountEntity!=null) {
 //            mHeadTitle.setText(localAccountEntity.getUserNick());
             if (!StringUtil.isEmpty(localAccountEntity.getAvatar())){
-                Log.e(TAG, localAccountEntity.getAvatar()+" ===> "+localAccountEntity.getTargetWeight());
 //                getSherlockActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 //               mHeadIcon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
             }
@@ -277,9 +273,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
     {
         mContentHeader.isShowContent(isTodayData);
        if (localAccountEntity!=null&&localAccountEntity.getTargetWeight()!=null) {
-           Log.e(TAG, "refreshView ..." + localAccountEntity.getTargetWeight());
            if (!localAccountEntity.getTargetWeight().equals("0")) {
-               Log.e(TAG,"------------------------------>..........................."+localAccountEntity.getTargetWeight()+"  ");
                mContentHeader.targetValue.setText(StringUtil.doubleToStringOne(Double.parseDouble(localAccountEntity.getTargetWeight())));
            }
        }
@@ -287,10 +281,12 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
        if (localAccountEntity!=null&& !StringUtil.isEmpty(localAccountEntity.getDoneTime())&&!localAccountEntity.getDoneTime().equals("0")) {
           mContentHeader.targetDay.setText("" + DateUtil.getDayDiff(localAccountEntity.getDoneTime()));
            if (!localAccountEntity.getTargetWeight().equals("0")&&localWeight>0){
-
                long days=DateUtil.getDayDiff(localAccountEntity.getDoneTime());
                mContentHeader.setWeekValue((int) days / 7,localWeight,StringUtil.toDouble(localAccountEntity.getTargetWeight()));
            }
+           mContentHeader.setTargetViewStatus(false);
+       }else{
+           mContentHeader.setTargetViewStatus(true);
        }
 
         String showTarget=appContext.getProperty(AppConfig.USER_SHOW_TARGET);
@@ -304,14 +300,11 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         }
     }
     private void queryHealthData(String pickTime){
-        Log.i(TAG,"queryHealthData "+pickTime);
         if (localAccountEntity==null){
             isTodayData=false;
             return;
         }
-        Log.i(TAG,"queryHealthData "+pickTime+" accountId="+localAccountEntity.getId());
         if (localAccountEntity!=null&&localAccountEntity.getId()==0){
-            Log.i(TAG,"游客称重....");
             return;
         }
         AppConfig appConfig=AppConfig.getAppConfig(mContext);
@@ -329,7 +322,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
 //                mContentHeader.setWeightValue("182.3");
                 localWeightId=weightHisEntity.getWid();
                 localWeight=weightHisEntity.getWeight();
-                Log.e(TAG, weightHisEntity.getPickTime() + "weight:" + weightHisEntity.getWeight());
                 updateHomeTargetValue(2,StringUtil.doubleToStringOne(weightHisEntity.getBmi()), appConfig.getBMITitle(weightHisEntity.getBmi()), appConfig.getBMIStatus(weightHisEntity.getBmi()), appConfig.getBMIValue(weightHisEntity.getBmi()));
                 updateHomeTargetValue(1,StringUtil.doubleToStringOne(weightHisEntity.getWeight()),appConfig.getWeightTitle(height, sex, weightHisEntity.getWeight()),appConfig.getWeightStatus(height, sex, weightHisEntity.getWeight()),appConfig.getWeightValue(height, sex, weightHisEntity.getWeight()));
                 updateHomeTargetValue(3,StringUtil.doubleToStringOne(weightHisEntity.getFat()),appConfig.getFatTitle(age, sex, weightHisEntity.getFat()),appConfig.getFatStatus(age, sex, weightHisEntity.getFat()),appConfig.getFatValue(age, sex, weightHisEntity.getFat()));
@@ -425,9 +417,13 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
      */
     public void loadData(AccountEntity account){
         if (account!=null) {
-            Log.i(TAG,"loadData()... account is not null "+account.getUserNick()+" "+account.getHeight()+"  "+account.getAge()+" "+account.getSex()
-                    +""+account.getWeight()+" "+account.getFat()+"  "+account.getSubFat()+"  "+account.getVisFat());
             bVisitor=false;
+            dayDatas.clear();
+            items.clear();
+            if (mAdapter!=null){
+                mAdapter.notifyDataSetChanged();
+            }
+            currentDay=0;
             localAccountEntity=account;
             if (mContentView!=null&&localAccountEntity!=null){
                 getSherlockActivity().getActionBar().setTitle(localAccountEntity.getUserNick());
@@ -437,7 +433,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                 if (dayDatas.size()==0){
                     loadWeightHis();
                 }
-                refreshDayData();
+                queryHealthData(strTodayDay);
             }
         }
     }
@@ -454,7 +450,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
     }
 
     public void updateWeightValue(String val,int type) {
-        Log.i(TAG,"updateWeightValue  val="+val+  "type＝"+type);
         switch (type){
             case 1:{
                 startEffect();
@@ -488,7 +483,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
      */
     public void updateResult()
     {
-        Log.i(TAG,"updateResult "+strTodayDay);
         queryHealthData(strTodayDay);
         refreshView();
     }
@@ -578,7 +572,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             if (currentDay>=dayDatas.size()||currentDay<0){
                 return;
             }
-            Log.e(TAG,"refreshDayData.....");
             if (currentDay == 0) {
                 mContentHeader.currentDate.setText(getResources().getString(R.string.main_today));
                 lastQueryDate=strTodayDay;
@@ -593,7 +586,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
             } else {
 
                 String str =dayDatas.get(currentDay);
-                Log.i(TAG,"=============>"+currentDay+"   "+str);
                 java.util.Date endDate = DateUtil.dayToDate(str);
                 String day=DateUtil.getDayString(endDate);
                 mContentHeader.currentDate.setText(df.format(endDate));
@@ -747,7 +739,6 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         }
         @Override
         public void onClick(View view) {
-            Log.e(TAG,"onClick() .."+position);
             HomeTargetEntity entity=items.get(position);
             nTargetType=entity.getType();
             openChartView();

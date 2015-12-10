@@ -7,8 +7,8 @@ android {
         applicationId "com.xujun.app.yoca"
         minSdkVersion 18
         targetSdkVersion 22
-        versionCode 37
-        versionName "1.0.37"
+        versionCode 38
+        versionName "1.0.38"
     }
     signingConfigs {
         myConfig {
@@ -37,8 +37,8 @@ android {
 
     productFlavors {
         development{
-            versionCode 37
-            versionName  '1.0.37'
+            versionCode 38
+            versionName  '1.0.38'
         }
 //        wandoujia{
 //            versionCode 2
@@ -61,8 +61,8 @@ android {
 //            versionName  '1.0.0'
 //        }
         hiapk {
-            versionCode 37
-            versionName  '1.0.37'
+            versionCode 38
+            versionName  '1.0.38'
         }
 //        anzhi {
 //            versionCode 1

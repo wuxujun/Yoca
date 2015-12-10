@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +111,6 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
             .build();
 
     public void setLocalAccountEntity(AccountEntity accountEntity){
-        Log.e(TAG,"setLocalAccountEntity()...");
         localAccountEntity=accountEntity;
     }
 
@@ -125,7 +123,6 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             if (popPickTime!=null){
                 popPickTime.dismiss();
-                Log.d(TAG, "popDateItemClickListener  " + i);
                 queryDate=dayDatas.get(i);
                 mDayTV.setText(queryDate);
                 refreshData();
@@ -152,7 +149,6 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e(TAG, "onCreateView()");
         mContentView=inflater.inflate(R.layout.chart_list_frame,null);
         mDayLinearLayout=(LinearLayout)mContentView.findViewById(R.id.llDayData);
         mDayTV=(TextView)mContentView.findViewById(R.id.tvDay);
@@ -167,7 +163,6 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG, "onItemClick  " + i);
                 if (dataType>0) {
                     TargetEntity entity = targets.get(i);
                     Intent intent = new Intent(getSherlockActivity(), ChartDActivity.class);
@@ -204,12 +199,34 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         setHasOptionsMenu(true);
-        Log.e(TAG, "onResume()");
+        if(StringUtil.isEmpty(appConfig.get(AppConfig.CONF_CHART_TYPE))){
+            dataType=1;
+        }else {
+            dataType = Integer.parseInt(appConfig.get(AppConfig.CONF_CHART_TYPE));
+        }
         if (localAccountEntity!=null){
             refreshData();
         }
+        setHeadButtonStatus();
     }
 
+    private void setHeadButtonStatus(){
+        resetButtonNormal();
+        switch (dataType){
+            case 0:
+                btnChartDay.setBackground(getSherlockActivity().getResources().getDrawable(R.drawable.header_tab_left));
+                break;
+            case 1:
+                btnChartWeek.setBackgroundColor(getSherlockActivity().getResources().getColor(R.color.btn_color_selected));
+                break;
+            case 2:
+                btnChartMonth.setBackgroundColor(getSherlockActivity().getResources().getColor(R.color.btn_color_selected));
+                break;
+            case 3:
+                btnChartYear.setBackground(getSherlockActivity().getResources().getDrawable(R.drawable.header_tab_right));
+                break;
+        }
+    }
 
     public void refreshData(){
         if (dataType>0) {
@@ -230,7 +247,6 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                         queryDate = results.get(0)[0];
                         for (int j = 0; j < results.size(); j++) {
                             String[] resultArray = results.get(j);
-                            Log.e(TAG, "pickTime " + resultArray[0] + "  " + resultArray[1]);
                             dayDatas.add(resultArray[0]);
                         }
                     }
@@ -268,7 +284,7 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
             }else{
                 entity.setContent(StringUtil.doubleToStringOne(targetTotal / total));
             }
-            items.add(new LineChartItem(entity,lineData,appContext));
+            items.add(new LineChartItem(entity,lineData,getXVals(),appContext));
             targetTotal=0f;
         }
         if (mListView!=null) {
@@ -303,6 +319,33 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private ArrayList<String>  getXVals(){
+        ArrayList<String> xVals = new ArrayList<String>();
+        HealthEntity entity;
+        int count=datas.size();
+        String date="";
+        for (int i = 0; i < count; i++) {
+            entity = datas.get(i);
+            if (entity != null) {
+                date = entity.getPickTime();
+                if (i == 0) {
+                    if (dataType == 3) {
+                        xVals.add(date);
+                    } else {
+                        xVals.add(DateUtil.getMonthForDate(date));
+                    }
+                } else {
+                    if (dataType == 3) {
+                        xVals.add(DateUtil.getYearForMonth(date));
+                    } else {
+                        xVals.add(DateUtil.getDayForDate(date));
+                    }
+                }
+            }
+        }
+        return  xVals;
     }
 
     private LineData generateDataLine(int type){
@@ -402,9 +445,12 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
         d1.setColor(Color.WHITE);
         d1.setDrawValues(false);
 
-        ArrayList<LineDataSet> sets=new ArrayList<LineDataSet>();
-        sets.add(d1);
-        LineData cd=new LineData(xVals,sets);
+
+//        ArrayList<LineDataSet> sets=new ArrayList<LineDataSet>();
+//        sets.add(d1);
+
+        LineData cd=new LineData();
+        cd.addDataSet(d1);
         return cd;
     }
 
@@ -561,7 +607,6 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                 holder.time.setText(DateUtil.getTimeString(entity.getAddtime()));
                 if (!StringUtil.isEmpty(entity.getAvatar())){
                     holder.icon.setVisibility(View.VISIBLE);
-                    Log.e(TAG,"   ------------> "+entity.getAvatar());
                     if (ImageUtils.isFileExist(appContext.getCameraPath() + "/crop_" + entity.getAvatar())) {
                         holder.icon.setImageBitmap(ImageUtils.getRoundedCornerBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + entity.getAvatar()),20,10));
                     }else{

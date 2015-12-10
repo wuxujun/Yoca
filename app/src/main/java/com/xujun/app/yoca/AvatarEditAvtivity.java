@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -43,6 +44,7 @@ import com.xujun.widget.MySeekBar;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -476,33 +478,18 @@ public class AvatarEditAvtivity extends BaseActivity{
             case AppConfig.REQUEST_CHOOSE_PIC:{
                 if (resultCode==RESULT_OK){
                     isAvatar=true;
-                    cameraIB.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + imageName));
+                    BitmapFactory.Options bitmapOpions= new BitmapFactory.Options();
+                    bitmapOpions.inSampleSize=8;
+                    int degree= ImageUtils.readPictureDegree(appContext.getCameraPath() + "/crop_" + imageName);
+                    Log.e(TAG, "==========>" + degree);
+                    Bitmap bitmap=ImageUtils.rotaingImageView(degree,ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + imageName));
+                    cameraIB.setImageBitmap(bitmap);
                 }
                 break;
             }
             case AppConfig.REQUEST_CROP_PHOTO:{
                 if (data!=null) {
-                    ContentResolver resolver = getContentResolver();
-                    Uri uri = data.getData();
-                    if (resultCode == RESULT_OK) {
-                        Bitmap img = null;
-                        try {
-                            Bitmap bitmap = BitmapFactory.decodeStream(resolver.openInputStream(uri));
-                            img = ImageUtils.zoomBitmap(bitmap, 640, 800);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        if (img != null) {
-                            try {
-                                ImageUtils.saveImageToSD(appContext.getCameraPath() + "/crop_" + imageName, img, 100);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            isAvatar = true;
-                            cameraIB.setImageBitmap(img);
-                        }
-//                    cameraIB.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath()+"/crop_"+imageName));
-                    }
+                    startActionPhoto(data.getData(),cropUri);
                 }
                 break;
             }
@@ -513,13 +500,14 @@ public class AvatarEditAvtivity extends BaseActivity{
     public void startActionPhoto(Uri data,Uri output){
         Intent intent=new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(data,"image/*");
-        intent.putExtra("output",output);
-        intent.putExtra("crop",true);
+        intent.putExtra("output", output);
+        intent.putExtra("crop", true);
         intent.putExtra("aspectX",1);
         intent.putExtra("aspectY",1);
         intent.putExtra("outputX",640);
         intent.putExtra("outputY",800);
-        startActivityForResult(intent,AppConfig.REQUEST_CHOOSE_PIC);
+        intent.putExtra("return-date",true);
+        startActivityForResult(intent, AppConfig.REQUEST_CHOOSE_PIC);
     }
 
     public void selectPhoto(int type){
@@ -528,7 +516,7 @@ public class AvatarEditAvtivity extends BaseActivity{
         origUri=Uri.fromFile(new File(appContext.getCameraPath()+"/"+imageName));
         if (type==0) {
             Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
+            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
             intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
             startActivityForResult(Intent.createChooser(intent, "选择照片"), AppConfig.REQUEST_CROP_PHOTO);
         }else{

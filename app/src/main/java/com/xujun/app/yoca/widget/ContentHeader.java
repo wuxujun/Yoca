@@ -52,7 +52,7 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
         mContext = context;
         mContentView = LayoutInflater.from(mContext).inflate(R.layout.layout_content, null);
 
-//        mContentView.findViewById(R.id.llTargetSet).setOnClickListener(this);
+        mContentView.findViewById(R.id.llTargetSet).setOnClickListener(this);
         mContentView.findViewById(R.id.ibLeft).setOnClickListener(this);
         mContentView.findViewById(R.id.ibRight).setOnClickListener(this);
         mContentView.findViewById(R.id.flDetail).setOnClickListener(this);
@@ -197,5 +197,15 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
     {
         double val=(weight-targetWeight)/weeks;
         ((TextView)mContentView.findViewById(R.id.tvWeekValue)).setText(StringUtil.doubleToStringOne(val));
+    }
+
+    public void setTargetViewStatus(boolean show){
+        if (show) {
+            mContentView.findViewById(R.id.llTargetSet).setVisibility(VISIBLE);
+            mContentView.findViewById(R.id.llTargetContent).setVisibility(GONE);
+        }else{
+            mContentView.findViewById(R.id.llTargetContent).setVisibility(VISIBLE);
+            mContentView.findViewById(R.id.llTargetSet).setVisibility(GONE);
+        }
     }
 }

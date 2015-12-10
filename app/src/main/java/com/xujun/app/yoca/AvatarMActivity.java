@@ -1,5 +1,6 @@
 package com.xujun.app.yoca;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,9 @@ import android.widget.Toast;
 import com.andreabaccega.formedittextvalidator.EmptyValidator;
 import com.andreabaccega.widget.FormEditText;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xujun.sqlite.AccountEntity;
@@ -66,9 +69,19 @@ public class AvatarMActivity extends BaseActivity{
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.e(TAG, "onItemClick  " + i);
-//                SherlockFragment sherlockFragment=new ChartFragment();
-//                ((ChartFragment)sherlockFragment).loadData(localAccountEngity);
-//                getFragmentManager().beginTransaction().replace(R.id.content_frame,sherlockFragment).commit();
+                WeightHisEntity entity=items.get(i);
+                if (entity!=null) {
+                    Intent intent = new Intent(AvatarMActivity.this, AvatarEditAvtivity.class);
+                    Bundle bundle = new Bundle();
+                    AccountEntity accountEntity=getAccountEntityForId(entity.getAid());
+                    if (accountEntity!=null) {
+                        bundle.putSerializable("account", accountEntity);
+                    }
+                    bundle.putString("dataTime", entity.getPickTime());
+                    bundle.putLong("weightId", entity.getWid());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
         });
         mHeadTitle.setText("减肥像册");
@@ -89,6 +102,21 @@ public class AvatarMActivity extends BaseActivity{
         });
     }
 
+    private AccountEntity getAccountEntityForId(long aid){
+        try{
+            Dao<AccountEntity,Integer> dao=getDatabaseHelper().getAccountEntityDao();
+            QueryBuilder<AccountEntity,Integer> queryBuilder=dao.queryBuilder();
+            Where<AccountEntity,Integer> where=queryBuilder.where().eq("id",aid);
+            PreparedQuery<AccountEntity> preparedQuery=queryBuilder.prepare();
+            List<AccountEntity> lists=dao.query(preparedQuery);
+            if (lists.size()>0){
+                return lists.get(0);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
     private void loadData(){

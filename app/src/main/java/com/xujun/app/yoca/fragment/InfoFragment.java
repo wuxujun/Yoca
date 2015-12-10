@@ -88,14 +88,12 @@ public class InfoFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e(TAG, "onCreateView()");
         mContentView=inflater.inflate(R.layout.list_frame,null);
         mListView=(ListView)mContentView.findViewById(R.id.lvList);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG,"onItemClick  "+i);
                 InfoEntity info=items.get(i);
                 if(!info.isGroup()) {
                     Intent intent = new Intent(getSherlockActivity(), WebActivity.class);
@@ -122,7 +120,19 @@ public class InfoFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         setHasOptionsMenu(true);
-        Log.e(TAG, "onResume()");
+        load();
+    }
+
+    public void reloadData(){
+        items.clear();
+        groups.clear();
+        try {
+            Dao<InfoEntity, Integer> dao = getDatabaseHelper().getInfoDao();
+            List<InfoEntity> infoEntityList=dao.queryForAll();
+            dao.delete(infoEntityList);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
         load();
     }
 
@@ -131,7 +141,6 @@ public class InfoFragment extends BaseFragment {
             Dao<InfoEntity,Integer> dao=getDatabaseHelper().getInfoDao();
             GenericRawResults<String[]> rawResults=dao.queryRaw("select groupName from t_info group by groupName ");
             List<String[]> results=rawResults.getResults();
-            Log.d(TAG, " select result size:" + results.size());
             if (results.size()>0) {
                 items.clear();
                 String[] resultArray=results.get(0);
@@ -149,6 +158,7 @@ public class InfoFragment extends BaseFragment {
         }catch (SQLException e){
             e.printStackTrace();
         }
+        mAdapter.notifyDataSetChanged();
     }
 
     private void queryInfoForGroup(String gname){
@@ -172,7 +182,6 @@ public class InfoFragment extends BaseFragment {
             Dao<InfoEntity,Integer> dao=getDatabaseHelper().getInfoDao();
             GenericRawResults<String[]> rawResults=dao.queryRaw("select max(id) from t_info ");
             List<String[]> results=rawResults.getResults();
-            Log.d(TAG, " getInfoMaxid select result size:" + results.size());
             if (results.size()>0) {
                 String[] resultArray = results.get(0);
                 if (!StringUtil.isEmpty(resultArray[0])) {
@@ -202,7 +211,7 @@ public class InfoFragment extends BaseFragment {
     private void addArticeInfo(InfoEntity entity){
         try{
             if (entity!=null){
-                Log.d(TAG,"addArticeInfo "+entity.getId()+" "+entity.getTitle());
+//                Log.d(TAG,"addArticeInfo "+entity.getId()+" "+entity.getTitle());
             }
             Dao<InfoEntity,Integer> dao=getDatabaseHelper().getInfoDao();
             dao.setAutoCommit(dao.startThreadConnection(),false);

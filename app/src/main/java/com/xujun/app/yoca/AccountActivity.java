@@ -218,7 +218,6 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                 findViewById(R.id.llAccountHashan).setBackgroundColor(getResources().getColor(R.color.btn_color_selected));
                 if (hasFocus) {
                     // Open keyboard
-                    Log.e(TAG,"3");
                     String val=hasHanET.getText().toString();
                     if (val!=null&&val.length()==3){
                         resetTextViewColor();
@@ -228,7 +227,6 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                     }
                 } else {
                     // Close keyboard
-                    Log.e(TAG,"3");
                     ((InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(hasHanET.getWindowToken(), 0);
                 }
             }
@@ -265,13 +263,11 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
         if (localAccountEntity!=null) {
             nickET.setText(localAccountEntity.getUserNick());
             birthdayET.setText(localAccountEntity.getBirthday());
-            Log.e(TAG,""+localAccountEntity.getHeight());
             if (localAccountEntity.getAvatar()!=null){
-                Log.e(TAG, "" + localAccountEntity.getAvatar());
                 if (ImageUtils.isFileExist(appContext.getCameraPath()+"/crop_"+localAccountEntity.getAvatar())) {
                     ((ImageButton) findViewById(R.id.ibAvatar)).setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
                 }else{
-                    ((ImageButton)findViewById(R.id.ibAvatar)).setBackgroundResource(R.drawable.userbig);
+                    ((ImageButton)findViewById(R.id.ibAvatar)).setImageResource(R.drawable.userbig);
                 }
             }
             if (localAccountEntity.getSex()!=null&&localAccountEntity.getSex()==0){
@@ -318,8 +314,6 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
 
     public void loadData(AccountEntity accountEntity){
         dataType=AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_MANAGER;
-        Log.e(TAG, "loadData accountEngity....");
-
         if (accountEntity!=null&&accountEntity.getType()!=2){
             localAccountEntity=accountEntity;
                 nickET.setText(accountEntity.getUserNick());
@@ -423,7 +417,6 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                     entity.setIsSync(0);
                     entity.setAge(getAge(birthdayET.getText().toString()));
                     if (getDataType()!=AppConfig.REQUEST_ACCOUNT_FRAGMENT_TYPE_OTHER) {
-                        Log.e(TAG,".......insert into accountEntity...");
                         InsertAccountEntity(entity);
                     }
                     if (sourceType==1){

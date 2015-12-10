@@ -59,7 +59,7 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
 
     private HomeTargetEntity    homeTargetEntity;
     private float               targetTotla;
-    private int                 dataType;
+    private int                 dataType=1;
 
     private Button              btnChartWeek;
     private Button              btnChartMonth;
@@ -70,7 +70,11 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart_d);
         appConfig=AppConfig.getAppConfig(mContext);
-        dataType=Integer.parseInt(appConfig.get(AppConfig.CONF_CHART_TYPE));
+        if (StringUtil.isEmpty(appConfig.get(AppConfig.CONF_CHART_TYPE))){
+            dataType=1;
+        }else {
+            dataType = Integer.parseInt(appConfig.get(AppConfig.CONF_CHART_TYPE));
+        }
         mHeadIcon.setImageDrawable(getResources().getDrawable(R.drawable.back));
         mHeadIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +170,7 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
         if (targetEntity!=null&&!StringUtil.isEmpty(StringUtil.doubleToStringOne(targetTotla/datas.size()))) {
             targetEntity.setContent(StringUtil.doubleToStringOne(targetTotla /datas.size()));
         }
-        items.add(new LineChartItem(targetEntity, lineData, appContext));
+        items.add(new LineChartItem(targetEntity, lineData,getXVals(), appContext));
 
         if (mListView!=null) {
             adapter=new ChartDataAdapter(appContext,items);
@@ -188,6 +192,32 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
         return null;
     }
 
+    private ArrayList<String>  getXVals(){
+        ArrayList<String> xVals = new ArrayList<String>();
+        HealthEntity entity;
+        int count=datas.size();
+        String date="";
+        for (int i = 0; i < count; i++) {
+            entity = datas.get(i);
+            if (entity != null) {
+                date = entity.getPickTime();
+                if (i == 0) {
+                    if (dataType == 3) {
+                        xVals.add(date);
+                    } else {
+                        xVals.add(DateUtil.getMonthForDate(date));
+                    }
+                } else {
+                    if (dataType == 3) {
+                        xVals.add(DateUtil.getYearForMonth(date));
+                    } else {
+                        xVals.add(DateUtil.getDayForDate(date));
+                    }
+                }
+            }
+        }
+        return  xVals;
+    }
 
     private LineData generateDataLine(int type){
         ArrayList<String> xVals = new ArrayList<String>();
@@ -257,6 +287,8 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
         LineDataSet d1=new LineDataSet(yVals,appConfig.getTargetType(type));
         d1.setLineWidth(2.0f);
         d1.setCircleSize(3.0f);
+        d1.setDrawCubic(true);
+        d1.setCubicIntensity(0.2f);
         d1.setHighLightColor(Color.WHITE);
         d1.setFillColor(Color.WHITE);
         d1.setCircleColor(Color.WHITE);
@@ -264,9 +296,11 @@ public class ChartDActivity extends BaseActivity implements View.OnClickListener
 
         d1.setDrawValues(false);
 
-        ArrayList<LineDataSet> sets=new ArrayList<LineDataSet>();
-        sets.add(d1);
-        LineData cd=new LineData(xVals,sets);
+//        ArrayList<LineDataSet> sets=new ArrayList<LineDataSet>();
+//        sets.add(d1);
+        LineData cd=new LineData();
+        cd.addDataSet(d1);
+
         return cd;
     }
 

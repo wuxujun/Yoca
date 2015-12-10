@@ -275,7 +275,9 @@ public class AppConfig {
             case 8:
                 return "Kg";
             case 9:
-                return "Kg";
+                return "%";
+            case 10:
+                return "%";
         }
         return result;
     }
@@ -356,7 +358,7 @@ public class AppConfig {
                 }else if(age>=40&&age<=59){
                     if (value<22.0){
                         result=0;
-                    }else if (value>29.0){
+                    }else if (value>28.0){
                         result=2;
                     }
                 }else if(age>=60){
@@ -372,7 +374,7 @@ public class AppConfig {
                 if (age>=18&&age<=39){
                     if (value<11.0){
                         result=0;
-                    }else if (value>17.0){
+                    }else if (value>16.0){
                         result=2;
                     }
                 }else if(age>=40&&age<=59){
@@ -407,7 +409,7 @@ public class AppConfig {
                 }else if(age>=40&&age<=59){
                     if (value<22.0){
                         result="偏瘦";
-                    }else if (value>29.0){
+                    }else if (value>28.0){
                         result="偏胖";
                     }
                 }else if(age>=60){
@@ -423,7 +425,7 @@ public class AppConfig {
                 if (age>=18&&age<=39){
                     if (value<11.0){
                         result="偏瘦";
-                    }else if (value>17.0){
+                    }else if (value>16.0){
                         result="偏胖";
                     }
                 }else if(age>=40&&age<=59){
@@ -563,7 +565,7 @@ public class AppConfig {
         }else if(value>15){
             return "偏高";
         }
-        return "标准";
+        return "正常";
     }
 
     public int getVisFatRefer(){
@@ -627,27 +629,33 @@ public class AppConfig {
         switch (sex){
             case 0:{
                 if (age>=18&&age<=29){
-                    if (value<23.6){
+                    if (value<(1298*0.9)){
                         result=0;
-                    }else if(value>23.6){
+                    }else if(value>(1298*1.1)){
                         result=2;
                     }
                 }else if(age>=30&&age<=49){
-                    if (value<21.7){
+                    if (value<(1302*0.9)){
                         result=0;
-                    }else if(value>21.7){
+                    }else if(value>(1302*1.1)){
                         result=2;
                     }
                 }else if(age>=50&&age<=69){
-                    if (value<20.7){
+                    if (value<(1242*0.9)){
                         result=0;
-                    }else if(value>20.7){
+                    }else if(value>(1242*1.1)){
                         result=2;
                     }
                 }else if(age>=70){
-                    if (value<20.7){
+                    if (value<(1035*0.9)){
                         result=0;
-                    }else if(value>20.7){
+                    }else if(value>(1035*1.1)){
+                        result=2;
+                    }
+                }else{
+                    if (value<(1265*0.9)){
+                        result=0;
+                    }else if(value>(1265*1.1)){
                         result=2;
                     }
                 }
@@ -655,27 +663,33 @@ public class AppConfig {
             }
             default:{
                 if (age>=18&&age<=29){
-                    if (value<24.0){
+                    if (value<(1560*0.9)){
                         result=0;
-                    }else if(value>24.0){
+                    }else if(value>(1560*1.1)){
                         result=2;
                     }
                 }else if(age>=30&&age<=49){
-                    if (value<22.3){
+                    if (value<(1561*0.9)){
                         result=0;
-                    }else if(value>22.3){
+                    }else if(value>(1561*1.1)){
                         result=2;
                     }
                 }else if(age>=50&&age<=69){
-                    if (value<21.5){
+                    if (value<(1505*0.9)){
                         result=0;
-                    }else if(value>21.5){
+                    }else if(value>(1505*1.1)){
                         result=2;
                     }
                 }else if(age>=70){
-                    if (value<21.5){
+                    if (value<(1398*0.9)){
                         result=0;
-                    }else if(value>21.5){
+                    }else if(value>(1398*1.1)){
+                        result=2;
+                    }
+                }else{
+                    if (value<(1260*0.9)){
+                        result=0;
+                    }else if(value>(1260*1.1)){
                         result=2;
                     }
                 }
@@ -698,27 +712,33 @@ public class AppConfig {
         switch (sex){
             case 0:{
                 if (age>=18&&age<=29){
-                    if (value<23.6){
+                    if (value<(1298*0.9)){
                         result="偏低";
-                    }else if(value>23.6){
+                    }else if(value>(1298*1.1)){
                         result="偏高";
                     }
                 }else if(age>=30&&age<=49){
-                    if (value<21.7){
+                    if (value<(1302*0.9)){
                         result="偏低";
-                    }else if(value>21.7){
+                    }else if(value>(1302*1.1)){
                         result="偏高";
                     }
                 }else if(age>=50&&age<=69){
-                    if (value<20.7){
+                    if (value<(1242*0.9)){
                         result="偏低";
-                    }else if(value>20.7){
+                    }else if(value>(1242*1.1)){
                         result="偏高";
                     }
                 }else if(age>=70){
-                    if (value<20.7){
+                    if (value<(1035*0.9)){
                         result="偏低";
-                    }else if(value>20.7){
+                    }else if(value>(1035*1.1)){
+                        result="偏高";
+                    }
+                }else{
+                    if (value<(1265*0.9)){
+                        result="偏低";
+                    }else if(value>(1265*1.1)){
                         result="偏高";
                     }
                 }
@@ -726,27 +746,33 @@ public class AppConfig {
             }
             default:{
                 if (age>=18&&age<=29){
-                    if (value<24.0){
+                    if (value<(1560*0.9)){
                         result="偏低";
-                    }else if(value>24.0){
+                    }else if(value>(1560*1.1)){
                         result="偏高";
                     }
                 }else if(age>=30&&age<=49){
-                    if (value<22.3){
+                    if (value<(1561*0.9)){
                         result="偏低";
-                    }else if(value>22.3){
+                    }else if(value>(1561*1.1)){
                         result="偏高";
                     }
                 }else if(age>=50&&age<=69){
-                    if (value<21.5){
+                    if (value<(1505*0.9)){
                         result="偏低";
-                    }else if(value>21.5){
+                    }else if(value>(1505*1.1)){
                         result="偏高";
                     }
                 }else if(age>=70){
-                    if (value<21.5){
+                    if (value<(1398*0.9)){
                         result="偏低";
-                    }else if(value>21.5){
+                    }else if(value>(1398*1.1)){
+                        result="偏高";
+                    }
+                }else{
+                    if (value<(1260*0.9)){
+                        result="偏低";
+                    }else if(value>(1260*1.1)){
                         result="偏高";
                     }
                 }
@@ -844,54 +870,66 @@ public class AppConfig {
 
     /***
      * 肌肉比例
-     * @param height 身高
+     * @param age 年龄
      * @param sex
      * @param value
      * @return
      */
-    public String getMuscleTitle(int height,int sex,double value){
+    public String getMuscleTitle(int age,int sex,double value){
         String result="标准";
         switch (sex){
-            case 0:
+            case 1:
             {
-                if (height<150){
-                    if (value<29.1) {
+                if (age<16){
+                    if (value<46.0) {
                         result = "偏低";
-                    }else if(value>34.7){
+                    }else if(value>51.0){
                         result="偏高";
                     }
-                }else if(height>150&&height<160){
-                    if (value<32.9){
+                }else if(age>15&&age<31){
+                    if (value<45.0){
                         result="偏低";
-                    }else if(value>37.5){
+                    }else if(value>50.0){
+                        result="偏高";
+                    }
+                }else if(age>30&&age<61){
+                    if (value<44.0){
+                        result="偏低";
+                    }else if(value>49.0){
                         result="偏高";
                     }
                 }else{
-                    if(value<36.5){
+                    if(value<43.0){
                         result="偏低";
-                    }else if(value>42.5){
+                    }else if(value>48.0){
                         result="偏高";
                     }
                 }
                 break;
             }
             default:{
-                if (height<160){
-                    if (value<38.5) {
+                if (age<16){
+                    if (value<44.0) {
                         result = "偏低";
-                    }else if(value>46.5){
+                    }else if(value>49.0){
                         result="偏高";
                     }
-                }else if(height>160&&height<170){
+                }else if(age>15&&age<31){
+                    if (value<43.0){
+                        result="偏低";
+                    }else if(value>48.0){
+                        result="偏高";
+                    }
+                }else if(age>30&&age<61){
                     if (value<42.0){
                         result="偏低";
-                    }else if(value>52.4){
+                    }else if(value>47.0){
                         result="偏高";
                     }
                 }else{
-                    if(value<49.4){
+                    if(value<41.0){
                         result="偏低";
-                    }else if(value>59.4){
+                    }else if(value>46.0){
                         result="偏高";
                     }
                 }
@@ -935,21 +973,21 @@ public class AppConfig {
             case 0:
             {
                 if (weight<45){
-                    if (value<1.8) {
+                    if (value<0.5) {
                         result =0;
-                    }else if(value>1.8){
+                    }else if(value>3.0){
                         result=2;
                     }
                 }else if(weight>45&&weight<60){
-                    if (value<2.2){
+                    if (value<0.5){
                         result=0;
-                    }else if(value>2.2){
+                    }else if(value>4.2){
                         result=2;
                     }
                 }else{
-                    if(value<2.5){
+                    if(value<0.5){
                         result=0;
-                    }else if(value>2.5){
+                    }else if(value>3.0){
                         result=2;
                     }
                 }
@@ -957,21 +995,21 @@ public class AppConfig {
             }
             default:{
                 if (weight<60){
-                    if (value<2.5) {
+                    if (value<0.5) {
                         result =0;
-                    }else if(value>2.5){
+                    }else if(value>4.5){
                         result=2;
                     }
                 }else if(weight>60&&weight<75){
-                    if (value<2.9){
+                    if (value<0.5){
                         result=0;
-                    }else if(value>2.9){
+                    }else if(value>6.0){
                         result=2;
                     }
                 }else{
-                    if(value<3.2){
+                    if(value<0.5){
                         result=0;
-                    }else if(value>3.2){
+                    }else if(value>7.0){
                         result=2;
                     }
                 }
@@ -994,21 +1032,21 @@ public class AppConfig {
             case 0:
             {
                 if (weight<45){
-                    if (value<1.8) {
+                    if (value<0.5) {
                         result = "偏低";
-                    }else if(value>1.8){
+                    }else if(value>3.0){
                         result="偏高";
                     }
                 }else if(weight>45&&weight<60){
-                    if (value<2.2){
+                    if (value<0.5){
                         result="偏低";
-                    }else if(value>2.2){
+                    }else if(value>4.2){
                         result="偏高";
                     }
                 }else{
-                    if(value<2.5){
+                    if(value<0.5){
                         result="偏低";
-                    }else if(value>2.5){
+                    }else if(value>3.0){
                         result="偏高";
                     }
                 }
@@ -1016,21 +1054,21 @@ public class AppConfig {
             }
             default:{
                 if (weight<60){
-                    if (value<2.5) {
+                    if (value<0.5) {
                         result = "偏低";
-                    }else if(value>2.5){
+                    }else if(value>4.5){
                         result="偏高";
                     }
                 }else if(weight>60&&weight<75){
-                    if (value<2.9){
+                    if (value<0.5){
                         result="偏低";
-                    }else if(value>2.9){
+                    }else if(value>6.0){
                         result="偏高";
                     }
                 }else{
-                    if(value<3.2){
+                    if(value<0.5){
                         result="偏低";
-                    }else if(value>3.2){
+                    }else if(value>7.5){
                         result="偏高";
                     }
                 }

@@ -50,7 +50,6 @@ public class AccountMActivity extends BaseActivity{
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(TAG, "onItemClick  " + i);
                 AccountEntity entity=items.get(i);
                 if (entity!=null){
                     Intent intent=new Intent(AccountMActivity.this,AccountActivity.class);
@@ -108,6 +107,8 @@ public class AccountMActivity extends BaseActivity{
         }catch (SQLException e){
             e.printStackTrace();
         }
+
+        adapter.notifyDataSetChanged();
     }
 
     public void manager(boolean edit){
@@ -205,7 +206,6 @@ public class AccountMActivity extends BaseActivity{
         }
         @Override
         public void onClick(View view) {
-            Log.e(TAG, "onClick() .." + position);
             AccountEntity entity=items.get(position);
             if (entity.getType()==0){
                 items.remove(position);

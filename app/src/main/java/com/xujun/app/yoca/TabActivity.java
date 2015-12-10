@@ -31,6 +31,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -418,6 +419,15 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 localAccountEntity=accountEntities.get(i);
                 if (localAccountEntity!=null){
                     mHeadTitle.setText(localAccountEntity.getUserNick());
+                    if (localAccountEntity.getAvatar()!=null){
+                        mHeadIcon.setScaleType(ImageView.ScaleType.FIT_XY);
+                        if (ImageUtils.isFileExist(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar())) {
+                            mHeadIcon.setImageBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + localAccountEntity.getAvatar()));
+                        }else{
+                            mHeadIcon.setImageResource(R.drawable.ic_my_item_user);
+                        }
+                    }
+
                     SherlockFragment sherlockFragment=(SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.content_frame);
                     if (sherlockFragment instanceof ContentFragment) {
                         ((ContentFragment)sherlockFragment).loadData(localAccountEntity);
@@ -429,7 +439,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        Log.d(TAG,"onCreateOptionsMenu()");
         mHeadButton.setVisibility(View.VISIBLE);
         mHeadIcon.setVisibility(View.INVISIBLE);
         SherlockFragment sherlockFragment=(SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.content_frame);
@@ -462,7 +471,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             mHeadButton.setVisibility(View.INVISIBLE);
         }else if(sherlockFragment instanceof InfoFragment){
             mHeadTitle.setText("资讯信息");
-            mHeadButton.setVisibility(View.INVISIBLE);
+            mHeadButton.setText("刷新");
         }
         return true;
     }
@@ -470,7 +479,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:{
-                Log.d(TAG, "---------------------------->...............");
                 break;
             }
             case R.id.item_main_edit:{
@@ -501,7 +509,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 
     private void scanLeDevice(boolean enable){
         if (enable){
-            Log.e(TAG,"scanLeDevice... Start...");
             if (!mScanning) {
                 mScanning = true;
                 mBluetoothAdapter.startLeScan(mLeScanCallback);
@@ -550,7 +557,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 
     private void onConnect(BluetoothDevice device){
         if (mBluetoothLeService==null||device==null){
-            Log.e(TAG,"onConnect service or device is null");
             return;
         }
         if (mScanning){
@@ -565,12 +571,10 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             int connState=mBluetoothManager.getConnectionState(device,BluetoothGatt.GATT);
             switch (connState){
                 case BluetoothGatt.STATE_CONNECTED:{
-                    Log.e(TAG,"connected .....");
 //                    mBluetoothLeService.disconnect();
                     break;
                 }
                 case BluetoothGatt.STATE_DISCONNECTED:{
-                    Log.e(TAG,"connecting....");
                     boolean ok=mBluetoothLeService.connect(device.getAddress());
                     if (!ok){
                         updateUIStatus(getResources().getString(R.string.main_connect_err),-1);
@@ -629,7 +633,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             case AppConfig.REQUEST_ENABLE_BT:
             {
                 if (resultCode==RESULT_CANCELED){
-                    Log.e(TAG,"BluetoothLeService is not null.");
+//                    Log.e(TAG,"BluetoothLeService is not null.");
                 }else{
                     startBluetoothLeService();
                 }
@@ -642,7 +646,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             }
             case AppConfig.REQUEST_ACCOUNT_ADD:{
                 if (resultCode==AppConfig.SUCCESS){
-                    Log.e(TAG,"account add success");
                     AccountEntity accountEntity=(AccountEntity)data.getSerializableExtra(AppConfig.PARAM_ACCOUNT);
                     if (accountEntity!=null){
                         Log.e(TAG, accountEntity.getId() + " " + accountEntity.getType() + "  " + accountEntity.getUserNick() + "  " + accountEntity.getBirthday());
@@ -660,7 +663,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         Intent bindIntent=new Intent(this,BluetoothLeService.class);
         f=bindService(bindIntent,mServiceConnection,Context.BIND_AUTO_CREATE);
         if (f){
-            Log.e(TAG,"BluetoothLeService - success");
+//            Log.e(TAG,"BluetoothLeService - success");
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -668,7 +671,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 }
             },500);
         }else{
-            Log.e(TAG,"BluetoothLeService bind Failed");
+//            Log.e(TAG,"BluetoothLeService bind Failed");
         }
     }
 
@@ -678,7 +681,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));
-            Log.e(TAG,"- write:--->"+stringBuilder.toString());
+//            Log.e(TAG,"- write:--->"+stringBuilder.toString());
             sendPacket=stringBuilder.toString();
         }
 
@@ -702,22 +705,29 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
      */
     private void writeSettingInfo(int dataType){
         if (dataType==AppConfig.WRITE_DEVICE_SET_MODE){
-            String val=appContext.getProperty(AppConfig.DEVICE_SET_SHOW_MODEL);
-            if (StringUtil.isEmpty(val)){
-                byte[]  data={9,8,18,21,5,1,(byte)(1&0xFF),(byte)(28&0xFF)};  //普通模式
+            String showTarget=appContext.getProperty(AppConfig.USER_SHOW_TARGET);
+            if (!StringUtil.isEmpty(showTarget) &&showTarget.equals("1")){
+                byte[]  data={9,8,18,21,5,1,(byte)(2&0xFF),(byte)(29&0xFF)};  //目标值
+                writeSetting(data);
+            }else {
+//            String val=appContext.getProperty(AppConfig.DEVICE_SET_SHOW_MODEL);
+//            if (StringUtil.isEmpty(val)){
+//                byte[]  data={9,8,18,21,5,1,(byte)(1&0xFF),(byte)(28&0xFF)};  //
+                byte[] data = {9, 8, 18, 21, 5, 1, (byte) (0 & 0xFF), (byte) (27 & 0xFF)};  //跑马模式
                 writeData(data);
-            }else{
-                if (val.equals("1")){
-                    byte[]  data={9,8,18,21,5,1,(byte)(1&0xFF),(byte)(28&0xFF)};  //普通模式
-                    writeData(data);
-                }else if(val.equals("0")){
-                    byte[]  data={9,8,18,21,5,1,(byte)(0&0xFF),(byte)(27&0xFF)};  //跑马模式
-                    writeSetting(data);
-                }else{
-                    byte[]  data={9,8,18,21,5,1,(byte)(2&0xFF),(byte)(29&0xFF)};  //目标值
-                    writeSetting(data);
-                }
             }
+//            }else{
+//                if (val.equals("1")){
+//                    byte[]  data={9,8,18,21,5,1,(byte)(1&0xFF),(byte)(28&0xFF)};  //普通模式
+//                    writeData(data);
+//                }else if(val.equals("0")){
+//                    byte[]  data={9,8,18,21,5,1,(byte)(0&0xFF),(byte)(27&0xFF)};  //跑马模式
+//                    writeSetting(data);
+//                }else{
+//                    byte[]  data={9,8,18,21,5,1,(byte)(2&0xFF),(byte)(29&0xFF)};  //目标值
+//                    writeSetting(data);
+//                }
+//            }
         }else if(dataType==AppConfig.WRITE_DEVICE_SET_LEDLIGHT){
             String val=appContext.getProperty(AppConfig.DEVICE_SET_LED_LEVEL);
             if (StringUtil.isEmpty(val)){
@@ -772,7 +782,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));
-            Log.e(TAG,"- write:--->"+stringBuilder.toString());
+//            Log.e(TAG,"- write:--->"+stringBuilder.toString());
             sendPacket=stringBuilder.toString();
         }
         for (BluetoothGattService gattService : gattServices) {
@@ -829,14 +839,14 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 mBluetoothLeService.close();
                 startScan();
             }else if(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)){
-                Log.d(TAG,"receive broadcast from BLEService ACTION_GATT_SERVICES_DISCOVERED");
+//                Log.d(TAG,"receive broadcast from BLEService ACTION_GATT_SERVICES_DISCOVERED");
                 if (!mCurrentAddress.equals(intent.getStringExtra(BluetoothLeService.EXTRA_ADDRESS))){
                     return;
                 }
                 gattServices=mBluetoothLeService.getSupportedGattServices(mCurrentAddress);
                 dealGattService();
             }else if(BluetoothLeService.ACTION_DATA_NOTIFY.equals(action)){
-                Log.d(TAG, "receive broadcast from BLEService ACTION_DATA_NOTIFY");
+//                Log.d(TAG, "receive broadcast from BLEService ACTION_DATA_NOTIFY");
                 byte[] data = intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA);
                 if (data != null && data.length > 0) {
                     final StringBuilder stringBuilder = new StringBuilder(data.length);
@@ -848,8 +858,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 dealRecvData(intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA));
 
             }else if(BluetoothLeService.ACTION_DATA_READ.equals(action)){
-
-                Log.d(TAG,"receive broadcast from BLEService ACTION_DATA_READ");
+//                Log.d(TAG,"receive broadcast from BLEService ACTION_DATA_READ");
                 byte[] data = intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA);
                 if (data != null && data.length > 0) {
                     final StringBuilder stringBuilder = new StringBuilder(data.length);
@@ -868,17 +877,16 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                     String text =stringBuilder.toString();
                     Log.e(TAG,"=====>ACTION_DATA_WRITE---->"+text);
                 }
-                Log.d(TAG,"receive broadcast from BLEService ACTION_DATA_WRITE status=>"+status);
+//                Log.d(TAG,"receive broadcast from BLEService ACTION_DATA_WRITE status=>"+status);
             }
             else if (AppConfig.ACTION_START_WEIGH.equals(action)){
-                Log.e(TAG," action:"+action);
                 if (mCurrentAddress!=null) {
-                    Log.i(TAG," ===> "+Integer.toHexString(intent.getIntExtra(AppConfig.EXTRA_DATA_HEIGHT,0))+"  "+Integer.toHexString(intent.getIntExtra(AppConfig.EXTRA_DATA_AGE,0))+"  "+Integer.toHexString(intent.getIntExtra(AppConfig.EXTRA_DATA_SEX,0)));
-                    Log.i(TAG," ===> "+Integer.parseInt("aa",16)+"  "+Integer.parseInt("23",16)+"  "+Integer.parseInt("0",16));
+//                    Log.i(TAG," ===> "+Integer.toHexString(intent.getIntExtra(AppConfig.EXTRA_DATA_HEIGHT,0))+"  "+Integer.toHexString(intent.getIntExtra(AppConfig.EXTRA_DATA_AGE,0))+"  "+Integer.toHexString(intent.getIntExtra(AppConfig.EXTRA_DATA_SEX,0)));
+//                    Log.i(TAG," ===> "+Integer.parseInt("aa",16)+"  "+Integer.parseInt("23",16)+"  "+Integer.parseInt("0",16));
                     BluetoothGattCharacteristic gattCharacteristic = new BluetoothGattCharacteristic(UUID.fromString("00002a06-0000-1000-8000-00805f9b34fb"), BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE, BluetoothGattCharacteristic.PROPERTY_WRITE);
                     gattCharacteristic.setValue(new byte[]{0x2});
                     mBluetoothLeService.writeCharacteristic(mCurrentAddress, gattCharacteristic);
-                    Log.d(TAG, "writeCharacteristic ALERT_LEVELE");
+//                    Log.d(TAG, "writeCharacteristic ALERT_LEVELE");
                 }
             }else{
                 Log.w(TAG, "Unknown action:" + action);
@@ -892,10 +900,8 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mBluetoothLeService=((BluetoothLeService.LocalBinder)iBinder).getService();
             if (!mBluetoothLeService.initialize()){
-                Log.e(TAG,"Unable to initialize BluetoothLeService");
                 return;
             }
-            Log.e(TAG,"c..........");
             startScan();
 //            mBluetoothLeService.connect(mCurrentAddress);
         }
@@ -945,7 +951,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                 return;
             }else if(cmd.equals("37")&&dType.equals("00")){
                 writeSettingInfo(AppConfig.WRITE_DEVICE_SET_MODE);
-                writeSettingInfo(AppConfig.WRITE_DEVICE_SET_LEDLIGHT);
+//                writeSettingInfo(AppConfig.WRITE_DEVICE_SET_LEDLIGHT);
                 sendAccountInfo();
                 return;
             }
@@ -1056,7 +1062,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             total+=data[i];
         }
         if (total!=data[7]){
-            Log.e(TAG, "checknumber is not ...");
+//            Log.e(TAG, "checknumber is not ...");
         }
 //        Log.e(TAG, "checknumber =====" + total + "  ===== " + data[7]);
 
@@ -1148,7 +1154,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
      */
     private void sendAccountInfo(){
         if (localAccountEntity==null){
-            Log.e(TAG,"sendStartWeight  localAccountEntity is null");
             return;
         }
         int h=localAccountEntity.getHeight();
@@ -1187,7 +1192,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             total+=data[i];
         }
         if (total!=data[15]){
-            Log.e(TAG,"checknumber is not ...");
+//            Log.e(TAG,"checknumber is not ...");
         }
 //        Log.e(TAG,"checknumber ====="+total+"  ===== "+data[15]);
 
@@ -1208,7 +1213,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 
     private void saveWeightData(String weight,String fat,String subFat,String visFat,String water,String bmr,String bodyAge,String muscle,String bone)
     {
-        Log.e(TAG,"+++++++++++"+System.currentTimeMillis()+"  "+startTime+"  "+(System.currentTimeMillis()-startTime));
         if ((System.currentTimeMillis()-startTime)<1000){
             startTime=System.currentTimeMillis();
             return;
@@ -1328,14 +1332,12 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         try{
             WeightEntity entity=searchForWeight(aId, pickTime);
             if (entity==null){
-                Log.e(TAG,"=================> is null");
                 entity=new WeightEntity();
                 entity.setWid(System.currentTimeMillis());
                 entity.setAid(aId);
                 entity.setPickTime(pickTime);
                 entity.setAddtime(System.currentTimeMillis());
             }
-            Log.e(TAG,"----------->"+entity.getWid());
             entity.setWeight(weight);
             entity.setFat(fat);
             entity.setSubFat(subFat);
@@ -1533,7 +1535,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             Dao<WeightEntity,Integer> dao=getDatabaseHelper().getWeightEntityDao();
             GenericRawResults<String[]> rawResults=dao.queryRaw("select max(syncid) from t_weight ");
             List<String[]> results=rawResults.getResults();
-            Log.d(TAG, " select result size:" + results.size());
             if (results.size()>0) {
                 String[] resultArray = results.get(0);
                 if (!StringUtil.isEmpty(resultArray[0])) {
@@ -1551,7 +1552,6 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             Dao<WeightHisEntity,Integer> dao=getDatabaseHelper().getWeightHisEntityDao();
             GenericRawResults<String[]> rawResults=dao.queryRaw("select max(syncid) from t_weight_his ");
             List<String[]> results=rawResults.getResults();
-            Log.d(TAG, " select result size:" + results.size());
             if (results.size()>0) {
                 String[] resultArray = results.get(0);
                 if (!StringUtil.isEmpty(resultArray[0])) {
@@ -1793,6 +1793,8 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                     appContext.setProperty(AppConfig.CONF_LOGIN_FLAG,"0");
                     startActivity(intent);
                     finish();
+                }else if(sherlockFragment instanceof InfoFragment){
+                    ((InfoFragment)sherlockFragment).reloadData();
                 }
                 break;
             }

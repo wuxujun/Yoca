@@ -7,13 +7,18 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.LineData;
 import com.xujun.app.yoca.R;
 import com.xujun.sqlite.TargetEntity;
+import com.xujun.util.StringUtil;
+
+import java.util.ArrayList;
 
 /**
  * 列表图
@@ -26,10 +31,14 @@ public class LineChartItem extends ChartData{
         this.mChartData=cd;
     }
     private TargetEntity  targetEntity;
+    private ArrayList<String>   xVal=new ArrayList<String>();
+    private LineData        lineData;
 
-    public LineChartItem(TargetEntity target,LineData cd,Context context){
+    public LineChartItem(TargetEntity target,LineData cd,ArrayList<String> xVals,Context context){
         this(cd);
         targetEntity=target;
+        this.xVal=xVals;
+        this.lineData=cd;
     }
     public int getItemType(){
         return 1;
@@ -41,7 +50,7 @@ public class LineChartItem extends ChartData{
             holder=new ViewHolder();
             convertView= LayoutInflater.from(context).inflate(R.layout.line_chart_item,null);
             holder.linearLayout=(LinearLayout)convertView.findViewById(R.id.llItem);
-            holder.chart=(LineChart)convertView.findViewById(R.id.lineChart);
+            holder.chart=(CombinedChart)convertView.findViewById(R.id.lineChart);
             holder.title=(TextView)convertView.findViewById(R.id.tvChartTitle);
             holder.average=(TextView)convertView.findViewById(R.id.tvChartAverage);
             convertView.setTag(holder);
@@ -73,26 +82,28 @@ public class LineChartItem extends ChartData{
         XAxis xAxis=holder.chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.WHITE);
-        xAxis.setDrawGridLines(false); //去除横线
+        xAxis.setDrawGridLines(true); //去除横线
         xAxis.setDrawAxisLine(true);
         YAxis leftAxis=holder.chart.getAxisLeft();
         leftAxis.setLabelCount(5,true);
-
         leftAxis.setTextColor(Color.WHITE);
+        leftAxis.setDrawGridLines(false);
 
         YAxis rightAxis=holder.chart.getAxisRight();
-        rightAxis.setLabelCount(5,true);
+        rightAxis.setLabelCount(5, true);
         rightAxis.setTextColor(Color.WHITE);
         rightAxis.setDrawGridLines(false);
-        holder.chart.setData((LineData) mChartData);
 
+        CombinedData data=new CombinedData(this.xVal);
+        data.setData(this.lineData);
+        holder.chart.setData(data);
         holder.chart.animateXY(2000,2000);
         return convertView;
     }
 
     private static class ViewHolder{
         LinearLayout    linearLayout;
-        LineChart   chart;
+        CombinedChart chart;
         TextView    title;
         TextView    average;
     }

@@ -3,11 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:gravity="center_vertical" android:paddingLeft="10dp" android:paddingRight="5dp">
     <ImageButton android:id="@+id/ibHeadBack"
-        android:layout_width="48dp" android:layout_marginBottom="3dp" android:layout_marginTop="3dp"
+        android:layout_width="48dp" android:layout_marginTop="3dp" android:layout_marginBottom="3dp"
         android:layout_height="match_parent" android:layout_alignParentLeft="true" android:layout_centerVertical="true"
         android:background="@null" android:src="@drawable/ic_launcher"/>
-    <TextView
-        android:layout_width="wrap_content" android:id="@+id/tvHeadTitle"  android:layout_centerVertical="true"
+    <TextView android:layout_marginLeft="64dp" android:layout_marginRight="64dp"
+        android:layout_width="wrap_content" android:id="@+id/tvHeadTitle"  android:layout_centerVertical="true" android:singleLine="true"
         android:layout_height="wrap_content" android:layout_centerInParent="true" android:textColor="#ffffff" android:textSize="18sp" android:text="@string/app_name"/>
     <Button android:id="@+id/btnHeadEdit" android:textColor="@color/white"
         android:layout_width="wrap_content" android:textSize="14sp"

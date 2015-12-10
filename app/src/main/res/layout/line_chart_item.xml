@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp" android:background="@color/white"/>
         </LinearLayout>
-    <com.github.mikephil.charting.charts.LineChart
+    <com.github.mikephil.charting.charts.CombinedChart
         android:layout_width="match_parent"
         android:id="@+id/lineChart"
         android:layout_height="150dp"/>

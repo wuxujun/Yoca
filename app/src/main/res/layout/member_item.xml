@@ -8,7 +8,7 @@
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp" android:layout_margin="20dp"
-            android:background="@drawable/user"
+            android:src="@drawable/user" android:scaleType="fitXY"
             android:id="@+id/ivMemberIcon" />
          <LinearLayout  android:layout_marginRight="20dp"
         android:layout_width="match_parent" android:layout_weight="1"
