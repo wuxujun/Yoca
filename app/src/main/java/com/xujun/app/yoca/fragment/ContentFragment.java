@@ -289,15 +289,15 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
            mContentHeader.setTargetViewStatus(true);
        }
 
-        String showTarget=appContext.getProperty(AppConfig.USER_SHOW_TARGET);
-        if (StringUtil.isEmpty(showTarget)){
-            mContentHeader.getTargetView().setVisibility(View.GONE);
-        }else{
-            mContentHeader.getTargetView().setVisibility(View.GONE);
-            if (showTarget.equals("1")){
+//        String showTarget=appContext.getProperty(AppConfig.USER_SHOW_TARGET);
+//        if (StringUtil.isEmpty(showTarget)){
+//            mContentHeader.getTargetView().setVisibility(View.GONE);
+//        }else{
+//            mContentHeader.getTargetView().setVisibility(View.GONE);
+//            if (showTarget.equals("1")){
                 mContentHeader.getTargetView().setVisibility(View.VISIBLE);
-            }
-        }
+//            }
+//        }
     }
     private void queryHealthData(String pickTime){
         if (localAccountEntity==null){
@@ -330,16 +330,20 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                 updateHomeTargetValue(7,StringUtil.doubleToStringOne(weightHisEntity.getWater()),appConfig.getWaterTitle(sex, weightHisEntity.getWater()),appConfig.getWaterStatus(sex, weightHisEntity.getWater()),appConfig.getWaterValue(sex, weightHisEntity.getWater()));
                 updateHomeTargetValue(6,StringUtil.doubleToStringOne(weightHisEntity.getBMR()),appConfig.getBMRTitle(age, sex, weightHisEntity.getBMR()),appConfig.getBMRStatus(age, sex, weightHisEntity.getBMR()),appConfig.getBMRValue(age, sex, weightHisEntity.getBMR()));
                 if(weightHisEntity.getBodyAge()!=null) {
-                    updateHomeTargetValue(11, StringUtil.doubleToStringOne(weightHisEntity.getBodyAge()), "正常", 1, 50);
+                    updateHomeTargetValue(11, StringUtil.doubleToStringOne(weightHisEntity.getBodyAge()), "标准", 1, 50);
                 }
-                updateHomeTargetValue(8,StringUtil.doubleToStringOne(weightHisEntity.getMuscle()),appConfig.getMuscleTitle(height, sex, weightHisEntity.getMuscle()),appConfig.getMuscleStatus(height, sex, weightHisEntity.getMuscle()),appConfig.getMuscleValue(height, sex, weightHisEntity.getMuscle()));
+                updateHomeTargetValue(8,StringUtil.doubleToStringOne(weightHisEntity.getMuscle()),appConfig.getMuscleTitle(age, sex, weightHisEntity.getMuscle()),appConfig.getMuscleStatus(age, sex, weightHisEntity.getMuscle()),appConfig.getMuscleValue(age, sex, weightHisEntity.getMuscle()));
                 updateHomeTargetValue(9,StringUtil.doubleToStringOne(weightHisEntity.getBone()),appConfig.getBoneTitle(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()),appConfig.getBoneStatus(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()),appConfig.getBoneValue(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()));
                 if(weightHisEntity.getProtein()!=null) {
-                    updateHomeTargetValue(10, StringUtil.doubleToStringOne(weightHisEntity.getProtein()), "正常", 1, 50);
+                    updateHomeTargetValue(10, StringUtil.doubleToStringOne(weightHisEntity.getProtein()), "标准", 1, 50);
                 }
                 isTodayData=true;
             }else{
                 isTodayData=false;
+                items.clear();
+                if (mAdapter!=null){
+                    mAdapter.notifyDataSetChanged();
+                }
             }
 
 //            Log.e(TAG,"recordsize:"+dao1.queryForAll().size());
@@ -510,6 +514,8 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                 currentDay--;
                 if (currentDay<0){
                     showCrouton("无数据");
+                    items.clear();
+                    mAdapter.notifyDataSetChanged();
                 }else {
                     refreshDayData();
                 }
@@ -519,6 +525,8 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                 currentDay++;
                 if (currentDay>=dayDatas.size()){
                    showCrouton("无数据");
+                    items.clear();
+                    mAdapter.notifyDataSetChanged();
                 }else {
                     refreshDayData();
                 }
@@ -615,6 +623,8 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
          currentDay++;
         if (currentDay>=dayDatas.size()){
             showCrouton("无数据");
+            items.clear();
+            mAdapter.notifyDataSetChanged();
         }else {
             refreshDayData();
         }
@@ -625,6 +635,8 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         currentDay--;
         if (currentDay<0){
             showCrouton("无数据");
+            items.clear();
+            mAdapter.notifyDataSetChanged();
         }else {
             refreshDayData();
         }

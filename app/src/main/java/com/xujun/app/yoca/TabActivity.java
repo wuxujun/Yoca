@@ -305,6 +305,17 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         }
     }
 
+    private void sendDataService(int actionType,String packet){
+        Message msg=Message.obtain(null,actionType,0,0,packet);
+        try{
+            if (messenger!=null) {
+                messenger.send(msg);
+            }
+        }catch (RemoteException e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -341,6 +352,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                     AccountEntity entity=lists.get(i);
                     if (entity.getType()==1){
                         localAccountEntity=entity;
+                        appContext.saveObject(localAccountEntity,AppConfig.CONF_CURRENT_ACCOUNT);
                         Log.e(TAG,localAccountEntity.getUserNick()+"  "+localAccountEntity.getTargetWeight()+"  "+localAccountEntity.getWeight());
                         SherlockFragment sherlockFragment=(SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.content_frame);
                         if (sherlockFragment instanceof ContentFragment) {
@@ -427,7 +439,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                             mHeadIcon.setImageResource(R.drawable.ic_my_item_user);
                         }
                     }
-
+                    appContext.saveObject(localAccountEntity,AppConfig.CONF_CURRENT_ACCOUNT);
                     SherlockFragment sherlockFragment=(SherlockFragment)getSupportFragmentManager().findFragmentById(R.id.content_frame);
                     if (sherlockFragment instanceof ContentFragment) {
                         ((ContentFragment)sherlockFragment).loadData(localAccountEntity);
@@ -681,7 +693,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             final StringBuilder stringBuilder = new StringBuilder(data.length);
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));
-//            Log.e(TAG,"- write:--->"+stringBuilder.toString());
+            Log.e(TAG,"- write:--->"+stringBuilder.toString());
             sendPacket=stringBuilder.toString();
         }
 
@@ -824,7 +836,9 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                     mCurrentAddress=intent.getStringExtra(BluetoothLeService.EXTRA_ADDRESS);
                     mBluetoothLeService.discoverService(mCurrentAddress);
                     startTime=System.currentTimeMillis();
+                    appContext.setProperty(AppConfig.DEVICE_MAC_ADDRESS,mCurrentAddress);
                     updateUIStatus(getResources().getString(R.string.main_connected), 0);
+                    sendNotifyService(AppConfig.ACTION_MAC_ADDRESS_SYNC);
                 }else{
                     updateUIStatus(getResources().getString(R.string.main_connect_err),-1);
                 }
@@ -854,6 +868,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
                         stringBuilder.append(String.format("%02X ", byteChar));
                     String text =stringBuilder.toString();
                     Log.e(TAG, "====>ACTION_DATA_NOTIFY---->" + text);
+                    sendDataService(AppConfig.ACTION_WEIGHT_PACKET_SENDER,text);
                 }
                 dealRecvData(intent.getByteArrayExtra(BluetoothLeService.EXTRA_DATA));
 
@@ -1096,7 +1111,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         int sex=localAccountEntity.getSex();
         int target=5000;
         if (StringUtil.isEmpty(localAccountEntity.getTargetWeight())){
-            if(localAccountEntity.getSex()==0){
+            if(localAccountEntity.getSex()==1){
                 target=(localAccountEntity.getHeight()-100)*100;
             }else{
                 target=(localAccountEntity.getHeight()-105)*100;
@@ -1161,7 +1176,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         int sex=localAccountEntity.getSex();
         int target=5000;
         if (StringUtil.isEmpty(localAccountEntity.getTargetWeight())){
-            if(localAccountEntity.getSex()==0){
+            if(localAccountEntity.getSex()==1){
                 target=(localAccountEntity.getHeight()-100)*100;
             }else{
                 target=(localAccountEntity.getHeight()-105)*100;
@@ -1237,7 +1252,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
         entity.setVisFat(StringUtil.toDouble(visFat));
         entity.setWater(StringUtil.toDouble(water));
         entity.setBMR(StringUtil.toDouble(bmr));
-        entity.setBodyAge(Integer.parseInt(bodyAge));
+        entity.setBodyAge(AppConfig.getAppConfig(mContext).countBodyAge(entity.getWeight(),entity.getFat(),localAccountEntity.getHeight(),localAccountEntity.getAge(),localAccountEntity.getSex()));
         entity.setMuscle(StringUtil.toDouble(muscle));
         entity.setBone(StringUtil.toDouble(bone));
         double protein=0.27*StringUtil.toDouble(muscle)+0.02*StringUtil.toDouble(fat);
@@ -1603,6 +1618,7 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
 
     private AccountEntity getAccountEntity(){
         try {
+            AccountEntity cAccount=(AccountEntity)appContext.readObject(AppConfig.CONF_CURRENT_ACCOUNT);
             Dao<AccountEntity,Integer> dao=getDatabaseHelper().getAccountEntityDao();
             QueryBuilder<AccountEntity,Integer> queryBuilder=dao.queryBuilder();
             queryBuilder.where().eq("type",1);
@@ -1610,6 +1626,9 @@ public class TabActivity extends SherlockFragmentActivity implements View.OnClic
             PreparedQuery<AccountEntity> preparedQuery1=queryBuilder.prepare();
             List<AccountEntity> list=dao.query(preparedQuery1);
             if (list.size()>0){
+                if (cAccount!=null){
+                    return cAccount;
+                }
                 return list.get(0);
             }
         }catch (SQLException e){

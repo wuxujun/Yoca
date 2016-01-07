@@ -88,12 +88,14 @@ public class LineChartItem extends ChartData{
         leftAxis.setLabelCount(5,true);
         leftAxis.setTextColor(Color.WHITE);
         leftAxis.setDrawGridLines(false);
-
+        leftAxis.setSpaceTop(2.0f);
+        leftAxis.setSpaceBottom(2.0f);
         YAxis rightAxis=holder.chart.getAxisRight();
         rightAxis.setLabelCount(5, true);
         rightAxis.setTextColor(Color.WHITE);
         rightAxis.setDrawGridLines(false);
-
+        rightAxis.setSpaceTop(2.0f);
+        rightAxis.setSpaceBottom(2.0f);
         CombinedData data=new CombinedData(this.xVal);
         data.setData(this.lineData);
         holder.chart.setData(data);

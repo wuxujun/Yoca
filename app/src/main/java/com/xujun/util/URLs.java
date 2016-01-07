@@ -46,6 +46,9 @@ public class URLs implements Serializable {
 
     public final static String SYNC_WEIGHT_URL=HTTP+HOST+URL_SPLITTER+"index.php?/ums/getWeights";
 	public final static String SYNC_HEALTH_URL=HTTP+HOST+URL_SPLITTER+"index.php?/ums/getHealth";
+	public final static String SYNC_MACADDR_URL=HTTP+HOST+URL_SPLITTER+"index.php?/ums/addMemberDevice";
+	public final static String SYNC_WEIGHT_PACKET_URL=HTTP+HOST+URL_SPLITTER+"index.php?/ums/addWeightPacket";
+
 
     public final static String IMAGE_UPLOAD=URL_API_HOST+"index.php?/ums/uploadImage";
 

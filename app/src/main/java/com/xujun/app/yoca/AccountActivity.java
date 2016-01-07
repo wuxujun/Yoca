@@ -77,7 +77,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
 
     private Calendar c = null;
 
-    private boolean      bSex=false;
+    private boolean      bSex=true;
     private boolean      bType=false;
 
     private Uri          origUri;
@@ -376,6 +376,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                     localAccountEntity.setHeshan(Integer.parseInt(hasHanET.getText().toString()));
                     localAccountEntity.setSex(bSex?1:0);
                     localAccountEntity.setAccountType(bType?1:0);
+                    localAccountEntity.setAge(getAge(birthdayET.getText().toString()));
                     if (imageName!=null){
                         localAccountEntity.setAvatar(imageName);
                     }
@@ -433,12 +434,12 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
                 break;
             }
             case R.id.btnSexMale:{
-                bSex=true;
+                bSex=false;
                 setSexButtonState();
                 break;
             }
             case R.id.btnSexWoram:{
-                bSex=false;
+                bSex=true;
                 setSexButtonState();
                 break;
             }
@@ -446,7 +447,7 @@ public class AccountActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void setSexButtonState(){
-        if (bSex){
+        if (!bSex){
             sexMale.setTextColor(getResources().getColor(R.color.btn_color_selected));
             sexWoram.setTextColor(getResources().getColor(R.color.btn_color));
             findViewById(R.id.llSexMale).setBackgroundColor(getResources().getColor(R.color.btn_color_selected));

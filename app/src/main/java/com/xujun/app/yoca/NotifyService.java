@@ -29,6 +29,7 @@ import com.xujun.model.WeightResp;
 import com.xujun.sqlite.AccountEntity;
 import com.xujun.sqlite.DatabaseHelper;
 import com.xujun.sqlite.HealthEntity;
+import com.xujun.sqlite.InfoEntity;
 import com.xujun.sqlite.WeightEntity;
 import com.xujun.sqlite.WeightHisEntity;
 import com.xujun.util.DateUtil;
@@ -72,6 +73,9 @@ public class NotifyService extends Service {
     private Handler handlerAccountSync=new Handler();
     private Handler handlerWarnSync=new Handler();
     private Handler handlerAvatarSync=new Handler();
+    private Handler handlerMacSync=new Handler();
+
+    private Handler handlerLast=new Handler();
 
 
     private Handler handlerHealthSync=new Handler();
@@ -104,6 +108,21 @@ public class NotifyService extends Service {
                     handlerAvatarSync.post(avatarDataSync_run);
                     break;
                 }
+                case AppConfig.ACTION_MAC_ADDRESS_SYNC:{
+                    handlerMacSync.post(macAddrSync_run);
+                    break;
+                }
+                case AppConfig.ACTION_WEIGHT_PACKET_SENDER:{
+                   try{
+                        Map<String, Object> params = new HashMap<String, Object>();
+                        params.put("value",msg.obj);
+                        params.put("imei", mAppContext.getIMSI());
+                        request(URLs.SYNC_WEIGHT_PACKET_URL, JsonUtil.toJson(params).toString(),null);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
+                }
                 default:
                     super.handleMessage(msg);
             }
@@ -126,11 +145,23 @@ public class NotifyService extends Service {
         am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,firsttime,1*60*1000,sender);
         initNotifiManager();
         initHealthData();
+        syncLast();
+    }
+
+    private void syncLast(){
+        handlerLast.post(sync_last);
     }
 
     private void initHealthData(){
-
-        handlerHealthSync.post(health_run);
+        try{
+            Dao<WeightEntity, Integer> dao = getDatabaseHelper().getWeightEntityDao();
+            List<WeightEntity> list=dao.queryForAll();
+            if (list.size()>0){
+                handlerHealthSync.post(health_run);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     private void deleteHealthData(long aid,int dType){
@@ -149,6 +180,8 @@ public class NotifyService extends Service {
             e.printStackTrace();
         }
     }
+
+
 
     private void createHealthData(long aid,int dType){
         int size=7;
@@ -186,6 +219,7 @@ public class NotifyService extends Service {
             if (list.size()>0){
                 HealthEntity entity=list.get(0);
                 hid=entity.getHid();
+                Log.e(TAG,"hid=========>"+hid);
             }
 
             Dao<WeightHisEntity, Integer> dao = getDatabaseHelper().getWeightHisEntityDao();
@@ -294,6 +328,7 @@ public class NotifyService extends Service {
                         healthEntity.setProtein(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[10]) / count));
                         healthEntity.setBodyAge(StringUtil.doubleToString(StringUtil.toDouble(resultArray[11]) / count));
                     }
+                    addHealthEntity(healthEntity);
                 }
             }
         }catch (SQLException e){
@@ -364,6 +399,76 @@ public class NotifyService extends Service {
         return time;
     }
 
+    private Runnable macAddrSync_run=new Runnable() {
+        @Override
+        public void run() {
+            try{
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("mac_addr",mAppContext.getProperty(AppConfig.DEVICE_MAC_ADDRESS));
+                params.put("mid", mAppContext.getProperty(AppConfig.CONF_USER_UID));
+                params.put("imei", mAppContext.getIMSI());
+                request(URLs.SYNC_MACADDR_URL, JsonUtil.toJson(params).toString(),null);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /***
+     * 同步近七天记录
+     */
+    private Runnable sync_last=new Runnable() {
+        @Override
+        public void run() {
+            try{
+                Dao<AccountEntity,Integer> dao=getDatabaseHelper().getAccountEntityDao();
+                QueryBuilder<AccountEntity,Integer> queryBuilder=dao.queryBuilder();
+                Where<AccountEntity,Integer> where=queryBuilder.where();
+                where.or(where.eq("type",0),where.eq("type",1));
+                queryBuilder.orderBy("type", true);
+                PreparedQuery<AccountEntity> preparedQuery=queryBuilder.prepare();
+                List<AccountEntity> lists=dao.query(preparedQuery);
+                if (lists.size()>0){
+                    for (int i=0;i<lists.size();i++){
+                        AccountEntity accountEntity=lists.get(i);
+                        int count=getWeightHisForAccount(accountEntity);
+                        if (count==0){
+                            Map<String, Object> params = new HashMap<String, Object>();
+                            params.put("syncid", "0");
+                            params.put("uid", accountEntity.getId());
+                            params.put("imei", mAppContext.getIMSI());
+                            request(URLs.SYNC_WEIGHT_URL, JsonUtil.toJson(params).toString(), null);
+                            request(URLs.SYNC_WEIGHT_HIS_URL, JsonUtil.toJson(params).toString(),null);
+                        }
+                    }
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private int getWeightHisForAccount(AccountEntity accountEntity){
+        try{
+            Dao<WeightEntity,Integer> dao=getDatabaseHelper().getWeightEntityDao();
+            QueryBuilder<WeightEntity,Integer> queryBuilder=dao.queryBuilder();
+            List<WeightEntity> lists=dao.queryForAll();
+            if (lists.size()>0){
+                Dao<WeightHisEntity,Integer> dao1=getDatabaseHelper().getWeightHisEntityDao();
+                QueryBuilder<WeightHisEntity,Integer> queryBuilder1=dao1.queryBuilder();
+                List<WeightHisEntity> lists1=dao1.queryForAll();
+                if (lists1.size()>0) {
+                    return lists1.size();
+                }
+                return lists.size();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
     private Runnable health_run=new Runnable(){
 
@@ -393,8 +498,6 @@ public class NotifyService extends Service {
             }catch (SQLException e){
                 e.printStackTrace();
             }
-
-
         }
     };
 
@@ -437,7 +540,7 @@ public class NotifyService extends Service {
 
     private void uploadAvatarData(){
         if (mAppContext.getNetworkType()<1){
-            L.e(TAG,"无网络连接，暂不同步。");
+            L.e(TAG, "无网络连接，暂不同步。");
             return;
         }
         try {
@@ -651,7 +754,7 @@ public class NotifyService extends Service {
                     QueryBuilder<WeightHisEntity, Integer> weightQueryBuilder = weightEntityDao.queryBuilder();
                     List<WeightHisEntity> list=weightQueryBuilder.query();
                     if (list!=null){
-                        Log.d(TAG,"===============> weight list------------> size "+list.size());
+                        handlerHealthSync.post(health_run);
                     }
                 }
             }else if(baseResp.getDataType().equals("uploadImage")&&baseResp.getSuccess()==1){
@@ -720,6 +823,7 @@ public class NotifyService extends Service {
             dao.setAutoCommit(dao.startThreadConnection(),false);
             dao.createOrUpdate(entity);
             dao.commit(dao.startThreadConnection());
+            Log.e(TAG,"addHealthEntity =======> "+entity.getHid());
         }catch (SQLException e){
             e.printStackTrace();
         }

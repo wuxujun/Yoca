@@ -43,8 +43,8 @@
                         android:layout_height="2dp" android:layout_weight="1" android:background="@color/line_red"/>
                 </LinearLayout>
                 <com.xujun.widget.MySeekBar android:id="@+id/mySeekBar" android:descendantFocusability= "blocksDescendants" android:focusable="false"
-                    android:layout_width="match_parent" android:progress="48" android:progressDrawable="@drawable/main_seekbar_style"
-                    android:layout_height="10dp" android:layout_marginTop="25dp" android:thumb="@drawable/ic_indicator"/>
+                    android:layout_width="match_parent" android:progress="50" android:progressDrawable="@drawable/main_seekbar_style"
+                    android:layout_height="10dp" android:layout_marginRight="20dp" android:layout_marginTop="25dp" android:thumb="@drawable/ic_indicator"/>
 
             </FrameLayout>
         </LinearLayout>

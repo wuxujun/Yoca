@@ -195,7 +195,7 @@ public class ContentHeader extends LinearLayout implements View.OnClickListener{
 
     public void setWeekValue(int weeks,double weight,double targetWeight)
     {
-        double val=(weight-targetWeight)/weeks;
+        double val=(weight-targetWeight)/(weeks+1);
         ((TextView)mContentView.findViewById(R.id.tvWeekValue)).setText(StringUtil.doubleToStringOne(val));
     }
 

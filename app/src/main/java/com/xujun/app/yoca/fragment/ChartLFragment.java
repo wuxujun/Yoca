@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.Image;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -193,18 +195,27 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
         mDayAdapter=new ItemAdapter();
         popPickTime=new PopPickTime(mContext,appContext,dayDatas);
         popPickTime.setOnItemClickListener(popDateItemClickListener);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setHasOptionsMenu(true);
+        Log.e(TAG,"onResume()...");
         if(StringUtil.isEmpty(appConfig.get(AppConfig.CONF_CHART_TYPE))){
             dataType=1;
         }else {
             dataType = Integer.parseInt(appConfig.get(AppConfig.CONF_CHART_TYPE));
         }
+        AccountEntity cAccount=(AccountEntity)appContext.readObject(AppConfig.CONF_CURRENT_ACCOUNT);
         if (localAccountEntity!=null){
+            dayDatas.clear();
+            if (cAccount!=null){
+                localAccountEntity=cAccount;
+                Log.e(TAG,"onResume()..."+localAccountEntity.getId()+"  "+localAccountEntity.getUserNick());
+            }
+            Log.e(TAG,"onResume()...-----> "+localAccountEntity.getId()+"  "+localAccountEntity.getUserNick());
             refreshData();
         }
         setHeadButtonStatus();
@@ -610,11 +621,21 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                     if (ImageUtils.isFileExist(appContext.getCameraPath() + "/crop_" + entity.getAvatar())) {
                         holder.icon.setImageBitmap(ImageUtils.getRoundedCornerBitmap(ImageUtils.getBitmapByPath(appContext.getCameraPath() + "/crop_" + entity.getAvatar()),20,10));
                     }else{
+                        int width=holder.icon.getWidth();
+                        if (width==0){
+                            width=120;
+                        }
+                        int height=holder.icon.getHeight();
+                        if (height==0){
+                            height=150;
+                        }
+                        final int imgWidth=width;
+                        final int imgHeight=height;
                         ImageLoader.getInstance().loadImage(URLs.IMAGE_URL + entity.getAvatar(), options, new SimpleImageLoadingListener() {
                             @Override
-                            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage){
-                                Bitmap bitmap= ImageUtils.zoomBitmap(loadedImage,holder.icon.getWidth(),holder.icon.getHeight());
-                                holder.icon.setImageBitmap(ImageUtils.getRoundedCornerBitmap(bitmap, 20,10));
+                            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                Bitmap bitmap = ImageUtils.zoomBitmap(loadedImage, imgWidth, imgHeight);
+                                holder.icon.setImageBitmap(ImageUtils.getRoundedCornerBitmap(bitmap, 20, 10));
                             }
                         });
 //                        ImageLoader.getInstance().displayImage(URLs.IMAGE_URL + entity.getAvatar(),holder.icon,options);
@@ -624,10 +645,10 @@ public class ChartLFragment extends BaseFragment implements View.OnClickListener
                 }else{
                     holder.icon.setVisibility(View.INVISIBLE);
                 }
-                if (localAccountEntity!=null){
+                if (localAccountEntity != null) {
                     holder.sholai.setText("Sholai指数:" + appConfig.getSholaiValue(localAccountEntity, entity));
                     int suc=appConfig.getSholaiSuc(localAccountEntity,entity);
-                    holder.title.setText(suc+"项合格  "+(8-suc)+" 项不合格");
+                    holder.title.setText((suc+2)+"项合格  "+(9-suc)+" 项不合格");
 
                 }
             }

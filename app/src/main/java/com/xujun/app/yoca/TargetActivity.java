@@ -214,7 +214,7 @@ public class TargetActivity extends BaseActivity implements View.OnClickListener
         }
 
         //女
-        if(localAccountEntity.getSex()==0){
+        if(localAccountEntity.getSex()==1){
             ((TextView)findViewById(R.id.tvTopWeight)).setText(StringUtil.doubleToStringOne((localAccountEntity.getHeight()-100)));
         }else{
            //男

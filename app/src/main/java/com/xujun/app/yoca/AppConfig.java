@@ -27,6 +27,8 @@ public class AppConfig {
     public final static int    ACTION_ACCOUNT_SYNC=3;
     public final static int    ACTION_WARNDATA_SYNC=4;
     public final static int    ACTION_WEIGH_DATA_AVATAR=5;
+    public final static int    ACTION_MAC_ADDRESS_SYNC=6;
+    public final static int    ACTION_WEIGHT_PACKET_SENDER=7;
 
     public final static String ACTION_START_WEIGH="com.xujun.yoca.ACTION_START_WEIGH";
 
@@ -95,6 +97,7 @@ public class AppConfig {
     public final static String DATA_VERSION= "data_version";
     public final static String CONF_APP_UNIQUEID="APP_UNIQUEID";
     public final static String CONF_COOKIE="cookie";
+    public final static String CONF_CURRENT_ACCOUNT="conf_current_account";
 
 
     public final static String USER_SHOW_TARGET="pre_show_target";
@@ -108,7 +111,7 @@ public class AppConfig {
     public final static String DEVICE_SET_SHOW_UNIT="pre_device_show_unit";
     public final static String DEVICE_SET_LED_LEVEL="pre_device_led_level";
     public final static String DEVICE_SET_LED_LEVEL_TITLE="pre_device_led_level_title";
-
+    public final static String DEVICE_MAC_ADDRESS="pre_device_mac_address";
 
 
     public final static String WEIBO_APPID="2846029855";
@@ -267,17 +270,19 @@ public class AppConfig {
             case 4:
                 return "%";
             case 5:
-                return "0";
+                return "";
             case 6:
                 return "Cal";
             case 7:
                 return "%";
             case 8:
-                return "Kg";
-            case 9:
                 return "%";
+            case 9:
+                return "Kg";
             case 10:
                 return "%";
+            case 11:
+                return "";
         }
         return result;
     }
@@ -288,26 +293,14 @@ public class AppConfig {
 
     public int getWeightStatus(int height,int sex,double value){
         int result=1;
-        switch (sex){
-            case 0:{
-                int val=height-100;
-                if (value<(val*1.1)){
-                    result=0;
-                }else if (value>(val*1.1)){
-                    result=2;
-                }
-
-                break;
-            }
-            default:{
-                int val=height-105;
-                if (value<(val*1.1)){
-                    result=0;
-                }else if (value>(val*1.1)){
-                    result=2;
-                }
-                break;
-            }
+        int w=height-105;
+        if (sex==1){
+            w=height-100;
+        }
+        if (value>(w*1.1)) {
+            result=2;
+        }else if (value<(w*0.9)){
+            result=0;
         }
         return result;
     }
@@ -321,124 +314,113 @@ public class AppConfig {
      */
     public String getWeightTitle(int height,int sex,double value){
         String result="标准";
-        switch (sex){
-            case 0:{
-                double val=(height-100)*0.9;
-                if (value<(val*1.1)){
-                    result="偏瘦";
-                }else if (value>(val*1.1)){
-                    result="偏胖";
-                }
-
-                break;
-            }
-            default:{
-                double val=(height-100)*0.9;
-                if (value<(val*1.1)){
-                        result="偏瘦";
-                    }else if (value>(val*1.1)){
-                        result="偏胖";
-                    }
-                break;
-            }
+        int w=height-105;
+        if (sex==1){
+            w=height-100;
+        }
+        if (value>(w*1.1)) {
+            result="偏胖";
+        }else if (value<(w*0.9)){
+            result="偏瘦";
         }
         return result;
     }
 
-    public int getFatStatus(int age,int sex,double value){
+    public int getFatStatus(int nAge,int nSex,double value){
         int result=1;
-        switch (sex){
+
+        switch (nSex){
             case 0:{
-                if (age>=18&&age<=39){
-                    if (value<21.0){
-                        result=0;
-                    }else if (value>27.0){
+                if (nAge>17&&nAge<40){
+                    if (value>16){
                         result=2;
+                    }else if(value<11) {
+                        result=0;
                     }
-                }else if(age>=40&&age<=59){
-                    if (value<22.0){
-                        result=0;
-                    }else if (value>28.0){
+                }else if(nAge>39&&nAge<60){
+                    if (value>17){
                         result=2;
+                    }else if(value<12) {
+                        result=0;
                     }
-                }else if(age>=60){
-                    if (value<23.0){
-                        result=0;
-                    }else if (value>29.0){
+                }else if(nAge>59){
+                    if (value>19){
                         result=2;
+                    }else if(value<14) {
+                        result=0;
                     }
                 }
                 break;
             }
-            default:{
-                if (age>=18&&age<=39){
-                    if (value<11.0){
-                        result=0;
-                    }else if (value>16.0){
+            case 1:{
+                if (nAge>17&&nAge<40){
+                    if (value>27){
                         result=2;
+                    }else if(value<21) {
+                        result=0;
                     }
-                }else if(age>=40&&age<=59){
-                    if (value<12.0){
-                        result=0;
-                    }else if (value>17.0){
+                }else if(nAge>39&&nAge<60){
+                    if (value>28){
                         result=2;
+                    }else if(value<22) {
+                        result=0;
                     }
-                }else if(age>=60){
-                    if (value<14.0){
-                        result=0;
-                    }else if (value>19.0){
+                }else if(nAge>59){
+                    if (value>29){
                         result=2;
+                    }else if(value<23) {
+                        result=0;
                     }
                 }
                 break;
             }
         }
-        return result;
+        return  result;
     }
 
-    public String getFatTitle(int age,int sex,double value){
-        String result="健康";
-        switch (sex){
+    public String getFatTitle(int nAge,int nSex,double value){
+        String result="标准";
+        switch (nSex){
             case 0:{
-                if (age>=18&&age<=39){
-                    if (value<21.0){
-                        result="偏瘦";
-                    }else if (value>27.0){
-                        result="偏胖";
+                if (nAge>17&&nAge<40){
+                    if (value>16){
+                        result="偏高";
+                    }else if(value<11) {
+                        result="偏低";
                     }
-                }else if(age>=40&&age<=59){
-                    if (value<22.0){
-                        result="偏瘦";
-                    }else if (value>28.0){
-                        result="偏胖";
+                }else if(nAge>39&&nAge<60){
+                    if (value>17){
+                        result="偏高";
+                    }else if(value<12) {
+                        result="偏低";
                     }
-                }else if(age>=60){
-                    if (value<23.0){
-                        result="偏瘦";
-                    }else if (value>29.0){
-                        result="偏胖";
+                }else if(nAge>59){
+                    if (value>19){
+                        result="偏高";
+                    }else if(value<14) {
+                        result="偏低";
                     }
                 }
                 break;
             }
-            default:{
-                if (age>=18&&age<=39){
-                    if (value<11.0){
-                        result="偏瘦";
-                    }else if (value>16.0){
-                        result="偏胖";
+            case 1:{
+                if (nAge>17&&nAge<40){
+                    if (value>27){
+                        result="偏高";
+                    }else if(value<21) {
+                        result="偏低";
                     }
-                }else if(age>=40&&age<=59){
-                    if (value<12.0){
-                        result="偏瘦";
-                    }else if (value>17.0){
-                        result="偏胖";
+                }else if(nAge>39&&nAge<60){
+                    if (value>28){
+                        result="偏高";
+                    }else if(value<22) {
+                        result="偏低";
                     }
-                }else if(age>=60){
-                    if (value<14.0){
-                        result="偏瘦";
-                    }else if (value>19.0){
-                        result="偏胖";
+                }else if(nAge>59){
+                    if (value>29){
+                        result="偏高";
+                    }else if(value<23) {
+                        result="偏低";
                     }
                 }
                 break;
@@ -450,7 +432,7 @@ public class AppConfig {
     public float getFatRefer(int sex,int age){
         float result=0.0f;
         switch (sex){
-            case 0:{
+            case 1:{
                 if (age>=18&&age<=39){
                    result=13.0f;
                 }else if(age>=40&&age<=59){
@@ -474,10 +456,10 @@ public class AppConfig {
         return result;
     }
 
-    public int getSubFatStatus(int sex,double value){
+    public int getSubFatStatus(int nSex,double value){
         int result=1;
-        switch (sex){
-            case 0:{
+        switch (nSex){
+            case 1:{
                 if (value<18.5){
                     result=0;
                 }else if(value>26.7){
@@ -499,14 +481,14 @@ public class AppConfig {
 
     /***
      * 皮下脂肪率
-     * @param sex
+     * @param nSex
      * @param value
      * @return
      */
-    public String getSubFatTitle(int sex,double value){
+    public String getSubFatTitle(int nSex,double value){
         String result="标准";
-        switch (sex){
-            case 0:{
+        switch (nSex){
+            case 1:{
                 if (value<18.5){
                     result="偏低";
                 }else if(value>26.7){
@@ -530,7 +512,7 @@ public class AppConfig {
     public float getSubFatRefer(int sex){
         float result=10.0f;
         switch (sex){
-            case 0:{
+            case 1:{
                 result=20.0f;
                 break;
             }
@@ -543,14 +525,13 @@ public class AppConfig {
     }
 
     public int getVisFatStatus(double value){
-        if (value>1&&value<9){
-            return 0;
-        }else if(value>10&&value<14){
-            return 2;
-        }else if(value>15){
-            return 3;
+        int result=1;
+        if (value<1){
+            result=0;
+        }else if(value>9){
+            result=2;
         }
-        return 1;
+        return result;
     }
     /**
      * 内脏脂肪率
@@ -558,14 +539,12 @@ public class AppConfig {
      * @return
      */
     public String getVisFatTitle(double value){
-        if (value>1&&value<9){
-            return "正常";
-        }else if(value>10&&value<14){
-            return "偏高";
-        }else if(value>15){
+        if (value<1){
+            return "偏低";
+        }else if(value>9){
             return "偏高";
         }
-        return "正常";
+        return "标准";
     }
 
     public int getVisFatRefer(){
@@ -573,220 +552,219 @@ public class AppConfig {
         return result;
     }
 
-    public int getWaterStatus(int sex,double value){
-        if (sex==1){
-            if (value>=55&&value<=65){
-                return 1;
-            }else if(value<55){
-                return 0;
+    public int getWaterStatus(int nSex,double value){
+        int result=1;
+        if (nSex==0) {
+            if (value>65.0){
+                result=2;
+            }else if(value<55.0) {
+                result=0;
             }
-            return 2;
-        }else{
-            if (value>=45&&value<=60){
-                return 1;
-            }else if(value<45){
-                return 0;
+        }else {
+            if (value>60){
+                result=2;
+            }else  if (value<45) {
+                result=0;
             }
-            return 2;
         }
+        return result;
     }
 
     /**
      * 水分含量
-     * @param sex
+     * @param nSex
      * @param value
      * @return
      */
-    public String getWaterTitle(int sex,double value){
-        if (sex==1){
-            if (value>=55&&value<=65){
-                return "正常";
-            }else if(value<55){
-                return "偏低";
+    public String getWaterTitle(int nSex,double value){
+        String result="标准";
+        if (nSex==0) {
+            if (value>65.0){
+                result="偏高";
+            }else if(value<55.0) {
+                result="偏低";
             }
-            return "偏高";
-        }else{
-            if (value>=45&&value<=60){
-                return "正常";
-            }else if(value<45){
-                return "偏低";
+        }else {
+            if (value>60){
+                result="偏高";
+            }else  if (value<45) {
+                result="偏低";
             }
-            return "偏高";
         }
+        return result;
     }
 
     public int getWaterRefer(int sex){
         int result=60;
-        if (sex==0){
+        if (sex==1){
             result=50;
         }
         return result;
     }
 
 
-    public int getBMRStatus(int age,int sex,double value){
+    public int getBMRStatus(int nAge,int nSex,double value){
         int result=1;
-        switch (sex){
+        switch (nSex){
             case 0:{
-                if (age>=18&&age<=29){
-                    if (value<(1298*0.9)){
-                        result=0;
-                    }else if(value>(1298*1.1)){
+                if(nAge<=17){
+                    if (value>1386){
                         result=2;
+                    }else if(value<1134) {
+                        result=0;
                     }
-                }else if(age>=30&&age<=49){
-                    if (value<(1302*0.9)){
-                        result=0;
-                    }else if(value>(1302*1.1)){
+                }else if(nAge>17&&nAge<30){
+                    if (value>1716){
                         result=2;
+                    }else if(value<1404) {
+                        result=0;
                     }
-                }else if(age>=50&&age<=69){
-                    if (value<(1242*0.9)){
-                        result=0;
-                    }else if(value>(1242*1.1)){
+                }else if(nAge>29&&nAge<50){
+                    if (value>1717){
                         result=2;
+                    }else if(value<1405) {
+                        result=0;
                     }
-                }else if(age>=70){
-                    if (value<(1035*0.9)){
-                        result=0;
-                    }else if(value>(1035*1.1)){
+                }else if(nAge>49&&nAge<70){
+                    if (value>1656){
                         result=2;
+                    }else if(value<1355) {
+                        result=0;
                     }
                 }else{
-                    if (value<(1265*0.9)){
-                        result=0;
-                    }else if(value>(1265*1.1)){
+                    if (value>1538){
                         result=2;
+                    }else if(value<1405) {
+                        result=0;
                     }
                 }
                 break;
             }
-            default:{
-                if (age>=18&&age<=29){
-                    if (value<(1560*0.9)){
-                        result=0;
-                    }else if(value>(1560*1.1)){
+            case 1:{
+                if(nAge<=17){
+                    if (value>1392){
                         result=2;
+                    }else if(value<1139) {
+                        result=0;
                     }
-                }else if(age>=30&&age<=49){
-                    if (value<(1561*0.9)){
-                        result=0;
-                    }else if(value>(1561*1.1)){
+                }else if (nAge>17&&nAge<30){
+                    if (value>1428){
                         result=2;
+                    }else if(value<1168) {
+                        result=0;
                     }
-                }else if(age>=50&&age<=69){
-                    if (value<(1505*0.9)){
-                        result=0;
-                    }else if(value>(1505*1.1)){
+                }else if(nAge>29&&nAge<50){
+                    if (value>1432){
                         result=2;
+                    }else if(value<1172) {
+                        result=0;
                     }
-                }else if(age>=70){
-                    if (value<(1398*0.9)){
-                        result=0;
-                    }else if(value>(1398*1.1)){
+                }else if(nAge>49&&nAge<70){
+                    if (value>1366){
                         result=2;
+                    }else if(value<1118) {
+                        result=0;
                     }
                 }else{
-                    if (value<(1260*0.9)){
-                        result=0;
-                    }else if(value>(1260*1.1)){
+                    if (value>1139){
                         result=2;
+                    }else if(value<932) {
+                        result=0;
                     }
                 }
                 break;
             }
         }
-
         return result;
     }
 
     /***
      * 基础代谢率
-     * @param age 年龄
-     * @param sex  性别
+     * @param nAge 年龄
+     * @param nSex  性别
      * @param value 值
      * @return
      */
-    public String getBMRTitle(int age,int sex,double value){
+    public String getBMRTitle(int nAge,int nSex,double value){
         String result="标准";
-        switch (sex){
+
+        switch (nSex){
             case 0:{
-                if (age>=18&&age<=29){
-                    if (value<(1298*0.9)){
-                        result="偏低";
-                    }else if(value>(1298*1.1)){
+                if(nAge<=17){
+                    if (value>1386){
                         result="偏高";
+                    }else if(value<1134) {
+                        result="偏低";
                     }
-                }else if(age>=30&&age<=49){
-                    if (value<(1302*0.9)){
-                        result="偏低";
-                    }else if(value>(1302*1.1)){
+                }else if(nAge>17&&nAge<30){
+                    if (value>1716){
                         result="偏高";
+                    }else if(value<1404) {
+                        result="偏低";
                     }
-                }else if(age>=50&&age<=69){
-                    if (value<(1242*0.9)){
-                        result="偏低";
-                    }else if(value>(1242*1.1)){
+                }else if(nAge>29&&nAge<50){
+                    if (value>1717){
                         result="偏高";
+                    }else if(value<1405) {
+                        result="偏低";
                     }
-                }else if(age>=70){
-                    if (value<(1035*0.9)){
-                        result="偏低";
-                    }else if(value>(1035*1.1)){
+                }else if(nAge>49&&nAge<70){
+                    if (value>1656){
                         result="偏高";
+                    }else if(value<1355) {
+                        result="偏低";
                     }
                 }else{
-                    if (value<(1265*0.9)){
-                        result="偏低";
-                    }else if(value>(1265*1.1)){
+                    if (value>1538){
                         result="偏高";
+                    }else if(value<1405) {
+                        result="偏低";
                     }
                 }
                 break;
             }
-            default:{
-                if (age>=18&&age<=29){
-                    if (value<(1560*0.9)){
-                        result="偏低";
-                    }else if(value>(1560*1.1)){
+            case 1:{
+                if(nAge<=17){
+                    if (value>1392){
                         result="偏高";
+                    }else if(value<1139) {
+                        result="偏低";
                     }
-                }else if(age>=30&&age<=49){
-                    if (value<(1561*0.9)){
-                        result="偏低";
-                    }else if(value>(1561*1.1)){
+                }else if (nAge>17&&nAge<30){
+                    if (value>1428){
                         result="偏高";
+                    }else if(value<1168) {
+                        result="偏低";
                     }
-                }else if(age>=50&&age<=69){
-                    if (value<(1505*0.9)){
-                        result="偏低";
-                    }else if(value>(1505*1.1)){
+                }else if(nAge>29&&nAge<50){
+                    if (value>1432){
                         result="偏高";
+                    }else if(value<1172) {
+                        result="偏低";
                     }
-                }else if(age>=70){
-                    if (value<(1398*0.9)){
-                        result="偏低";
-                    }else if(value>(1398*1.1)){
+                }else if(nAge>49&&nAge<70){
+                    if (value>1366){
                         result="偏高";
+                    }else if(value<1118) {
+                        result="偏低";
                     }
                 }else{
-                    if (value<(1260*0.9)){
-                        result="偏低";
-                    }else if(value>(1260*1.1)){
+                    if (value>1139){
                         result="偏高";
+                    }else if(value<932) {
+                        result="偏低";
                     }
                 }
                 break;
             }
         }
-
         return result;
     }
 
     public float getBMRRefer(int sex,int age){
         float result=60.0f;
         switch (sex){
-            case 0:{
+            case 1:{
                 if (age>=18&&age<=29){
                     result=2360f;
                 }else if(age>=30&&age<=49){
@@ -814,49 +792,61 @@ public class AppConfig {
         return result;
     }
 
-    public int getMuscleStatus(int height,int sex,double value){
+    public int getMuscleStatus(int age,int sex,double value){
         int result=1;
         switch (sex){
             case 0:
             {
-                if (height<150){
-                    if (value<29.1) {
-                        result =0;
-                    }else if(value>34.7){
+                if (age<16){
+                    if (value<46.0) {
+                        result = 0;
+                    }else if(value>51.0){
                         result=2;
                     }
-                }else if(height>150&&height<160){
-                    if (value<32.9){
+                }else if(age>15&&age<31){
+                    if (value<45.0){
                         result=0;
-                    }else if(value>37.5){
+                    }else if(value>50.0){
+                        result=2;
+                    }
+                }else if(age>30&&age<61){
+                    if (value<44.0){
+                        result=0;
+                    }else if(value>49.0){
                         result=2;
                     }
                 }else{
-                    if(value<36.5){
+                    if(value<43.0){
                         result=0;
-                    }else if(value>42.5){
+                    }else if(value>48.0){
                         result=2;
                     }
                 }
                 break;
             }
             default:{
-                if (height<160){
-                    if (value<38.5) {
-                        result = 0;
-                    }else if(value>46.5){
+                if (age<16){
+                    if (value<44.0) {
+                        result =0;
+                    }else if(value>49.0){
                         result=2;
                     }
-                }else if(height>160&&height<170){
+                }else if(age>15&&age<31){
+                    if (value<43.0){
+                        result=0;
+                    }else if(value>48.0){
+                        result=2;
+                    }
+                }else if(age>30&&age<61){
                     if (value<42.0){
                         result=0;
-                    }else if(value>52.4){
+                    }else if(value>47.0){
                         result=2;
                     }
                 }else{
-                    if(value<49.4){
+                    if(value<41.0){
                         result=0;
-                    }else if(value>59.4){
+                    }else if(value>46.0){
                         result=2;
                     }
                 }
@@ -878,7 +868,7 @@ public class AppConfig {
     public String getMuscleTitle(int age,int sex,double value){
         String result="标准";
         switch (sex){
-            case 1:
+            case 0:
             {
                 if (age<16){
                     if (value<46.0) {
@@ -943,7 +933,7 @@ public class AppConfig {
     public float getMuscleRefer(int sex,int height){
         float result=60.0f;
         switch (sex){
-            case 0:{
+            case 1:{
                 if (height<150){
                     result=31.0f;
                 }else if(height>150&&height<160){
@@ -967,53 +957,47 @@ public class AppConfig {
         return result;
     }
 
-    public int getBoneStatus(double weight,int sex,double value){
+    public int getBoneStatus(double weight,int nSex,double value){
         int result=1;
-        switch (sex){
-            case 0:
-            {
-                if (weight<45){
-                    if (value<0.5) {
-                        result =0;
-                    }else if(value>3.0){
-                        result=2;
-                    }
-                }else if(weight>45&&weight<60){
-                    if (value<0.5){
-                        result=0;
-                    }else if(value>4.2){
-                        result=2;
-                    }
-                }else{
-                    if(value<0.5){
-                        result=0;
-                    }else if(value>3.0){
-                        result=2;
-                    }
+        if (nSex==0){
+            if (weight<60.0){
+                if (value>4.5){
+                    result=2;
+                }else if(value<0.5) {
+                    result=0;
                 }
-                break;
+            }else if(weight>59&&weight<76){
+                if (value>6.0){
+                    result=2;
+                }else if(value<0.5) {
+                    result=0;
+                }
+            }else if (weight>75.0){
+                if (value>7.5){
+                    result=2;
+                }else if(value<0.5) {
+                    result=0;
+                }
             }
-            default:{
-                if (weight<60){
-                    if (value<0.5) {
-                        result =0;
-                    }else if(value>4.5){
-                        result=2;
-                    }
-                }else if(weight>60&&weight<75){
-                    if (value<0.5){
-                        result=0;
-                    }else if(value>6.0){
-                        result=2;
-                    }
-                }else{
-                    if(value<0.5){
-                        result=0;
-                    }else if(value>7.0){
-                        result=2;
-                    }
+        }else{
+            if (weight<45.0){
+                if (value>3.0){
+                    result=2;
+                }else if(value<0.5) {
+                    result=0;
                 }
-                break;
+            }else if(weight>44&&weight<61){
+                if (value>4.2){
+                    result=2;
+                }else if(value<0.5) {
+                    result=0;
+                }
+            }else if (weight>60.0){
+                if (value>3.0){
+                    result=2;
+                }else if(value<0.5) {
+                    result=0;
+                }
             }
         }
         return result;
@@ -1022,57 +1006,51 @@ public class AppConfig {
     /***
      * 骨量
      * @param weight 体重
-     * @param sex
+     * @param nSex
      * @param value
      * @return
      */
-    public String getBoneTitle(double weight,int sex,double value){
+    public String getBoneTitle(double weight,int nSex,double value){
         String result="标准";
-        switch (sex){
-            case 0:
-            {
-                if (weight<45){
-                    if (value<0.5) {
-                        result = "偏低";
-                    }else if(value>3.0){
-                        result="偏高";
-                    }
-                }else if(weight>45&&weight<60){
-                    if (value<0.5){
-                        result="偏低";
-                    }else if(value>4.2){
-                        result="偏高";
-                    }
-                }else{
-                    if(value<0.5){
-                        result="偏低";
-                    }else if(value>3.0){
-                        result="偏高";
-                    }
+        if (nSex==0){
+            if (weight<60.0){
+                if (value>4.5){
+                    result="偏高";
+                }else if(value<0.5) {
+                    result="偏低";
                 }
-                break;
+            }else if(weight>59&&weight<76){
+                if (value>6.0){
+                    result="偏高";
+                }else if(value<0.5) {
+                    result="偏低";
+                }
+            }else if (weight>75.0){
+                if (value>7.5){
+                    result="偏高";
+                }else if(value<0.5) {
+                    result="偏低";
+                }
             }
-            default:{
-                if (weight<60){
-                    if (value<0.5) {
-                        result = "偏低";
-                    }else if(value>4.5){
-                        result="偏高";
-                    }
-                }else if(weight>60&&weight<75){
-                    if (value<0.5){
-                        result="偏低";
-                    }else if(value>6.0){
-                        result="偏高";
-                    }
-                }else{
-                    if(value<0.5){
-                        result="偏低";
-                    }else if(value>7.5){
-                        result="偏高";
-                    }
+        }else{
+            if (weight<45.0){
+                if (value>3.0){
+                    result="偏高";
+                }else if(value<0.5) {
+                    result="偏低";
                 }
-                break;
+            }else if(weight>44&&weight<61){
+                if (value>4.2){
+                    result="偏高";
+                }else if(value<0.5) {
+                    result="偏低";
+                }
+            }else if (weight>60.0){
+                if (value>3.0){
+                    result="偏高";
+                }else if(value<0.5) {
+                    result="偏低";
+                }
             }
         }
         return result;
@@ -1082,7 +1060,7 @@ public class AppConfig {
     public float getBoneRefer(int sex,double weight){
         float result=60.0f;
         switch (sex){
-            case 1:{
+            case 0:{
                 if (weight<60){
                     result=2.5f;
                 }else if(weight>60&&weight<75){
@@ -1107,27 +1085,23 @@ public class AppConfig {
     }
 
     public int getBMIStatus(double value){
-        if (value>=24&&value<=28)
-        {
-            return 2;
-        }else if(value>28){
-            return 3;
+        int result=1;
+        if (value>23.0) {
+            result=2;
         }else if(value<18.5){
-            return 0;
+            result=0;
         }
-        return 1;
+        return result;
     }
 
     public String getBMITitle(double value){
-        if (value>=24&&value<=28)
-        {
-            return "偏高";
-        }else if(value>28){
-            return "偏高";
+        String result="标准";
+        if (value>23.0) {
+            result="偏高";
         }else if(value<18.5){
-            return "偏瘦";
+            result="偏低";
         }
-        return "健康";
+        return result;
     }
 
     public float getBMIRefer(){
@@ -1136,73 +1110,61 @@ public class AppConfig {
 
     public int getWeightValue(int height,int sex,double value){
         int result=50;
-        switch (sex){
-            case 0:{
-                double val=(height-100)*0.9;
-                if (value<(val*1.1)){
-                    result=26;
-                }else if (value>(val*1.1)){
-                    result=76;
-                }
-
-                break;
-            }
-            default:{
-                double val=(height-100)*0.9;
-                if (value<(val*1.1)){
-                    result=25;
-                }else if (value>(val*1.1)){
-                    result=75;
-                }
-                break;
-            }
+        int w=height-105;
+        if (sex==1){
+            w=height-100;
+        }
+        if (value>(w*1.1)) {
+            result=85;
+        }else if (value<(w*0.9)){
+            result=25;
         }
         return result;
     }
 
-    public int getFatValue(int age,int sex,double value){
+    public int getFatValue(int nAge,int nSex,double value){
         int result=50;
-        switch (sex){
+        switch (nSex){
             case 0:{
-                if (age>=18&&age<=39){
-                    if (value<21.0){
+                if (nAge>17&&nAge<40){
+                    if (value>16){
+                        result=85;
+                    }else if(value<11) {
                         result=25;
-                    }else if (value>27.0){
-                        result=75;
                     }
-                }else if(age>=40&&age<=59){
-                    if (value<22.0){
-                        result=26;
-                    }else if (value>29.0){
-                        result=76;
+                }else if(nAge>39&&nAge<60){
+                    if (value>17){
+                        result=85;
+                    }else if(value<12) {
+                        result=25;
                     }
-                }else if(age>=60){
-                    if (value<23.0){
-                        result=26;
-                    }else if (value>29.0){
-                        result=80;
+                }else if(nAge>59){
+                    if (value>19){
+                        result=85;
+                    }else if(value<14) {
+                        result=25;
                     }
                 }
                 break;
             }
-            default:{
-                if (age>=18&&age<=39){
-                    if (value<11.0){
+            case 1:{
+                if (nAge>17&&nAge<40){
+                    if (value>27){
+                        result=85;
+                    }else if(value<21) {
                         result=25;
-                    }else if (value>17.0){
-                        result=70;
                     }
-                }else if(age>=40&&age<=59){
-                    if (value<12.0){
-                        result=23;
-                    }else if (value>17.0){
-                        result=76;
+                }else if(nAge>39&&nAge<60){
+                    if (value>28){
+                        result=85;
+                    }else if(value<22) {
+                        result=25;
                     }
-                }else if(age>=60){
-                    if (value<14.0){
-                        result=24;
-                    }else if (value>19.0){
-                        result=73;
+                }else if(nAge>59){
+                    if (value>29){
+                        result=85;
+                    }else if(value<23) {
+                        result=25;
                     }
                 }
                 break;
@@ -1220,19 +1182,19 @@ public class AppConfig {
     public int getSubFatValue(int sex,double value){
         int result=50;
         switch (sex){
-            case 0:{
+            case 1:{
                 if (value<18.5){
-                    result=24;
+                    result=25;
                 }else if(value>26.7){
-                    result=70;
+                    result=85;
                 }
                 break;
             }
             default:{
                 if (value<8.6){
-                    result=18;
+                    result=25;
                 }else if(value>16.7){
-                    result=72;
+                    result=85;
                 }
                 break;
             }
@@ -1246,43 +1208,34 @@ public class AppConfig {
      * @return
      */
     public int getVisFatValue(double value){
-        int result=20;
-        if (value>1&&value<9){
-            result=50;
-        }else if(value>10&&value<14){
-            result=75;
-        }else if(value>15){
-            result=90;
+        int result=50;
+        if (value<1){
+            result=25;
+        }else if(value>9){
+            result=85;
         }
         return result;
     }
 
     /**
      * 水分含量
-     * @param sex
+     * @param nSex
      * @param value
      * @return
      */
-    public int getWaterValue(int sex,double value){
+    public int getWaterValue(int nSex,double value){
         int result=50;
-        switch (sex){
-            case 0:
-            {
-                if (value<=45){
-                    result=25;
-                }else if(value>=60){
-                    result=78;
-                }
-                break;
+        if (nSex==0) {
+            if (value>65.0){
+                result=85;
+            }else if(value<55.0) {
+                result=25;
             }
-            default:
-            {
-                if (value<=55){
-                    result=22;
-                }else if(value>=65){
-                    result=80;
-                }
-                break;
+        }else {
+            if (value>60){
+                result=85;
+            }else  if (value<45) {
+                result=25;
             }
         }
         return result;
@@ -1291,126 +1244,149 @@ public class AppConfig {
 
     /***
      * 基础代谢率
-     * @param age 年龄
-     * @param sex  性别
+     * @param nAge 年龄
+     * @param nSex  性别
      * @param value 值
      * @return
      */
-    public int getBMRValue(int age,int sex,double value){
+    public int getBMRValue(int nAge,int nSex,double value){
         int result=50;
-        switch (sex){
+        switch (nSex){
             case 0:{
-                if (age>=18&&age<=29){
-                    if (value<23.6){
-                        result=23;
-                    }else if(value>23.6){
-                        result=80;
+                if(nAge<=17){
+                    if (value>1386){
+                        result=85;
+                    }else if(value<1134) {
+                        result=25;
                     }
-                }else if(age>=30&&age<=49){
-                    if (value<21.7){
-                        result=24;
-                    }else if(value>21.7){
-                        result=76;
+                }else if(nAge>17&&nAge<30){
+                    if (value>1716){
+                        result=85;
+                    }else if(value<1404) {
+                        result=25;
                     }
-                }else if(age>=50&&age<=69){
-                    if (value<20.7){
-                        result=28;
-                    }else if(value>20.7){
-                        result=71;
+                }else if(nAge>29&&nAge<50){
+                    if (value>1717){
+                        result=85;
+                    }else if(value<1405) {
+                        result=25;
                     }
-                }else if(age>=70){
-                    if (value<20.7){
-                        result=18;
-                    }else if(value>20.7){
-                        result=75;
+                }else if(nAge>49&&nAge<70){
+                    if (value>1656){
+                        result=85;
+                    }else if(value<1355) {
+                        result=25;
+                    }
+                }else{
+                    if (value>1538){
+                        result=85;
+                    }else if(value<1405) {
+                        result=25;
                     }
                 }
                 break;
             }
-            default:{
-                if (age>=18&&age<=29){
-                    if (value<24.0){
-                        result=28;
-                    }else if(value>24.0){
-                        result=79;
-                    }
-                }else if(age>=30&&age<=49){
-                    if (value<22.3){
+            case 1:{
+                if(nAge<=17){
+                    if (value>1392){
+                        result=85;
+                    }else if(value<1139) {
                         result=25;
-                    }else if(value>22.3){
-                        result=78;
                     }
-                }else if(age>=50&&age<=69){
-                    if (value<21.5){
-                        result=28;
-                    }else if(value>21.5){
-                        result=78;
+                }else if (nAge>17&&nAge<30){
+                    if (value>1428){
+                        result=85;
+                    }else if(value<1168) {
+                        result=25;
                     }
-                }else if(age>=70){
-                    if (value<21.5){
-                        result=28;
-                    }else if(value>21.5){
-                        result=72;
+                }else if(nAge>29&&nAge<50){
+                    if (value>1432){
+                        result=85;
+                    }else if(value<1172) {
+                        result=25;
+                    }
+                }else if(nAge>49&&nAge<70){
+                    if (value>1366){
+                        result=85;
+                    }else if(value<1118) {
+                        result=25;
+                    }
+                }else{
+                    if (value>1139){
+                        result=85;
+                    }else if(value<932) {
+                        result=25;
                     }
                 }
                 break;
             }
         }
-
         return result;
     }
 
     /***
      * 肌肉比例
-     * @param height 身高
+     * @param age 年龄
      * @param sex
      * @param value
      * @return
      */
-    public int getMuscleValue(int height,int sex,double value){
+    public int getMuscleValue(int age,int sex,double value){
         int result=50;
         switch (sex){
             case 0:
             {
-                if (height<150){
-                    if (value<29.1) {
-                        result=26;
-                    }else if(value>34.7){
-                        result=75;
+                if (age<16){
+                    if (value<46.0) {
+                        result = 25;
+                    }else if(value>51.0){
+                        result=85;
                     }
-                }else if(height>150&&height<160){
-                    if (value<32.9){
-                        result=22;
-                    }else if(value>37.5){
-                        result=78;
+                }else if(age>15&&age<31){
+                    if (value<45.0){
+                        result=25;
+                    }else if(value>50.0){
+                        result=85;
+                    }
+                }else if(age>30&&age<61){
+                    if (value<44.0){
+                        result=25;
+                    }else if(value>49.0){
+                        result=85;
                     }
                 }else{
-                    if(value<36.5){
-                        result=23;
-                    }else if(value>42.5){
-                        result=68;
+                    if(value<43.0){
+                        result=25;
+                    }else if(value>48.0){
+                        result=85;
                     }
                 }
                 break;
             }
             default:{
-                if (height<160){
-                    if (value<38.5) {
-                        result=19;
-                    }else if(value>46.5){
-                        result=68;
+                if (age<16){
+                    if (value<44.0) {
+                        result =25;
+                    }else if(value>49.0){
+                        result=85;
                     }
-                }else if(height>160&&height<170){
+                }else if(age>15&&age<31){
+                    if (value<43.0){
+                        result=25;
+                    }else if(value>48.0){
+                        result=85;
+                    }
+                }else if(age>30&&age<61){
                     if (value<42.0){
-                        result=28;
-                    }else if(value>52.4){
-                        result=78;
+                        result=25;
+                    }else if(value>47.0){
+                        result=85;
                     }
                 }else{
-                    if(value<49.4){
-                        result=28;
-                    }else if(value>59.4){
-                        result=68;
+                    if(value<41.0){
+                        result=25;
+                    }else if(value>46.0){
+                        result=85;
                     }
                 }
                 break;
@@ -1424,70 +1400,61 @@ public class AppConfig {
     /***
      * 骨量
      * @param weight 体重
-     * @param sex
+     * @param nSex
      * @param value
      * @return
      */
-    public int getBoneValue(double weight,int sex,double value){
+    public int getBoneValue(double weight,int nSex,double value){
         int result=50;
-        switch (sex){
-            case 0:
-            {
-                if (weight<45){
-                    if (value<1.8) {
-                        result=25;
-                    }else if(value>1.8){
-                        result=74;
-                    }
-                }else if(weight>45&&weight<60){
-                    if (value<2.2){
-                        result=28;
-                    }else if(value>2.2){
-                        result=68;
-                    }
-                }else{
-                    if(value<2.5){
-                        result=22;
-                    }else if(value>2.5){
-                        result=68;
-                    }
+        if (nSex==0){
+            if (weight<60.0){
+                if (value>4.5){
+                    result=85;
+                }else if(value<0.5) {
+                    result=25;
                 }
-                break;
+            }else if(weight>59&&weight<76){
+                if (value>6.0){
+                    result=85;
+                }else if(value<0.5) {
+                    result=25;
+                }
+            }else if (weight>75.0){
+                if (value>7.5){
+                    result=85;
+                }else if(value<0.5) {
+                    result=25;
+                }
             }
-            default:{
-                if (weight<60){
-                    if (value<2.5) {
-                        result=28;
-                    }else if(value>2.5){
-                        result=68;
-                    }
-                }else if(weight>60&&weight<75){
-                    if (value<2.9){
-                        result=28;
-                    }else if(value>2.9){
-                        result=68;
-                    }
-                }else{
-                    if(value<3.2){
-                        result=28;
-                    }else if(value>3.2){
-                        result=68;
-                    }
+        }else{
+            if (weight<45.0){
+                if (value>3.0){
+                    result=85;
+                }else if(value<0.5) {
+                    result=25;
                 }
-                break;
+            }else if(weight>44&&weight<61){
+                if (value>4.2){
+                    result=85;
+                }else if(value<0.5) {
+                    result=25;
+                }
+            }else if (weight>60.0){
+                if (value>3.0){
+                    result=85;
+                }else if(value<0.5) {
+                    result=25;
+                }
             }
         }
-
         return result;
     }
 
 
     public int getBMIValue(double value){
         int result=50;
-        if (value>=24&&value<=28){
-            result=65;
-        }else if(value>28){
-            result=90;
+        if (value>23){
+            result=85;
         }else if(value<18.5){
             result=25;
         }
@@ -1500,7 +1467,7 @@ public class AppConfig {
         int nHeight=entity.getHeight();
         int nSex=entity.getSex();
         int nAge=entity.getAge();
-        if (nSex==0){
+        if (nSex==1){
             w=nHeight-100;
         }
         double weightVal=100.0;
@@ -1531,7 +1498,7 @@ public class AppConfig {
 
         double fatVal=100.0;
         switch (nSex){
-            case 1:{
+            case 0:{
                 if (nAge>17&&nAge<40){
                     if (hisEntity.getFat()>16||hisEntity.getFat()<11) {
                         if (Math.abs(hisEntity.getFat()-16)<Math.abs(hisEntity.getFat()-11)){
@@ -1559,7 +1526,7 @@ public class AppConfig {
                 }
                 break;
             }
-            case 0:{
+            case 1:{
                 if (nAge>17&&nAge<40){
                     if (hisEntity.getFat()>27||hisEntity.getFat()<21) {
                         if (Math.abs(hisEntity.getFat()-27)<Math.abs(hisEntity.getFat()-21)){
@@ -1596,7 +1563,7 @@ public class AppConfig {
 
         double subFatVal=100.0;
         switch (nSex){
-            case 1: {
+            case 0: {
                 if (hisEntity.getSubFat()>16.7||hisEntity.getSubFat()<8.6) {
                     if (Math.abs(hisEntity.getSubFat()-16.7)<Math.abs(hisEntity.getSubFat()-8.6)){
                         subFatVal=100-Math.abs(hisEntity.getSubFat()-16.7)/16.7*100.0;
@@ -1606,7 +1573,7 @@ public class AppConfig {
                 }
                 break;
             }
-            case 0:{
+            case 1:{
                 if (hisEntity.getSubFat()>26.7||hisEntity.getSubFat()<18.5) {
                     if (Math.abs(hisEntity.getSubFat()-26.7)<Math.abs(hisEntity.getSubFat()-18.5)){
                         subFatVal=100-Math.abs(hisEntity.getSubFat()-26.7)/26.7*100.0;
@@ -1638,7 +1605,7 @@ public class AppConfig {
 
         double bmrVal=100.0;
         switch (nSex){
-            case 1:{
+            case 0:{
                 if(nAge<=17){
                     if (hisEntity.getBMR()>1386||hisEntity.getBMR()<1134) {
                         if (Math.abs(hisEntity.getBMR()-1386)<Math.abs(hisEntity.getBMR()-1134)) {
@@ -1683,7 +1650,7 @@ public class AppConfig {
                 }
                 break;
             }
-            case 0:{
+            case 1:{
                 if(nAge<=17){
                     if (hisEntity.getBMR()>1392||hisEntity.getBMR()<1139) {
                         if (Math.abs(hisEntity.getBMR()-1392)<Math.abs(hisEntity.getBMR()-1139)) {
@@ -1734,7 +1701,7 @@ public class AppConfig {
         System.out.println("BMR="+bmrVal);
 
         double waterVal=100.0;
-        if (nSex==1) {
+        if (nSex==0) {
             if (hisEntity.getWater()>65.0||hisEntity.getWater()<55.0) {
                 if (Math.abs(hisEntity.getWater() - 65.0) < Math.abs(hisEntity.getWater() - 55.0)) {
                     waterVal=100-Math.abs(hisEntity.getWater()-65.0)/65.0*100.0;
@@ -1757,7 +1724,7 @@ public class AppConfig {
         System.out.println("Water="+waterVal);
 
         double boneVal=100.0;
-        if (nSex==1){
+        if (nSex==0){
             if (hisEntity.getWeight()<60.0){
                 if (hisEntity.getBone()>4.5||hisEntity.getBone()<0.5) {
                     if (Math.abs(hisEntity.getBone()-4.5)<Math.abs(hisEntity.getBone()-0.5)){
@@ -1823,326 +1790,69 @@ public class AppConfig {
 
     public int getSholaiSuc(AccountEntity entity,WeightHisEntity hisEntity){
         int suc=0;
-        int w=entity.getHeight()-105;
-        int nHeight=entity.getHeight();
-        int nSex=entity.getSex();
-        int nAge=entity.getAge();
-        if (nSex==0){
-            w=nHeight-100;
-        }
-        double weightVal=100.0;
-        if (hisEntity.getWeight()>(w*1.1)||hisEntity.getWeight()<(w*0.9)) {
-            if ((hisEntity.getWeight()-(w*1.1))<(hisEntity.getWeight()-(w*0.9))) {
-                weightVal=100-Math.abs(hisEntity.getWeight()-(w*1.1))/(w*1.1)*100.0;
-            }else{
-                weightVal=100-Math.abs(hisEntity.getWeight()-(w*0.9))/(w*0.9)*100.0;
-            }
-        }
-        if (weightVal>80.0){
+        int wState=getWeightStatus(entity.getHeight(),entity.getSex(),hisEntity.getWeight());
+        if (wState==1){
             suc++;
         }
-        System.out.println("Weight="+weightVal);
-
-        double bmiVal=100.0;
-        if (hisEntity.getBmi()>23.0||hisEntity.getBmi()<18.5) {
-            if (Math.abs(hisEntity.getBmi()-23.0)<Math.abs(hisEntity.getBmi()-18.5)){
-                bmiVal=100-Math.abs(hisEntity.getBmi()-23.0)/23.0*100.0;
-            }else{
-                bmiVal=100-Math.abs(hisEntity.getBmi()-18.5)/18.5*100.0;
-            }
-        }
-        if (bmiVal>80.0){
+        int  bmiState=getBMIStatus(hisEntity.getBmi());
+        if (bmiState==1){
             suc++;
         }
-        System.out.println("Bmi="+bmiVal);
-
-        double fatVal=100.0;
-        switch (nSex){
-            case 1:{
-                if (nAge>17&&nAge<40){
-                    if (hisEntity.getFat()>16||hisEntity.getFat()<11) {
-                        if (Math.abs(hisEntity.getFat()-16)<Math.abs(hisEntity.getFat()-11)){
-                            fatVal=100-Math.abs(hisEntity.getFat()-16)/16.0*100.0;
-                        }else{
-                            fatVal=100-Math.abs(hisEntity.getFat()-11)/11.0*100.0;
-                        }
-                    }
-                }else if(nAge>39&&nAge<60){
-                    if (hisEntity.getFat()>17||hisEntity.getFat()<12) {
-                        if (Math.abs(hisEntity.getFat()-17)<Math.abs(hisEntity.getFat()-12)){
-                            fatVal=100-Math.abs(hisEntity.getFat()-17)/17.0*100.0;
-                        }else{
-                            fatVal=100-Math.abs(hisEntity.getFat()-12)/12.0*100.0;
-                        }
-                    }
-                }else if(nAge>59){
-                    if (hisEntity.getFat()>19||hisEntity.getFat()<14) {
-                        if (Math.abs(hisEntity.getFat()-19)<Math.abs(hisEntity.getFat()-14)){
-                            fatVal=100-Math.abs(hisEntity.getFat()-19)/19.0*100.0;
-                        }else{
-                            fatVal=100-Math.abs(hisEntity.getFat()-14)/14.0*100.0;
-                        }
-                    }
-                }
-                break;
-            }
-            case 0:{
-                if (nAge>17&&nAge<40){
-                    if (hisEntity.getFat()>27||hisEntity.getFat()<21) {
-                        if (Math.abs(hisEntity.getFat()-27)<Math.abs(hisEntity.getFat()-21)){
-                            fatVal=100-Math.abs(hisEntity.getFat()-27)/27.0*100.0;
-                        }else{
-                            fatVal=100-Math.abs(hisEntity.getFat() - 21)/21.0*100.0;
-                        }
-                    }
-                }else if(nAge>39&&nAge<60){
-                    if (hisEntity.getFat()>28||hisEntity.getFat()<22) {
-                        if (Math.abs(hisEntity.getFat()-28)<Math.abs(hisEntity.getFat()-22)){
-                            fatVal=100-Math.abs(hisEntity.getFat()-28)/28.0*100.0;
-                        }else{
-                            fatVal=100-Math.abs(hisEntity.getFat()-22)/22.0*100.0;
-                        }
-                    }
-                }else if(nAge>59){
-                    if (hisEntity.getFat()>29||hisEntity.getFat()<23) {
-                        if (Math.abs(hisEntity.getFat()-29)<Math.abs(hisEntity.getFat()-23)){
-                            fatVal=100-Math.abs(hisEntity.getFat()-29)/29.0*100.0;
-                        }else{
-                            fatVal=100-Math.abs(hisEntity.getFat()-23)/23.0*100.0;
-                        }
-                    }
-                }
-                break;
-            }
-        }
-        if (fatVal>80.0){
+        int fatState=getFatStatus(entity.getAge(),entity.getSex(),hisEntity.getFat());
+        if (fatState==1){
             suc++;
         }
-        System.out.println("Fat="+fatVal);
-
-
-        double subFatVal=100.0;
-        switch (nSex){
-            case 1: {
-                if (hisEntity.getSubFat()>16.7||hisEntity.getSubFat()<8.6) {
-                    if (Math.abs(hisEntity.getSubFat()-16.7)<Math.abs(hisEntity.getSubFat()-8.6)){
-                        subFatVal=100-Math.abs(hisEntity.getSubFat()-16.7)/16.7*100.0;
-                    }else{
-                        subFatVal=100-Math.abs(hisEntity.getSubFat()-8.6)/8.6*100.0;
-                    }
-                }
-                break;
-            }
-            case 0:{
-                if (hisEntity.getSubFat()>26.7||hisEntity.getSubFat()<18.5) {
-                    if (Math.abs(hisEntity.getSubFat()-26.7)<Math.abs(hisEntity.getSubFat()-18.5)){
-                        subFatVal=100-Math.abs(hisEntity.getSubFat()-26.7)/26.7*100.0;
-                    }else{
-                        subFatVal=100-Math.abs(hisEntity.getSubFat()-18.5)/18.5*100.0;
-                    }
-                }
-                break;
-            }
-        }
-        if (subFatVal>80.0){
+        int subFatState=getSubFatStatus(entity.getSex(),hisEntity.getSubFat());
+        if (subFatState==1){
             suc++;
         }
-        System.out.println("SubFat="+subFatVal);
-
-
-        double visFatVal=100.0;
-        if (hisEntity.getVisFat()>9||hisEntity.getVisFat()<1) {
-            if (Math.abs(hisEntity.getVisFat()-9)<Math.abs(hisEntity.getVisFat()-1)){
-                visFatVal=100-Math.abs(hisEntity.getVisFat()-9.0)/9.0*100.0;
-            }else{
-                visFatVal=100-Math.abs(hisEntity.getVisFat()-1.0)/1.0*100.0;
-            }
-        }
-        if (visFatVal>80.0){
+        int visFatState=getVisFatStatus(hisEntity.getVisFat());
+        if (visFatState==1){
             suc++;
         }
-        System.out.println("VisFat="+visFatVal);
-
-        double bmrVal=100.0;
-        switch (nSex){
-            case 1:{
-                if(nAge<=17){
-                    if (hisEntity.getBMR()>1386||hisEntity.getBMR()<1134) {
-                        if (Math.abs(hisEntity.getBMR()-1386)<Math.abs(hisEntity.getBMR()-1134)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1386)/1386*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1134)/1134*100.0;
-                        }
-                    }
-
-                }else if(nAge>17&&nAge<30){
-                    if (hisEntity.getBMR()>1716||hisEntity.getBMR()<1404) {
-                        if (Math.abs(hisEntity.getBMR()-1716)<Math.abs(hisEntity.getBMR()-1404)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1716)/1716*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1404)/1404*100.0;
-                        }
-                    }
-                }else if(nAge>29&&nAge<50){
-                    if (hisEntity.getBMR()>1717||hisEntity.getBMR()<1405) {
-                        if (Math.abs(hisEntity.getBMR()-1717)<Math.abs(hisEntity.getBMR()-1405)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1717)/1717*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1405)/1405*100.0;
-                        }
-                    }
-                }else if(nAge>49&&nAge<70){
-                    if (hisEntity.getBMR()>1656||hisEntity.getBMR()<1355) {
-                        if (Math.abs(hisEntity.getBMR()-1656)<Math.abs(hisEntity.getBMR()-1355)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1656)/1656*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1355)/1355*100.0;
-                        }
-                    }
-                }else{
-                    if (hisEntity.getBMR()>1538||hisEntity.getBMR()<1405) {
-                        if (Math.abs(hisEntity.getBMR()-1538)<Math.abs(hisEntity.getBMR()-1258)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1538)/1538*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1258)/1258*100.0;
-                        }
-                    }
-                }
-                break;
-            }
-            case 0:{
-                if(nAge<=17){
-                    if (hisEntity.getBMR()>1392||hisEntity.getBMR()<1139) {
-                        if (Math.abs(hisEntity.getBMR()-1392)<Math.abs(hisEntity.getBMR()-1139)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1392)/1392*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1139)/1139*100.0;
-                        }
-                    }
-                }else if (nAge>17&&nAge<30){
-                    if (hisEntity.getBMR()>1428||hisEntity.getBMR()<1168) {
-                        if (Math.abs(hisEntity.getBMR()-1428)<Math.abs(hisEntity.getBMR()-1168)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1428)/1428*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1168)/1168*100.0;
-                        }
-                    }
-                }else if(nAge>29&&nAge<50){
-                    if (hisEntity.getBMR()>1432||hisEntity.getBMR()<1172) {
-                        if (Math.abs(hisEntity.getBMR()-1432)<Math.abs(hisEntity.getBMR()-1172)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1432)/1432*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1172)/1172*100.0;
-                        }
-                    }
-                }else if(nAge>49&&nAge<70){
-                    if (hisEntity.getBMR()>1366||hisEntity.getBMR()<1118) {
-                        if (Math.abs(hisEntity.getBMR()-1366)<Math.abs(hisEntity.getBMR()-1118)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1366)/1366*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1118)/1118*100.0;
-                        }
-                    }
-                }else{
-                    if (hisEntity.getBMR()>1139||hisEntity.getBMR()<932) {
-                        if (Math.abs(hisEntity.getBMR()-1139)<Math.abs(hisEntity.getBMR()-932)) {
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-1139)/1139*100.0;
-                        }else{
-                            bmrVal=100-Math.abs(hisEntity.getBMR()-932)/932*100.0;
-                        }
-                    }
-                }
-                break;
-            }
-        }
-        if (bmrVal>80.0){
+        int bmrState=getBMRStatus(entity.getAge(),entity.getSex(),hisEntity.getBMR());
+        if (bmrState==1){
             suc++;
         }
-        System.out.println("BMR="+bmrVal);
-
-        double waterVal=100.0;
-        if (nSex==1) {
-            if (hisEntity.getWater()>65.0||hisEntity.getWater()<55.0) {
-                if (Math.abs(hisEntity.getWater() - 65.0) < Math.abs(hisEntity.getWater() - 55.0)) {
-                    waterVal=100-Math.abs(hisEntity.getWater()-65.0)/65.0*100.0;
-                }else{
-                    waterVal=100-Math.abs(hisEntity.getWater()-55.0)/55.0*100.0;
-                }
-            }
-        }else {
-            if (hisEntity.getWater()>60||hisEntity.getWater()<45) {
-                if (Math.abs(hisEntity.getWater()-60.0)<Math.abs(hisEntity.getWater()-45.0)){
-                    waterVal=100-Math.abs(hisEntity.getWater()-60.0)/60.0*100.0;
-                }else{
-                    waterVal=100-Math.abs(hisEntity.getWater()-45.0)/45.0*100.0;
-                }
-            }
-        }
-        if (weightVal>80.0){
+        int waterState=getWaterStatus(entity.getSex(),hisEntity.getWater());
+        if (waterState==1){
             suc++;
         }
-        System.out.println("Water="+waterVal);
-
-        double boneVal=100.0;
-        if (nSex==1){
-            if (hisEntity.getWeight()<60.0){
-                if (hisEntity.getBone()>4.5||hisEntity.getBone()<0.5) {
-                    if (Math.abs(hisEntity.getBone()-4.5)<Math.abs(hisEntity.getBone()-0.5)){
-                        boneVal=100-Math.abs(hisEntity.getBone()-4.5)/4.5*100.0;
-                    }else{
-                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
-                    }
-                }
-            }else if(hisEntity.getWeight()>59&&hisEntity.getWeight()<76){
-                if (hisEntity.getBone()>6.0||hisEntity.getBone()<0.5) {
-                    if (Math.abs(hisEntity.getBone()-6.0)<Math.abs(hisEntity.getBone()-0.5)){
-                        boneVal=100-Math.abs(hisEntity.getBone()-6.0)/6.0*100.0;
-                    }else{
-                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
-                    }
-                }
-            }else if (hisEntity.getWeight()>75.0){
-                if (hisEntity.getBone()>7.5||hisEntity.getBone()<0.5) {
-                    if (Math.abs(hisEntity.getBone()-7.5)<Math.abs(hisEntity.getBone()-0.5)){
-                        boneVal=100-Math.abs(hisEntity.getBone()-7.5)/7.5*100.0;
-                    }else{
-                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
-                    }
-                }
-            }
-        }else{
-            if (hisEntity.getWeight()<45.0){
-                if (hisEntity.getBone()>3.0||hisEntity.getBone()<0.5) {
-                    if (Math.abs(hisEntity.getBone()-3.0)<Math.abs(hisEntity.getBone()-0.5)){
-                        boneVal=100-Math.abs(hisEntity.getBone()-3.0)/3.0*100.0;
-                    }else{
-                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
-                    }
-                }
-            }else if(hisEntity.getWeight()>44&&hisEntity.getWeight()<61){
-                if (hisEntity.getBone()>4.2||hisEntity.getBone()<0.5) {
-                    if (Math.abs(hisEntity.getBone()-4.2)<Math.abs(hisEntity.getBone()-0.5)){
-                        boneVal=100-Math.abs(hisEntity.getBone()-4.2)/4.2*100.0;
-                    }else{
-                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
-                    }
-                }
-            }else if (hisEntity.getWeight()>60.0){
-                if (hisEntity.getBone()>3.0||hisEntity.getBone()<0.5) {
-                    if (Math.abs(hisEntity.getBone()-3.0)<Math.abs(hisEntity.getBone()-0.5)){
-                        boneVal=100-Math.abs(hisEntity.getBone()-3.0)/3.0*100.0;
-                    }else{
-                        boneVal=100-Math.abs(hisEntity.getBone()-0.5)/0.5*100.0;
-                    }
-                }
-            }
-        }
-        if (boneVal>80.0){
+        int muscleState=getMuscleStatus(entity.getAge(),entity.getSex(),hisEntity.getMuscle());
+        if (muscleState==1){
             suc++;
         }
-        System.out.println("Bone="+boneVal);
+        int boneState=getBoneStatus(hisEntity.getWeight(),entity.getSex(),hisEntity.getBone());
+        if (boneState==1){
+            suc++;
+        }
 
         return suc;
+    }
+
+    public  int countBodyAge(double weight,double fat,int height,int age,int sex){
+        double bsa=(Math.pow(weight,0.444)*Math.pow(height,0.663))*88.83/10000;
+        System.out.println("bsa====>"+bsa);
+        double k=0.2;
+        if (sex==1){
+            k=0.1;
+        }
+        double wlbm=(1-fat/100.0)*weight;
+
+        System.out.print("wlbm ====>"+wlbm);
+        double ta=(fat-10.74)/0.2589;
+        if (sex==1){
+            ta=(fat-21.99)/0.097;
+        }
+        System.out.print("ta ====>"+ta);
+        double wb=(34.668-(wlbm/bsa))/0.1;
+        if (sex==1){
+            wb=(28.746-(wlbm/bsa))/0.032;
+        }
+        System.out.print("wlbm/bsa ===>"+wb);
+        double bodyage=(1-k)*age+k*(wb+ta)/2;
+        System.out.print("bodyage "+bodyage);
+        return (int)bodyage;
     }
 
 }

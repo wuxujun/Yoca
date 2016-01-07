@@ -143,6 +143,7 @@ public class InfoFragment extends BaseFragment {
             List<String[]> results=rawResults.getResults();
             if (results.size()>0) {
                 items.clear();
+                groups.clear();
                 String[] resultArray=results.get(0);
                 for (int i=0;i<resultArray.length;i++){
                     if (!StringUtil.isEmpty(resultArray[i])){

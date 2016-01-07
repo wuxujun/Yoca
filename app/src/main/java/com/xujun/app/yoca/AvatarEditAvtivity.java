@@ -148,6 +148,16 @@ public class AvatarEditAvtivity extends BaseActivity{
         loadHomeTarget();
     }
 
+    private void updateHomeTargetValue(int targetType,String value,String valueTitle,int valueStatus,int progres){
+        try{
+            Dao<HomeTargetEntity, Integer> homeTargetDao= getDatabaseHelper().getHomeTargetDao();
+            homeTargetDao.updateRaw("UPDATE `t_home_target` SET value ="+value+",valueTitle='"+valueTitle+"',valueStatus="+valueStatus+",progres="+progres+" WHERE aid="+localAccountEntity.getId()+" and type="+targetType+";");
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     private void saveAvatar(){
         String bust="0";
         if (!StringUtil.isEmpty(bustET.getText().toString())){
@@ -254,7 +264,34 @@ public class AvatarEditAvtivity extends BaseActivity{
     }
 
     private void loadHomeTarget(){
+        AppConfig appConfig=AppConfig.getAppConfig(mContext);
+        int sex=localAccountEntity.getSex();
+        int age=localAccountEntity.getAge();
+        int height=localAccountEntity.getHeight();
+
         try {
+            Dao<WeightHisEntity,Integer> weightHisEntityDao=getDatabaseHelper().getWeightHisEntityDao();
+            QueryBuilder<WeightHisEntity, Integer> weightHisQueryBuilder = weightHisEntityDao.queryBuilder();
+            weightHisQueryBuilder.where().eq("wid", localWeightId);
+            WeightHisEntity weightHisEntity=weightHisQueryBuilder.queryForFirst();
+            if (weightHisEntity!=null){
+                updateHomeTargetValue(2,StringUtil.doubleToStringOne(weightHisEntity.getBmi()), appConfig.getBMITitle(weightHisEntity.getBmi()), appConfig.getBMIStatus(weightHisEntity.getBmi()), appConfig.getBMIValue(weightHisEntity.getBmi()));
+                updateHomeTargetValue(1,StringUtil.doubleToStringOne(weightHisEntity.getWeight()),appConfig.getWeightTitle(height, sex, weightHisEntity.getWeight()),appConfig.getWeightStatus(height, sex, weightHisEntity.getWeight()),appConfig.getWeightValue(height, sex, weightHisEntity.getWeight()));
+                updateHomeTargetValue(3,StringUtil.doubleToStringOne(weightHisEntity.getFat()),appConfig.getFatTitle(age, sex, weightHisEntity.getFat()),appConfig.getFatStatus(age, sex, weightHisEntity.getFat()),appConfig.getFatValue(age, sex, weightHisEntity.getFat()));
+                updateHomeTargetValue(4,StringUtil.doubleToStringOne(weightHisEntity.getSubFat()),appConfig.getSubFatTitle(sex, weightHisEntity.getSubFat()),appConfig.getSubFatStatus(sex, weightHisEntity.getSubFat()),appConfig.getSubFatValue(sex, weightHisEntity.getSubFat()));
+                updateHomeTargetValue(5,StringUtil.doubleToStringOne(weightHisEntity.getVisFat()),appConfig.getVisFatTitle(weightHisEntity.getVisFat()),appConfig.getVisFatStatus(weightHisEntity.getVisFat()),appConfig.getVisFatValue(weightHisEntity.getVisFat()));
+                updateHomeTargetValue(7,StringUtil.doubleToStringOne(weightHisEntity.getWater()),appConfig.getWaterTitle(sex, weightHisEntity.getWater()),appConfig.getWaterStatus(sex, weightHisEntity.getWater()),appConfig.getWaterValue(sex, weightHisEntity.getWater()));
+                updateHomeTargetValue(6,StringUtil.doubleToStringOne(weightHisEntity.getBMR()),appConfig.getBMRTitle(age, sex, weightHisEntity.getBMR()),appConfig.getBMRStatus(age, sex, weightHisEntity.getBMR()),appConfig.getBMRValue(age, sex, weightHisEntity.getBMR()));
+                if(weightHisEntity.getBodyAge()!=null) {
+                    updateHomeTargetValue(11, StringUtil.doubleToStringOne(weightHisEntity.getBodyAge()), "标准", 1, 50);
+                }
+                updateHomeTargetValue(8,StringUtil.doubleToStringOne(weightHisEntity.getMuscle()),appConfig.getMuscleTitle(age, sex, weightHisEntity.getMuscle()),appConfig.getMuscleStatus(age, sex, weightHisEntity.getMuscle()),appConfig.getMuscleValue(age, sex, weightHisEntity.getMuscle()));
+                updateHomeTargetValue(9,StringUtil.doubleToStringOne(weightHisEntity.getBone()),appConfig.getBoneTitle(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()),appConfig.getBoneStatus(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()),appConfig.getBoneValue(weightHisEntity.getWeight(), sex, weightHisEntity.getBone()));
+                if(weightHisEntity.getProtein()!=null) {
+                    updateHomeTargetValue(10, StringUtil.doubleToStringOne(weightHisEntity.getProtein()), "标准", 1, 50);
+                }
+            }
+
             items.clear();
             List<HomeTargetEntity> homeTargetEntityList = getDatabaseHelper().getHomeTargetDao().queryBuilder().orderBy("type",true).where().eq("aid", localAccountEntity.getId()).and().notIn("type",0).query();
             if (homeTargetEntityList.size()>0) {
