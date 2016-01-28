@@ -178,6 +178,16 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                             addHomeTargetEntity(entity);
                         }
                     }
+                }else{
+                    for (int i1=0;i1<homeTargetEntityList.size();i1++)
+                    {
+                        HomeTargetEntity entity=homeTargetEntityList.get(i1);
+                        if (entity!=null){
+                            entity.setUnit(getTargetUnit(entity.getType()));
+                            addHomeTargetEntity(entity);
+                        }
+                    }
+
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -194,6 +204,21 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
         }catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    private String getTargetUnit(int type){
+        try{
+            Dao<TargetEntity,Integer> dao=getDatabaseHelper().getTargetInfoDao();
+            QueryBuilder<TargetEntity, Integer> targetQueryBuilder = dao.queryBuilder();
+            targetQueryBuilder.where().eq("type", type);
+            List<TargetEntity> list = targetQueryBuilder.query();
+            if (list.size()>0){
+                return ((TargetEntity)list.get(0)).getUnit();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return "0";
     }
 
     @Override
@@ -326,7 +351,7 @@ public class ContentFragment extends BaseFragment implements View.OnClickListene
                 updateHomeTargetValue(1,StringUtil.doubleToStringOne(weightHisEntity.getWeight()),appConfig.getWeightTitle(height, sex, weightHisEntity.getWeight()),appConfig.getWeightStatus(height, sex, weightHisEntity.getWeight()),appConfig.getWeightValue(height, sex, weightHisEntity.getWeight()));
                 updateHomeTargetValue(3,StringUtil.doubleToStringOne(weightHisEntity.getFat()),appConfig.getFatTitle(age, sex, weightHisEntity.getFat()),appConfig.getFatStatus(age, sex, weightHisEntity.getFat()),appConfig.getFatValue(age, sex, weightHisEntity.getFat()));
                 updateHomeTargetValue(4,StringUtil.doubleToStringOne(weightHisEntity.getSubFat()),appConfig.getSubFatTitle(sex, weightHisEntity.getSubFat()),appConfig.getSubFatStatus(sex, weightHisEntity.getSubFat()),appConfig.getSubFatValue(sex, weightHisEntity.getSubFat()));
-                updateHomeTargetValue(5,StringUtil.doubleToStringOne(weightHisEntity.getVisFat()),appConfig.getVisFatTitle(weightHisEntity.getVisFat()),appConfig.getVisFatStatus(weightHisEntity.getVisFat()),appConfig.getVisFatValue(weightHisEntity.getVisFat()));
+                updateHomeTargetValue(5,StringUtil.doubleToString(Math.ceil(weightHisEntity.getVisFat())),appConfig.getVisFatTitle(weightHisEntity.getVisFat()),appConfig.getVisFatStatus(weightHisEntity.getVisFat()),appConfig.getVisFatValue(weightHisEntity.getVisFat()));
                 updateHomeTargetValue(7,StringUtil.doubleToStringOne(weightHisEntity.getWater()),appConfig.getWaterTitle(sex, weightHisEntity.getWater()),appConfig.getWaterStatus(sex, weightHisEntity.getWater()),appConfig.getWaterValue(sex, weightHisEntity.getWater()));
                 updateHomeTargetValue(6,StringUtil.doubleToStringOne(weightHisEntity.getBMR()),appConfig.getBMRTitle(age, sex, weightHisEntity.getBMR()),appConfig.getBMRStatus(age, sex, weightHisEntity.getBMR()),appConfig.getBMRValue(age, sex, weightHisEntity.getBMR()));
                 if(weightHisEntity.getBodyAge()!=null) {

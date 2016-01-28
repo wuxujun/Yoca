@@ -191,7 +191,6 @@ public class NotifyService extends Service {
             size=12;
         }
         for (int i=0;i<size;i++){
-            Log.e(TAG,"insertHealthData  aid="+aid+"  dataType:"+dType+"   idx="+i+"  "+getHealthTime(dType,i));
             String time=getHealthTime(dType,i);
             int count=getHealthData(aid,time,dType);
             if (count==0){
@@ -219,7 +218,6 @@ public class NotifyService extends Service {
             if (list.size()>0){
                 HealthEntity entity=list.get(0);
                 hid=entity.getHid();
-                Log.e(TAG,"hid=========>"+hid);
             }
 
             Dao<WeightHisEntity, Integer> dao = getDatabaseHelper().getWeightHisEntityDao();
@@ -249,11 +247,11 @@ public class NotifyService extends Service {
                         healthEntity.setProtein("0");
                         healthEntity.setBodyAge("0");
                     }else {
-                        Log.e(TAG, "pickTime " + time + "  " + resultArray[0] + "  " + resultArray[1] + "  " + resultArray[2] + "  " + resultArray[3] + "  " + resultArray[4] + "  " + resultArray[5] + "  " + resultArray[6] + "  " + resultArray[7] + "  " + resultArray[8] + "  " + resultArray[9] + "  " + resultArray[10] + "  " + resultArray[11]);
-                        Log.e(TAG, "pickTime:" + time + "  " + StringUtil.toDouble(resultArray[0]) / count + "  " + StringUtil.toDouble(resultArray[1]) / count + "  " + StringUtil.toDouble(resultArray[2]) / count +
-                                "  " + StringUtil.toDouble(resultArray[3]) / count + "  " + StringUtil.toDouble(resultArray[4]) / count + "  " + StringUtil.toDouble(resultArray[5]) / count +
-                                "  " + StringUtil.toDouble(resultArray[6]) / count + "  " + StringUtil.toDouble(resultArray[7]) / count + "  " + StringUtil.toDouble(resultArray[8]) / count +
-                                "  " + StringUtil.toDouble(resultArray[9]) / count + "  " + StringUtil.toDouble(resultArray[10]) / count + "  " + StringUtil.toDouble(resultArray[11]) / count);
+//                        Log.e(TAG, "pickTime " + time + "  " + resultArray[0] + "  " + resultArray[1] + "  " + resultArray[2] + "  " + resultArray[3] + "  " + resultArray[4] + "  " + resultArray[5] + "  " + resultArray[6] + "  " + resultArray[7] + "  " + resultArray[8] + "  " + resultArray[9] + "  " + resultArray[10] + "  " + resultArray[11]);
+//                        Log.e(TAG, "pickTime:" + time + "  " + StringUtil.toDouble(resultArray[0]) / count + "  " + StringUtil.toDouble(resultArray[1]) / count + "  " + StringUtil.toDouble(resultArray[2]) / count +
+//                                "  " + StringUtil.toDouble(resultArray[3]) / count + "  " + StringUtil.toDouble(resultArray[4]) / count + "  " + StringUtil.toDouble(resultArray[5]) / count +
+//                                "  " + StringUtil.toDouble(resultArray[6]) / count + "  " + StringUtil.toDouble(resultArray[7]) / count + "  " + StringUtil.toDouble(resultArray[8]) / count +
+//                                "  " + StringUtil.toDouble(resultArray[9]) / count + "  " + StringUtil.toDouble(resultArray[10]) / count + "  " + StringUtil.toDouble(resultArray[11]) / count);
                         healthEntity.setSholai("0");
                         healthEntity.setWeight(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[1]) / count));
                         healthEntity.setBmi(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[2]) / count));
@@ -310,11 +308,11 @@ public class NotifyService extends Service {
                         healthEntity.setProtein("0");
                         healthEntity.setBodyAge("0");
                     }else {
-                        Log.e(TAG, "pickTime " + time + "  " + resultArray[0] + "  " + resultArray[1] + "  " + resultArray[2] + "  " + resultArray[3] + "  " + resultArray[4] + "  " + resultArray[5] + "  " + resultArray[6] + "  " + resultArray[7] + "  " + resultArray[8] + "  " + resultArray[9] + "  " + resultArray[10] + "  " + resultArray[11]);
-                        Log.e(TAG, "pickTime:" + time + "  " + StringUtil.toDouble(resultArray[0]) / count + "  " + StringUtil.toDouble(resultArray[1]) / count + "  " + StringUtil.toDouble(resultArray[2]) / count +
-                                "  " + StringUtil.toDouble(resultArray[3]) / count + "  " + StringUtil.toDouble(resultArray[4]) / count + "  " + StringUtil.toDouble(resultArray[5]) / count +
-                                "  " + StringUtil.toDouble(resultArray[6]) / count + "  " + StringUtil.toDouble(resultArray[7]) / count + "  " + StringUtil.toDouble(resultArray[8]) / count +
-                                "  " + StringUtil.toDouble(resultArray[9]) / count + "  " + StringUtil.toDouble(resultArray[10]) / count + "  " + StringUtil.toDouble(resultArray[11]) / count);
+//                        Log.e(TAG, "pickTime " + time + "  " + resultArray[0] + "  " + resultArray[1] + "  " + resultArray[2] + "  " + resultArray[3] + "  " + resultArray[4] + "  " + resultArray[5] + "  " + resultArray[6] + "  " + resultArray[7] + "  " + resultArray[8] + "  " + resultArray[9] + "  " + resultArray[10] + "  " + resultArray[11]);
+//                        Log.e(TAG, "pickTime:" + time + "  " + StringUtil.toDouble(resultArray[0]) / count + "  " + StringUtil.toDouble(resultArray[1]) / count + "  " + StringUtil.toDouble(resultArray[2]) / count +
+//                                "  " + StringUtil.toDouble(resultArray[3]) / count + "  " + StringUtil.toDouble(resultArray[4]) / count + "  " + StringUtil.toDouble(resultArray[5]) / count +
+//                                "  " + StringUtil.toDouble(resultArray[6]) / count + "  " + StringUtil.toDouble(resultArray[7]) / count + "  " + StringUtil.toDouble(resultArray[8]) / count +
+//                                "  " + StringUtil.toDouble(resultArray[9]) / count + "  " + StringUtil.toDouble(resultArray[10]) / count + "  " + StringUtil.toDouble(resultArray[11]) / count);
                         healthEntity.setSholai("0");
                         healthEntity.setWeight(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[1]) / count));
                         healthEntity.setBmi(StringUtil.doubleToStringOne(StringUtil.toDouble(resultArray[2]) / count));
@@ -420,37 +418,43 @@ public class NotifyService extends Service {
     private Runnable sync_last=new Runnable() {
         @Override
         public void run() {
-            try{
-                Dao<AccountEntity,Integer> dao=getDatabaseHelper().getAccountEntityDao();
-                QueryBuilder<AccountEntity,Integer> queryBuilder=dao.queryBuilder();
-                Where<AccountEntity,Integer> where=queryBuilder.where();
-                where.or(where.eq("type",0),where.eq("type",1));
-                queryBuilder.orderBy("type", true);
-                PreparedQuery<AccountEntity> preparedQuery=queryBuilder.prepare();
-                List<AccountEntity> lists=dao.query(preparedQuery);
-                if (lists.size()>0){
-                    for (int i=0;i<lists.size();i++){
-                        AccountEntity accountEntity=lists.get(i);
-                        int count=getWeightHisForAccount(accountEntity);
-                        if (count==0){
-                            Map<String, Object> params = new HashMap<String, Object>();
-                            params.put("syncid", "0");
-                            params.put("uid", accountEntity.getId());
-                            params.put("imei", mAppContext.getIMSI());
-                            request(URLs.SYNC_WEIGHT_URL, JsonUtil.toJson(params).toString(), null);
-                            request(URLs.SYNC_WEIGHT_HIS_URL, JsonUtil.toJson(params).toString(),null);
-                        }
-                    }
+            try {
+                int count = getAllWeightHis();
+                if (count == 0) {
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("syncid", "0");
+                    params.put("start","0");
+                    params.put("end","20");
+                    params.put("uid", mAppContext.getProperty(AppConfig.CONF_USER_UID));
+                    params.put("imei", mAppContext.getIMSI());
+                    request(URLs.SYNC_WEIGHT_URL, JsonUtil.toJson(params).toString(), null);
+                    request(URLs.SYNC_WEIGHT_HIS_URL, JsonUtil.toJson(params).toString(), null);
                 }
-            }catch (SQLException e){
-                e.printStackTrace();
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
     };
 
-    private int getWeightHisForAccount(AccountEntity accountEntity){
+    private void requestSyncWeight(int type,int start,int end){
+        try{
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("syncid", "0");
+            params.put("start",start);
+            params.put("end",end);
+            params.put("uid", mAppContext.getProperty(AppConfig.CONF_USER_UID));
+            params.put("imei", mAppContext.getIMSI());
+            if (type==0) {
+                request(URLs.SYNC_WEIGHT_URL, JsonUtil.toJson(params).toString(), null);
+            }else {
+                request(URLs.SYNC_WEIGHT_HIS_URL, JsonUtil.toJson(params).toString(), null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private int getAllWeightHis(){
         try{
             Dao<WeightEntity,Integer> dao=getDatabaseHelper().getWeightEntityDao();
             QueryBuilder<WeightEntity,Integer> queryBuilder=dao.queryBuilder();
@@ -552,7 +556,7 @@ public class NotifyService extends Service {
                 for (int i=0;i<list.size();i++){
                     WeightHisEntity hisEntity=list.get(i);
                     if (!StringUtil.isEmpty(hisEntity.getAvatar())){
-                        Log.e(TAG, "uploadAvatarData " + hisEntity.getAvatar());
+//                        Log.e(TAG, "uploadAvatarData " + hisEntity.getAvatar());
                         Map<String,Object> params=new HashMap<String, Object>();
                         params.put("wid",hisEntity.getWid());
                         if (!StringUtil.isEmpty(mAppContext.getProperty(AppConfig.CONF_USER_UID))) {
@@ -616,7 +620,6 @@ public class NotifyService extends Service {
             weightQueryBuilder.where().eq("isSync", 0);
             List<WeightEntity> weightEntityList=weightQueryBuilder.query();
             if (weightEntityList.size()>0) {
-                Log.e(TAG,"0000------------>============"+weightEntityList.size());
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("root", weightEntityList);
                 if (!StringUtil.isEmpty(mAppContext.getProperty(AppConfig.CONF_USER_UID))) {
@@ -736,6 +739,9 @@ public class NotifyService extends Service {
                     for (int i=0;i<weightResp.getRoot().size();i++){
                         addWeightEntity(weightResp.getRoot().get(i));
                     }
+                    if ((weightResp.getStart()+weightResp.getEnd())<weightResp.getTotal()){
+                        requestSyncWeight(0,weightResp.getStart()+weightResp.getEnd(),20+weightResp.getStart()+weightResp.getEnd());
+                    }
                 }
             }else if(baseResp.getDataType().equals("getHealth")){
                 WeightResp weightResp=(WeightResp)JsonUtil.ObjFromJson(resp,WeightResp.class);
@@ -749,6 +755,9 @@ public class NotifyService extends Service {
                 if (weightHisResp.getRoot()!=null&&weightHisResp.getRoot().size()>0){
                     for (int j=0;j<weightHisResp.getRoot().size();j++){
                         addWeightHisEntity(weightHisResp.getRoot().get(j));
+                    }
+                    if ((weightHisResp.getStart()+weightHisResp.getEnd())<weightHisResp.getTotal()){
+                        requestSyncWeight(1, weightHisResp.getStart() + weightHisResp.getEnd(),20+weightHisResp.getStart()+weightHisResp.getEnd());
                     }
                     Dao<WeightHisEntity, Integer> weightEntityDao = getDatabaseHelper().getWeightHisEntityDao();
                     QueryBuilder<WeightHisEntity, Integer> weightQueryBuilder = weightEntityDao.queryBuilder();
@@ -823,7 +832,6 @@ public class NotifyService extends Service {
             dao.setAutoCommit(dao.startThreadConnection(),false);
             dao.createOrUpdate(entity);
             dao.commit(dao.startThreadConnection());
-            Log.e(TAG,"addHealthEntity =======> "+entity.getHid());
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -859,7 +867,6 @@ public class NotifyService extends Service {
             Dao<WeightEntity,Integer> dao=getDatabaseHelper().getWeightEntityDao();
             GenericRawResults<String[]> rawResults=dao.queryRaw("select max(syncid) from t_weight ");
             List<String[]> results=rawResults.getResults();
-            Log.d(TAG, " select result size:" + results.size());
             if (results.size()>0) {
                 String[] resultArray = results.get(0);
                 if (!StringUtil.isEmpty(resultArray[0])) {
@@ -877,7 +884,6 @@ public class NotifyService extends Service {
             Dao<WeightHisEntity,Integer> dao=getDatabaseHelper().getWeightHisEntityDao();
             GenericRawResults<String[]> rawResults=dao.queryRaw("select max(syncid) from t_weight_his ");
             List<String[]> results=rawResults.getResults();
-            Log.d(TAG, " select result size:" + results.size());
             if (results.size()>0) {
                 String[] resultArray = results.get(0);
                 if (!StringUtil.isEmpty(resultArray[0])) {
@@ -895,7 +901,6 @@ public class NotifyService extends Service {
             Dao<HealthEntity,Integer> dao=getDatabaseHelper().getHealthDao();
             GenericRawResults<String[]> rawResults=dao.queryRaw("select count(1) from t_health where aid="+aid+" and dataType="+dType+"  and pickTime='"+pickTime+"' ");
             List<String[]> results=rawResults.getResults();
-            Log.d(TAG, " getHealthData select result size:" + results.size());
             if (results.size()>0) {
                 String[] resultArray = results.get(0);
                 if (!StringUtil.isEmpty(resultArray[0])) {

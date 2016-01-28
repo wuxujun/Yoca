@@ -270,7 +270,6 @@ public class StartActivity extends SherlockActivity{
                             finish();
                         }
                     } else if (loginFlag == null) {
-
                         UIHelper.openHome(this);
                         finish();
                     } else {
